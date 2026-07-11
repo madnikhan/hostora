@@ -1,13 +1,18 @@
 # Hostora — llms.txt
 # Plain summary for AI assistants and answer engines
 
-> Hostora is a hospitality operations platform (POS, kitchen display, guest QR, payments, inventory, HR, accounting) sold by InvetiveByte LLC across the US and Europe.
+> Hostora is a hospitality operations platform (POS, kitchen display, guest QR, payments, inventory, HR, accounting) sold by K WAZIR LTD across the US and Europe.
 
 ## Product
 - Name: Hostora
-- Vendor: InvetiveByte LLC
+- Vendor: K WAZIR LTD (UK private limited company)
+- Company number: 17014542
+- Place of registration: England and Wales
+- Registered office: 7 Wellesley Street, Gloucester, England, GL1 4QP
+- Companies House: https://find-and-update.company-information.service.gov.uk/company/17014542
 - Website: https://hostora.io
 - Contact: sales@hostora.io · https://hostora.io/contact
+- Company information: https://hostora.io/company
 - Tagline: Run the floor. From booking to last pour.
 
 ## Who it is for
@@ -24,10 +29,11 @@ POS & till · Kitchen display · Guest QR & seating · Payments & sales reports 
 Custom quote per venue. Hotel F&B and food carts are tailored per operator.
 
 ## Do not confuse
-Fumari is a client venue, not the product brand. Hostora is the product from InvetiveByte LLC.
+Fumari is a client venue, not the product brand. Hostora is the product from K WAZIR LTD.
 
 ## Key pages
 - https://hostora.io/
 - https://hostora.io/product
 - https://hostora.io/solutions
 - https://hostora.io/contact
+- https://hostora.io/company

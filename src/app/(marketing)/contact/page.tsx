@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { FadeUp } from "@/components/FadeUp";
+import { company } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: "Book a demo",
-  description:
-    "Book a Hostora demo for your restaurant, takeaway, event venue, hotel F&B, or food cart. Contact InvetiveByte LLC sales across the US and Europe.",
+  description: `Book a Hostora demo for your restaurant, takeaway, event venue, hotel F&B, or food cart. Contact ${company.legalName} sales across the ${company.markets}.`,
   alternates: { canonical: "/contact" },
   openGraph: {
     title: "Book a Hostora demo",
@@ -30,18 +30,27 @@ export default function ContactPage() {
           <div className="mt-10 space-y-4 text-sm text-muted">
             <p>
               Vendor:{" "}
-              <span className="text-foreground">InvetiveByte LLC</span>
+              <span className="text-foreground">{company.legalName}</span>
             </p>
             <p>
-              Product: <span className="text-foreground">Hostora</span>
+              Product:{" "}
+              <span className="text-foreground">{company.productBrand}</span>
+            </p>
+            <p>
+              Company number:{" "}
+              <span className="text-foreground">{company.number}</span>
+            </p>
+            <p>
+              Registered office:{" "}
+              <span className="text-foreground">{company.registeredOffice}</span>
             </p>
             <p>
               Email:{" "}
               <a
                 className="text-accent hover:underline"
-                href="mailto:sales@hostora.io?subject=Hostora%20demo%20request"
+                href={`mailto:${company.email}?subject=Hostora%20demo%20request`}
               >
-                sales@hostora.io
+                {company.email}
               </a>
             </p>
           </div>
@@ -49,7 +58,7 @@ export default function ContactPage() {
 
         <FadeUp delay={0.1}>
           <form
-            action="mailto:sales@hostora.io"
+            action={`mailto:${company.email}`}
             method="get"
             className="rounded-[2rem] border border-border bg-surface p-8"
           >

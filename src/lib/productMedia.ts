@@ -70,3 +70,68 @@ export const productMedia = {
     poster: "/media/product/demo-poster.png",
   },
 } as const;
+
+/** Per-slide pitch deck loops (cropped from product screen recording). */
+export const pitchClips = {
+  open: {
+    video: "/media/product/pitch/01-open.mp4",
+    poster: "/media/product/pitch/01-open-poster.jpg",
+    label: "Hostora",
+  },
+  problem: {
+    video: "/media/product/pitch/02-problem.mp4",
+    poster: "/media/product/pitch/02-problem-poster.jpg",
+    label: "Live floor",
+  },
+  icp: {
+    video: "/media/product/pitch/03-icp.mp4",
+    poster: "/media/product/pitch/03-icp-poster.jpg",
+    label: "Stations",
+  },
+  product: {
+    video: "/media/product/pitch/04-product.mp4",
+    poster: "/media/product/pitch/04-product-poster.jpg",
+    label: "Modules",
+  },
+  till: {
+    video: "/media/product/pitch/05-till.mp4",
+    poster: "/media/product/pitch/05-till-poster.jpg",
+    label: "Till & tables",
+  },
+  kitchen: {
+    video: "/media/product/pitch/06-kitchen.mp4",
+    poster: "/media/product/pitch/06-kitchen-poster.jpg",
+    label: "Kitchen",
+  },
+  guests: {
+    video: "/media/product/pitch/07-guests.mp4",
+    poster: "/media/product/pitch/07-guests-poster.jpg",
+    label: "Guest QR",
+  },
+  money: {
+    video: "/media/product/pitch/08-money.mp4",
+    poster: "/media/product/pitch/08-money-poster.jpg",
+    label: "Sales reports",
+  },
+  control: {
+    video: "/media/product/pitch/09-control.mp4",
+    poster: "/media/product/pitch/09-control-poster.jpg",
+    label: "Control",
+  },
+  deploy: {
+    video: "/media/product/pitch/10-deploy.mp4",
+    poster: "/media/product/pitch/10-deploy-poster.jpg",
+    label: "Deploy",
+  },
+  proof: {
+    video: "/media/product/pitch/11-proof.mp4",
+    poster: "/media/product/pitch/11-proof-poster.jpg",
+    label: "Analytics",
+  },
+  cta: {
+    video: "/media/product/pitch/12-cta.mp4",
+    poster: "/media/product/pitch/12-cta-poster.jpg",
+    label: "Hostora",
+  },
+} as const;
+

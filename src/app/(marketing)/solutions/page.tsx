@@ -80,7 +80,7 @@ const faqs = [
   },
   {
     q: "Who builds and sells Hostora?",
-    a: "Hostora is a product brand of InvetiveByte LLC, sold across the US and Europe. Pricing is a custom quote per venue.",
+    a: "Hostora is a product brand of K WAZIR LTD, a UK private limited company (Companies House 17014542), sold across the US and Europe. Pricing is a custom quote per venue.",
   },
 ];
 

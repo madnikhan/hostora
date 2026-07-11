@@ -1,7 +1,8 @@
 # Hostora brand
 
 **Product brand:** Hostora  
-**Vendor / IP owner:** InvetiveByte LLC  
+**Vendor / IP owner:** K WAZIR LTD (UK company number 17014542)  
+**Registered office:** 7 Wellesley Street, Gloucester, England, GL1 4QP  
 **Not the product name:** Fumari (client venue / deployment only)
 
 ## Why Hostora
@@ -16,7 +17,7 @@
 
 ## One-liner
 
-All-in-one hospitality operations platform — POS, kitchen display, bookings, payments, stock, and staff — for restaurants, takeaways, event venues, hotels (F&B/ops), and food carts across the US and Europe.
+All-in-one hospitality operations platform — POS, kitchen display, bookings, payments, stock, and staff — for restaurants, takeaways, event venues, hotels (F&B/ops), and food carts across the US and Europe. Sold by K WAZIR LTD (England and Wales).
 
 ## Voice
 
@@ -43,7 +44,7 @@ All-in-one hospitality operations platform — POS, kitchen display, bookings, p
 - gethostora.com
 - hostora.app
 
-Register under InvetiveByte LLC. Update `metadataBase` and contact emails after purchase.
+Register under K WAZIR LTD. Update `metadataBase` and contact emails after purchase.
 
 ## Trademark
 

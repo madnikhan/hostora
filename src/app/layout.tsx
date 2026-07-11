@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
 import { JsonLd } from "@/components/JsonLd";
+import { company } from "@/lib/company";
 import "./globals.css";
 
 const display = Syne({
@@ -24,8 +25,7 @@ const siteUrl = "https://hostora.io";
 
 const titleDefault =
   "Hostora — Restaurant, hotel F&B, takeaway & food cart software";
-const description =
-  "Hostora is hospitality operations software by InvetiveByte LLC for restaurants, takeaways, event venues, hotels (F&B), and food carts. POS, kitchen display, guest QR, payments, inventory, HR, and reporting — US & Europe.";
+const description = `Hostora is hospitality operations software by ${company.legalName} for restaurants, takeaways, event venues, hotels (F&B), and food carts. POS, kitchen display, guest QR, payments, inventory, HR, and reporting — ${company.markets}.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -42,17 +42,17 @@ export const metadata: Metadata = {
     "hospitality operations platform",
     "kitchen display system",
     "food business software",
-    "InvetiveByte LLC",
+    "K WAZIR LTD",
     "Hostora",
   ],
-  authors: [{ name: "InvetiveByte LLC" }],
-  creator: "InvetiveByte LLC",
-  publisher: "InvetiveByte LLC",
+  authors: [{ name: company.legalName }],
+  creator: company.legalName,
+  publisher: company.legalName,
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_GB",
     url: siteUrl,
     siteName: "Hostora",
     title: titleDefault,
@@ -87,15 +87,30 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "InvetiveByte LLC",
+    name: company.legalName,
+    legalName: company.legalName,
     brand: {
       "@type": "Brand",
-      name: "Hostora",
+      name: company.productBrand,
     },
     url: siteUrl,
     logo: `${siteUrl}/brand/mark.png`,
-    email: "sales@hostora.io",
-    areaServed: ["US", "EU"],
+    email: company.email,
+    identifier: {
+      "@type": "PropertyValue",
+      name: "Company Number",
+      value: company.number,
+      propertyID: "Companies House",
+      url: company.companiesHouseUrl,
+    },
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "7 Wellesley Street",
+      addressLocality: "Gloucester",
+      postalCode: "GL1 4QP",
+      addressCountry: "GB",
+    },
+    areaServed: ["US", "EU", "GB"],
     description,
   },
   {
@@ -110,13 +125,14 @@ const jsonLd = [
     offers: {
       "@type": "Offer",
       price: "0",
-      priceCurrency: "USD",
+      priceCurrency: "GBP",
       description: "Custom quote per venue — contact sales",
       url: `${siteUrl}/contact`,
     },
     provider: {
       "@type": "Organization",
-      name: "InvetiveByte LLC",
+      name: company.legalName,
+      identifier: company.number,
     },
     audience: {
       "@type": "Audience",

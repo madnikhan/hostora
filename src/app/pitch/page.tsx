@@ -4,7 +4,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { productMedia } from "@/lib/productMedia";
+import { PitchSlideVideo } from "@/components/PitchSlideVideo";
+import { pitchClips } from "@/lib/productMedia";
 
 type Slide = {
   eyebrow: string;
@@ -12,7 +13,11 @@ type Slide = {
   accent?: string;
   body: string;
   cta?: boolean;
-  image?: { src: string; alt: string; label: string };
+  media: {
+    video: string;
+    poster: string;
+    label: string;
+  };
 };
 
 const slides: Slide[] = [
@@ -21,92 +26,74 @@ const slides: Slide[] = [
     title: "Run the floor.",
     accent: "From booking to last pour.",
     body: "Hospitality operations for restaurants, takeaways, event venues, hotels, and food carts — US & Europe.",
+    media: pitchClips.open,
   },
   {
     eyebrow: "The problem",
     title: "Busy nights break patchwork tools.",
     body: "Separate till apps, kitchen screens, booking widgets, and spreadsheets create missed tickets, slow service, and no single source of truth.",
+    media: pitchClips.problem,
   },
   {
     eyebrow: "Who it's for",
     title: "Five businesses. One spine.",
     body: "Restaurants · Takeaways · Event venues · Hotels · Food carts — packaged for venues; hotel F&B and carts configured and built to each operator.",
+    media: pitchClips.icp,
   },
   {
     eyebrow: "The product",
     title: "One platform for the whole service.",
     body: "POS, kitchen display, guest QR, payments, inventory, HR, accounting, and supervisor controls — together.",
+    media: pitchClips.product,
   },
   {
     eyebrow: "Till",
     title: "Orders that keep pace with the room.",
     body: "Open tabs, modifiers, split bills, and payments designed for real floor pressure — not demo day.",
-    image: {
-      src: productMedia.till.src,
-      alt: productMedia.till.alt,
-      label: "Till",
-    },
+    media: pitchClips.till,
   },
   {
     eyebrow: "Kitchen & print",
     title: "Every station sees what matters.",
     body: "Live KDS by area, thermal routing for food / bar / specialty stations, and busy-period reliability.",
-    image: {
-      src: productMedia.kds.src,
-      alt: productMedia.kds.alt,
-      label: "Kitchen display",
-    },
+    media: pitchClips.kitchen,
   },
   {
     eyebrow: "Guests & QR",
     title: "Guests order. You prepare.",
     body: "Table ordering QR, seating invites, and reservation flows that connect guests to service.",
-    image: {
-      src: productMedia.guestQr.src,
-      alt: productMedia.guestQr.alt,
-      label: "Guest QR",
-    },
+    media: pitchClips.guests,
   },
   {
     eyebrow: "Money & insight",
     title: "Payments and reporting operators trust.",
     body: "Sales reports, hourly analytics, and day / week / month views — framed for US and European operators.",
-    image: {
-      src: productMedia.sales.src,
-      alt: productMedia.sales.alt,
-      label: "Sales reports",
-    },
+    media: pitchClips.money,
   },
   {
     eyebrow: "Control",
     title: "Stock, staff, and supervisors.",
     body: "Inventory thresholds, HR and attendance, deletion audits, and live monitoring when the floor gets loud.",
-    image: {
-      src: productMedia.supervisor.src,
-      alt: productMedia.supervisor.alt,
-      label: "Control",
-    },
+    media: pitchClips.control,
   },
   {
     eyebrow: "Deploy",
     title: "Built for real venues.",
     body: "On-prem printing, multi-station kitchens, and operational controls — not a cloud-only slideware POS.",
+    media: pitchClips.deploy,
   },
   {
     eyebrow: "Proof",
     title: "Proven under live service load.",
     body: "Hostora is the commercial brand for a platform already running multi-station hospitality venues. Ask for a private case walkthrough.",
-    image: {
-      src: productMedia.accounting.src,
-      alt: productMedia.accounting.alt,
-      label: "Accounting",
-    },
+    media: pitchClips.proof,
   },
   {
     eyebrow: "Next step",
     title: "Book a Hostora demo.",
     body: "Per-venue licensing. Custom quotes for multi-site. Sales reps: leave this slide open and take discovery notes.",
     cta: true,
+    media: pitchClips.cta,
   },
 ];
 
@@ -142,8 +129,6 @@ export default function PitchPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev, total]);
 
-  const hasImage = Boolean(slide.image);
-
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background hero-glow">
       <div className="flex items-center justify-between px-6 py-5 md:px-10">
@@ -170,15 +155,9 @@ export default function PitchPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className={`mx-auto w-full ${hasImage ? "max-w-6xl" : "max-w-5xl"}`}
+            className="mx-auto w-full max-w-6xl"
           >
-            <div
-              className={
-                hasImage
-                  ? "grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14"
-                  : ""
-              }
-            >
+            <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
               <div>
                 <motion.p
                   className="eyebrow"
@@ -215,31 +194,13 @@ export default function PitchPage() {
                 ) : null}
               </div>
 
-              {slide.image ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.1, duration: 0.5 }}
-                  className="overflow-hidden rounded-3xl border border-border bg-surface shadow-[0_40px_80px_rgba(0,0,0,0.45)]"
-                >
-                  <div className="flex items-center gap-2 border-b border-border px-4 py-3">
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-accent/80" />
-                    <span className="ml-3 text-xs text-muted">{slide.image.label}</span>
-                  </div>
-                  <div className="relative aspect-16/10">
-                    <Image
-                      src={slide.image.src}
-                      alt={slide.image.alt}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 520px"
-                      className="object-cover object-top"
-                      priority={index < 6}
-                    />
-                  </div>
-                </motion.div>
-              ) : null}
+              <PitchSlideVideo
+                key={slide.media.video}
+                video={slide.media.video}
+                poster={slide.media.poster}
+                label={slide.media.label}
+                active
+              />
             </div>
           </motion.div>
         </AnimatePresence>

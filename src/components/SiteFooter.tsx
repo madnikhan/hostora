@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { company } from "@/lib/company";
 
 export function SiteFooter() {
   return (
@@ -8,8 +9,8 @@ export function SiteFooter() {
           <p className="display text-2xl font-bold">Hostora</p>
           <p className="mt-3 text-sm leading-relaxed text-muted">
             Hospitality operations for restaurants, takeaways, events, hotels,
-            and food carts. Built by InvetiveByte LLC. Sold across the US and
-            Europe.
+            and food carts. A product of {company.legalName}. Sold across the{" "}
+            {company.markets}.
           </p>
         </div>
         <div className="flex flex-wrap gap-6 text-sm text-muted">
@@ -25,11 +26,44 @@ export function SiteFooter() {
           <Link href="/contact" className="hover:text-foreground">
             Contact
           </Link>
+          <Link href="/company" className="hover:text-foreground">
+            Company information
+          </Link>
         </div>
       </div>
-      <div className="border-t border-border px-6 py-5 text-center text-xs text-muted">
-        © {new Date().getFullYear()} InvetiveByte LLC. Hostora is a product brand of
-        InvetiveByte LLC.
+      <div className="border-t border-border px-6 py-6 text-xs leading-relaxed text-muted">
+        <div className="mx-auto max-w-6xl space-y-2 text-center md:text-left">
+          <p>
+            © {new Date().getFullYear()} {company.legalName}. Hostora is a
+            product brand of {company.legalName}.
+          </p>
+          <p>
+            {company.legalName} · Company number {company.number} · Registered
+            in {company.placeOfRegistration}
+          </p>
+          <p>Registered office: {company.registeredOffice}</p>
+          <p>
+            <a
+              className="text-accent hover:underline"
+              href={`mailto:${company.email}`}
+            >
+              {company.email}
+            </a>
+            {" · "}
+            <a
+              className="text-accent hover:underline"
+              href={company.companiesHouseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Companies House
+            </a>
+            {" · "}
+            <Link href="/company" className="text-accent hover:underline">
+              Company information
+            </Link>
+          </p>
+        </div>
       </div>
     </footer>
   );

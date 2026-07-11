@@ -11,8 +11,10 @@
 
 **Modules:** POS · Kitchen display · Guest QR & seating · Payments & sales reports · Analytics · Inventory · Staff / HR / attendance · Accounting (HMRC-ready) · Supervisor monitoring
 
-**Vendor:** InvetiveByte LLC  
+**Vendor:** K WAZIR LTD (UK · 17014542)  
+**Registered office:** 7 Wellesley Street, Gloucester, England, GL1 4QP  
 **Demo:** /contact · sales@hostora.io  
+**Company info:** /company  
 **Rep pitch:** /pitch (fullscreen, arrow keys)  
 **Product proof:** /product · home demo video
 

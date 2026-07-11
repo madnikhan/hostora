@@ -2,7 +2,7 @@
 
 ## Elevator (15 seconds)
 
-Hostora is the hospitality operations platform for restaurants, takeaways, event venues, hotels, and food carts. One system for till, kitchen, guest QR, payments, inventory, HR, and reporting — sold by InvetiveByte LLC across the US and Europe.
+Hostora is the hospitality operations platform for restaurants, takeaways, event venues, hotels, and food carts. One system for till, kitchen, guest QR, payments, inventory, HR, and reporting — sold by K WAZIR LTD across the US and Europe.
 
 ## Problem
 
@@ -52,7 +52,7 @@ Restaurants, takeaways, and events ship as packaged verticals (per-venue quote).
 | “We already have a till” | Hostora is operations — till plus kitchen, guest QR, and control in one spine. |
 | “Cloud POS is enough” | Real venues need station printing and floor-speed workflows; ask for a live demo under load. |
 | “Too expensive” | Per-venue licensing; quote against lost tickets + staff time, not against the cheapest till app. |
-| “Is this Fumari?” | Fumari is a client venue. Hostora is the product brand from InvetiveByte LLC. |
+| “Is this Fumari?” | Fumari is a client venue. Hostora is the product brand from K WAZIR LTD (UK). |
 | “Do you do hotel PMS?” | No — Hostora runs hotel F&B and floor ops (outlets, kitchen, staff). Rooms / front desk stay with your PMS. |
 
 ## Pricing stance

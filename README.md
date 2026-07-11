@@ -1,6 +1,6 @@
 # Hostora
 
-Marketing site and sales pitch for **Hostora** — hospitality operations platform by **InvetiveByte LLC**.
+Marketing site and sales pitch for **Hostora** — hospitality operations platform by **K WAZIR LTD** (UK company number 17014542).
 
 This project is **separate** from any client venue deployment (e.g. Fumari). Do not merge this into client POS repos.
 
@@ -22,6 +22,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `/product` | Product modules with UI screenshots |
 | `/solutions` | Restaurant / takeaway / events / hotels (F&B) / food carts |
 | `/contact` | Demo CTA |
+| `/company` | UK company / legal disclosures |
 | `/pitch` | Animated sales deck for reps |
 
 Product UI media lives in `public/media/product/` (anonymized). Raw captures stay in `public/media/_raw/` (gitignored).
