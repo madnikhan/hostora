@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FadeUp } from "@/components/FadeUp";
 import { DeviceMock } from "@/components/DeviceMock";
+import { HeroMediaBubbles } from "@/components/HeroMediaBubbles";
 import { ProductDemoVideo } from "@/components/ProductDemoVideo";
 import { StickyChapter } from "@/components/StickyChapter";
 import { productMedia } from "@/lib/productMedia";
@@ -9,6 +10,7 @@ export default function HomePage() {
   return (
     <div className="grain">
       <section className="hero-glow relative overflow-hidden px-6 pb-28 pt-24 md:pt-32">
+        <HeroMediaBubbles />
         <div className="relative z-10 mx-auto max-w-5xl text-center">
           <FadeUp>
             <p className="eyebrow">Hospitality OS · US & Europe</p>

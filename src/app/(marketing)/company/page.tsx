@@ -7,10 +7,6 @@ export const metadata: Metadata = {
   title: "Company information",
   description: `${company.legalName} (company number ${company.number}) — UK private limited company behind Hostora. Registered office: ${company.registeredOffice}.`,
   alternates: { canonical: "/company" },
-  openGraph: {
-    title: `Company information — ${company.legalName}`,
-    description: `Legal details for ${company.legalName}, the UK company that sells Hostora.`,
-  },
 };
 
 const rows = [

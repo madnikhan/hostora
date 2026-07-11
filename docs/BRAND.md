@@ -37,14 +37,12 @@ All-in-one hospitality operations platform — POS, kitchen display, bookings, p
 | Body font | DM Sans |
 | Mark | `public/brand/mark.svg` (H as doorway / table bridge) |
 
-## Domains to check
+## Domains
 
-- hostora.com
-- hostora.io
-- gethostora.com
-- hostora.app
+- **Live:** https://hostorasoft.co.uk
+- hostora.com / hostora.io / gethostora.com (aliases if acquired)
 
-Register under K WAZIR LTD. Update `metadataBase` and contact emails after purchase.
+Register under K WAZIR LTD. Sales email: sales@hostorasoft.co.uk.
 
 ## Trademark
 

@@ -9,11 +9,6 @@ export const metadata: Metadata = {
   description:
     "Hostora product modules: POS & till, kitchen display, guest QR, payments, analytics, inventory, HR & attendance, and HMRC-ready accounting for food and hospitality businesses.",
   alternates: { canonical: "/product" },
-  openGraph: {
-    title: "Hostora product modules",
-    description:
-      "Everything the floor needs — till, kitchen, guest QR, payments, stock, staff, and accounting.",
-  },
 };
 
 const modules = [

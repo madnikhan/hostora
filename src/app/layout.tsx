@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
 import { JsonLd } from "@/components/JsonLd";
-import { company } from "@/lib/company";
+import { company, ogImage, ogVideo, siteUrl } from "@/lib/company";
 import "./globals.css";
 
 const display = Syne({
@@ -21,11 +21,20 @@ const mono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://hostora.io";
-
 const titleDefault =
   "Hostora — Restaurant, hotel F&B, takeaway & food cart software";
 const description = `Hostora is hospitality operations software by ${company.legalName} for restaurants, takeaways, event venues, hotels (F&B), and food carts. POS, kitchen display, guest QR, payments, inventory, HR, and reporting — ${company.markets}.`;
+
+const ogImages = [
+  {
+    url: ogImage.url,
+    secureUrl: ogImage.url,
+    type: ogImage.type,
+    width: ogImage.width,
+    height: ogImage.height,
+    alt: ogImage.alt,
+  },
+];
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -44,6 +53,7 @@ export const metadata: Metadata = {
     "food business software",
     "K WAZIR LTD",
     "Hostora",
+    "hostorasoft",
   ],
   authors: [{ name: company.legalName }],
   creator: company.legalName,
@@ -57,12 +67,14 @@ export const metadata: Metadata = {
     siteName: "Hostora",
     title: titleDefault,
     description,
-    images: [
+    images: ogImages,
+    videos: [
       {
-        url: "/brand/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Hostora — hospitality operations software",
+        url: ogVideo.url,
+        secureUrl: ogVideo.url,
+        type: "video/mp4",
+        width: 1280,
+        height: 720,
       },
     ],
   },
@@ -70,7 +82,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: titleDefault,
     description,
-    images: ["/brand/og.png"],
+    images: [ogImage.url],
   },
   icons: {
     icon: [
@@ -120,7 +132,7 @@ const jsonLd = [
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     url: siteUrl,
-    image: `${siteUrl}/brand/og.png`,
+    image: ogImage.url,
     description,
     offers: {
       "@type": "Offer",

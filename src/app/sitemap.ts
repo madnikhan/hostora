@@ -1,31 +1,30 @@
 import type { MetadataRoute } from "next";
-
-const base = "https://hostora.io";
+import { siteUrl } from "@/lib/company";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   return [
-    { url: base, lastModified, changeFrequency: "weekly", priority: 1 },
+    { url: siteUrl, lastModified, changeFrequency: "weekly", priority: 1 },
     {
-      url: `${base}/product`,
+      url: `${siteUrl}/product`,
       lastModified,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
-      url: `${base}/solutions`,
+      url: `${siteUrl}/solutions`,
       lastModified,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
-      url: `${base}/contact`,
+      url: `${siteUrl}/contact`,
       lastModified,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${base}/company`,
+      url: `${siteUrl}/company`,
       lastModified,
       changeFrequency: "yearly",
       priority: 0.5,

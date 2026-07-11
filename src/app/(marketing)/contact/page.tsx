@@ -6,11 +6,6 @@ export const metadata: Metadata = {
   title: "Book a demo",
   description: `Book a Hostora demo for your restaurant, takeaway, event venue, hotel F&B, or food cart. Contact ${company.legalName} sales across the ${company.markets}.`,
   alternates: { canonical: "/contact" },
-  openGraph: {
-    title: "Book a Hostora demo",
-    description:
-      "Tell us about your venue — restaurant, takeaway, events, hotel F&B, or food cart.",
-  },
 };
 
 export default function ContactPage() {

@@ -185,10 +185,10 @@ export default function PitchPage() {
                       Book a demo
                     </Link>
                     <a
-                      href="mailto:sales@hostora.io"
+                      href="mailto:sales@hostorasoft.co.uk"
                       className="rounded-full border border-border px-7 py-3.5 text-sm font-semibold"
                     >
-                      sales@hostora.io
+                      sales@hostorasoft.co.uk
                     </a>
                   </div>
                 ) : null}

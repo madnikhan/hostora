@@ -10,11 +10,6 @@ export const metadata: Metadata = {
   description:
     "Hostora hospitality software for restaurants, takeaways, event venues, hotel F&B, and food carts — packaged for venues, tailored for hotels and mobile operators.",
   alternates: { canonical: "/solutions" },
-  openGraph: {
-    title: "Hostora solutions — restaurants to food carts",
-    description:
-      "One operations spine for restaurants, takeaways, events, hotel F&B, and food carts.",
-  },
 };
 
 const solutions = [

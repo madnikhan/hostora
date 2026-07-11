@@ -2,6 +2,9 @@
 
 Marketing site and sales pitch for **Hostora** — hospitality operations platform by **K WAZIR LTD** (UK company number 17014542).
 
+**Live site:** [https://hostorasoft.co.uk](https://hostorasoft.co.uk)  
+**Sales:** [sales@hostorasoft.co.uk](mailto:sales@hostorasoft.co.uk)
+
 This project is **separate** from any client venue deployment (e.g. Fumari). Do not merge this into client POS repos.
 
 ## Quick start
@@ -13,6 +16,12 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+Optional env:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://hostorasoft.co.uk
+```
 
 ## Routes
 
@@ -27,7 +36,19 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Product UI media lives in `public/media/product/` (anonymized). Raw captures stay in `public/media/_raw/` (gitignored).
 
-SEO helpers: `/sitemap.xml`, `/robots.txt`, `/llms.txt`, Open Graph at `/brand/og.png`.
+SEO helpers: `/sitemap.xml`, `/robots.txt`, `/llms.txt`, Open Graph at `/brand/og.jpg`.
+
+## Social / WhatsApp previews
+
+Share **https://hostorasoft.co.uk** (not hostora.io). Tags use absolute `og:image` → `/brand/og.jpg`.
+
+After a deploy that changes the share image:
+
+1. Confirm `https://hostorasoft.co.uk/brand/og.jpg` returns `200` / `image/jpeg`
+2. Refresh Facebook cache: [Sharing Debugger](https://developers.facebook.com/tools/debug/)
+3. WhatsApp: send the link in a **new** chat, or append `?v=2` once to bust cache
+
+WhatsApp shows a **static** card only — it does not animate OG video.
 
 ## Presenting to prospects
 
@@ -45,7 +66,7 @@ SEO helpers: `/sitemap.xml`, `/robots.txt`, `/llms.txt`, Open Graph at `/brand/o
 
 ## Deploy
 
-Deploy this app on its own (e.g. Vercel) under your Hostora domain. Keep it isolated from client production POS servers.
+Deploy this app on its own (e.g. Vercel) under **hostorasoft.co.uk**. Keep it isolated from client production POS servers.
 
 ## Stack
 
