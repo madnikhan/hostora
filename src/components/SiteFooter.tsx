@@ -7,8 +7,9 @@ export function SiteFooter() {
         <div className="max-w-md">
           <p className="display text-2xl font-bold">Hostora</p>
           <p className="mt-3 text-sm leading-relaxed text-muted">
-            Hospitality operations for restaurants, takeaways, events, and
-            hotels. Built by InvetiveByte LLC. Sold across the US and Europe.
+            Hospitality operations for restaurants, takeaways, events, hotels,
+            and food carts. Built by InvetiveByte LLC. Sold across the US and
+            Europe.
           </p>
         </div>
         <div className="flex flex-wrap gap-6 text-sm text-muted">

@@ -5,7 +5,15 @@ import { DeviceMock } from "@/components/DeviceMock";
 import { productMedia } from "@/lib/productMedia";
 
 export const metadata: Metadata = {
-  title: "Product",
+  title: "Product — POS, kitchen, QR, inventory & more",
+  description:
+    "Hostora product modules: POS & till, kitchen display, guest QR, payments, analytics, inventory, HR & attendance, and HMRC-ready accounting for food and hospitality businesses.",
+  alternates: { canonical: "/product" },
+  openGraph: {
+    title: "Hostora product modules",
+    description:
+      "Everything the floor needs — till, kitchen, guest QR, payments, stock, staff, and accounting.",
+  },
 };
 
 const modules = [

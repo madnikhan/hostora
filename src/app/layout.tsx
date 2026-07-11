@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
+import { JsonLd } from "@/components/JsonLd";
 import "./globals.css";
 
 const display = Syne({
@@ -19,23 +20,111 @@ const mono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://hostora.io";
+
+const titleDefault =
+  "Hostora — Restaurant, hotel F&B, takeaway & food cart software";
+const description =
+  "Hostora is hospitality operations software by InvetiveByte LLC for restaurants, takeaways, event venues, hotels (F&B), and food carts. POS, kitchen display, guest QR, payments, inventory, HR, and reporting — US & Europe.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Hostora — Hospitality operations, unified",
+    default: titleDefault,
     template: "%s · Hostora",
   },
-  description:
-    "All-in-one hospitality platform for restaurants, takeaways, event venues, and hotels. POS, kitchen display, bookings, payments, stock, and staff — US & Europe.",
-  metadataBase: new URL("https://hostora.io"),
+  description,
+  keywords: [
+    "restaurant POS software",
+    "hotel restaurant software",
+    "takeaway POS",
+    "food cart POS",
+    "hospitality operations platform",
+    "kitchen display system",
+    "food business software",
+    "InvetiveByte LLC",
+    "Hostora",
+  ],
+  authors: [{ name: "InvetiveByte LLC" }],
+  creator: "InvetiveByte LLC",
+  publisher: "InvetiveByte LLC",
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Hostora",
-    description: "Run the floor. From booking to last pour.",
     type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    siteName: "Hostora",
+    title: titleDefault,
+    description,
+    images: [
+      {
+        url: "/brand/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Hostora — hospitality operations software",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: titleDefault,
+    description,
+    images: ["/brand/og.png"],
   },
   icons: {
-    icon: "/brand/mark.svg",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/brand/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/brand/mark.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
 };
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "InvetiveByte LLC",
+    brand: {
+      "@type": "Brand",
+      name: "Hostora",
+    },
+    url: siteUrl,
+    logo: `${siteUrl}/brand/mark.png`,
+    email: "sales@hostora.io",
+    areaServed: ["US", "EU"],
+    description,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Hostora",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: siteUrl,
+    image: `${siteUrl}/brand/og.png`,
+    description,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      description: "Custom quote per venue — contact sales",
+      url: `${siteUrl}/contact`,
+    },
+    provider: {
+      "@type": "Organization",
+      name: "InvetiveByte LLC",
+    },
+    audience: {
+      "@type": "Audience",
+      audienceType:
+        "Restaurants, takeaways, event venues, hotel F&B, and food cart operators",
+    },
+  },
+];
 
 export default function RootLayout({
   children,
@@ -51,6 +140,7 @@ export default function RootLayout({
         className="min-h-full bg-background text-foreground"
         suppressHydrationWarning
       >
+        <JsonLd data={jsonLd} />
         {children}
       </body>
     </html>

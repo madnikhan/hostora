@@ -20,7 +20,7 @@ const slides: Slide[] = [
     eyebrow: "Hostora",
     title: "Run the floor.",
     accent: "From booking to last pour.",
-    body: "Hospitality operations for restaurants, takeaways, event venues, and hotels — US & Europe.",
+    body: "Hospitality operations for restaurants, takeaways, event venues, hotels, and food carts — US & Europe.",
   },
   {
     eyebrow: "The problem",
@@ -29,8 +29,8 @@ const slides: Slide[] = [
   },
   {
     eyebrow: "Who it's for",
-    title: "Four businesses. One spine.",
-    body: "Restaurants · Takeaways · Event venues · Hotels — packaged for venues; hotel F&B configured and tailored to each property’s outlets.",
+    title: "Five businesses. One spine.",
+    body: "Restaurants · Takeaways · Event venues · Hotels · Food carts — packaged for venues; hotel F&B and carts configured and built to each operator.",
   },
   {
     eyebrow: "The product",

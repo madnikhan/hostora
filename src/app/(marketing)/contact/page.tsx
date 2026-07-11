@@ -2,7 +2,15 @@ import type { Metadata } from "next";
 import { FadeUp } from "@/components/FadeUp";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Book a demo",
+  description:
+    "Book a Hostora demo for your restaurant, takeaway, event venue, hotel F&B, or food cart. Contact InvetiveByte LLC sales across the US and Europe.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Book a Hostora demo",
+    description:
+      "Tell us about your venue — restaurant, takeaway, events, hotel F&B, or food cart.",
+  },
 };
 
 export default function ContactPage() {
@@ -15,9 +23,9 @@ export default function ContactPage() {
             Book a Hostora demo.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
-            Tell us about your venue — restaurant, takeaway, events, or hotel
-            F&amp;B — and a sales representative will walk you through Hostora for
-            US or Europe operations.
+            Tell us about your venue — restaurant, takeaway, events, hotel
+            F&amp;B, or food cart — and a sales representative will walk you
+            through Hostora for US or Europe operations.
           </p>
           <div className="mt-10 space-y-4 text-sm text-muted">
             <p>

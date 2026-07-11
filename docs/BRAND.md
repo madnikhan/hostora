@@ -7,7 +7,7 @@
 ## Why Hostora
 
 - Short, pronounceable in English and major EU languages
-- “Host” covers restaurants, takeaways, events, and hotel F&B
+- “Host” covers restaurants, takeaways, events, hotel F&B, and food carts
 - No cuisine lock-in; distinct from Toast / Square / Lightspeed
 
 ## Tagline
@@ -16,7 +16,7 @@
 
 ## One-liner
 
-All-in-one hospitality operations platform — POS, kitchen display, bookings, payments, stock, and staff — for restaurants, takeaways, event venues, and hotels (F&B/ops) across the US and Europe.
+All-in-one hospitality operations platform — POS, kitchen display, bookings, payments, stock, and staff — for restaurants, takeaways, event venues, hotels (F&B/ops), and food carts across the US and Europe.
 
 ## Voice
 

@@ -20,11 +20,13 @@ Open [http://localhost:3000](http://localhost:3000).
 |------|---------|
 | `/` | Brand home (scroll story + demo video) |
 | `/product` | Product modules with UI screenshots |
-| `/solutions` | Restaurant / takeaway / events / hotels (F&B) |
+| `/solutions` | Restaurant / takeaway / events / hotels (F&B) / food carts |
 | `/contact` | Demo CTA |
 | `/pitch` | Animated sales deck for reps |
 
 Product UI media lives in `public/media/product/` (anonymized). Raw captures stay in `public/media/_raw/` (gitignored).
+
+SEO helpers: `/sitemap.xml`, `/robots.txt`, `/llms.txt`, Open Graph at `/brand/og.png`.
 
 ## Presenting to prospects
 

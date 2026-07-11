@@ -22,8 +22,8 @@ export default function HomePage() {
           <FadeUp delay={0.16}>
             <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted md:text-xl">
               Hostora is the all-in-one operations platform for restaurants,
-              takeaways, event venues, and hotels — till, kitchen, bookings,
-              payments, stock, and staff in one system.
+              takeaways, event venues, hotels, and food carts — till, kitchen,
+              bookings, payments, stock, and staff in one system.
             </p>
           </FadeUp>
           <FadeUp delay={0.24}>
@@ -105,12 +105,12 @@ export default function HomePage() {
           <div className="mx-auto max-w-4xl text-center">
             <p className="eyebrow">Built to sell</p>
             <h2 className="display mt-4 text-4xl font-bold md:text-6xl">
-              One platform. Four businesses.
+              One platform. Five businesses.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-              Restaurants, takeaways, event venues, and hotels share the same
-              operational spine — packaged for venues, tailored for hotel F&amp;B
-              properties.
+              Restaurants, takeaways, event venues, hotels, and food carts share
+              the same operational spine — packaged for venues, tailored for
+              hotel F&amp;B and mobile carts.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Link
