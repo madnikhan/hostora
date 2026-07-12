@@ -29,12 +29,13 @@ NEXT_PUBLIC_SITE_URL=https://hostorasoft.co.uk
 |------|---------|
 | `/` | Brand home (scroll story + demo video) |
 | `/product` | Product modules with UI screenshots |
+| `/hardware` | Hardware kit (servers, tills, printers, scanners) |
 | `/solutions` | Restaurant / takeaway / events / hotels (F&B) / food carts |
 | `/contact` | Demo CTA |
 | `/company` | UK company / legal disclosures |
 | `/pitch` | Animated sales deck for reps |
 
-Product UI media lives in `public/media/product/` (anonymized). Raw captures stay in `public/media/_raw/` (gitignored).
+Product UI media lives in `public/media/product/` (anonymized). Hardware product shots live in `public/media/hardware/`. Raw captures stay in `public/media/_raw/` (gitignored).
 
 SEO helpers: `/sitemap.xml`, `/robots.txt`, `/llms.txt`, Open Graph at `/brand/og.jpg`.
 
@@ -102,11 +103,16 @@ Copy [`.env.example`](.env.example) to `.env.local` and fill values. See that fi
 4. Use **← →** or **Space** to advance
 5. End on the CTA slide; book demo via `/contact`
 
+## TikTok ads
+
+Three motion-graphics vertical films (Restaurant / Hotel F&B / Events) — no product screenshots: preview `/ads/tiktok/restaurant` (etc.), export with `npm run ad:tiktok:all`. Files in [`public/ads/`](public/ads/). Docs: [docs/sales/tiktok-ad.md](docs/sales/tiktok-ad.md).
+
 ## Brand docs
 
 - [docs/BRAND.md](docs/BRAND.md)
 - [docs/MESSAGING.md](docs/MESSAGING.md)
 - [docs/sales/one-pager.md](docs/sales/one-pager.md)
+- [docs/sales/tiktok-ad.md](docs/sales/tiktok-ad.md)
 
 ## Deploy
 

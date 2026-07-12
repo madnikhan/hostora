@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { FadeUp } from "@/components/FadeUp";
 import { DeviceMock } from "@/components/DeviceMock";
+import { hardwareFeatured } from "@/lib/hardwareMedia";
 import { productMedia } from "@/lib/productMedia";
 
 export const metadata: Metadata = {
   title: "Product — POS, kitchen, QR, inventory & more",
   description:
-    "Hostora product modules: POS & till, kitchen display, guest QR, payments, analytics, inventory, HR & attendance, and HMRC-ready accounting for food and hospitality businesses.",
+    "Hostora product modules: POS & till, kitchen display, guest QR, payments, analytics, inventory, HR & attendance, and HMRC-ready accounting — plus optional hardware for the floor.",
   alternates: { canonical: "/product" },
 };
 
@@ -104,6 +106,46 @@ export default function ProductPage() {
             </FadeUp>
           ))}
         </div>
+
+        <section className="mt-24 border-t border-border pt-16">
+          <FadeUp>
+            <p className="eyebrow">Hardware & local deploy</p>
+            <h2 className="display mt-4 text-3xl font-bold md:text-4xl">
+              Software with the kit installed
+            </h2>
+            <p className="mt-4 max-w-2xl text-muted leading-relaxed">
+              Local servers, POS tills, tablets, thermal printers, scanners, and
+              payment terminals — Hostora configured on the devices your floor
+              actually uses.
+            </p>
+          </FadeUp>
+          <div className="mt-10 grid gap-8 sm:grid-cols-3">
+            {hardwareFeatured.map((item, i) => (
+              <FadeUp key={item.id} delay={i * 0.05}>
+                <Link href="/hardware" className="group block">
+                  <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#0B0B0C]">
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                      className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <p className="display mt-4 text-lg font-bold">{item.name}</p>
+                </Link>
+              </FadeUp>
+            ))}
+          </div>
+          <FadeUp>
+            <Link
+              href="/hardware"
+              className="mt-8 inline-flex text-sm font-semibold text-accent transition hover:text-accent-strong"
+            >
+              See all hardware →
+            </Link>
+          </FadeUp>
+        </section>
 
         <FadeUp>
           <div className="mt-20 rounded-[2rem] border border-border bg-accent-soft p-10 md:p-14">

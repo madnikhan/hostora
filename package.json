@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "ad:tiktok": "node scripts/record_tiktok_ad.mjs",
+    "ad:tiktok:all": "VARIANT=all node scripts/record_tiktok_ad.mjs",
+    "ad:tiktok:audio": "node scripts/generate_tiktok_audio.mjs",
+    "ad:tiktok:legacy-clips": "bash scripts/build_tiktok_ad.sh"
   },
   "dependencies": {
     "date-fns": "^4.4.0",
@@ -27,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "playwright": "^1.61.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

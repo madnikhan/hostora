@@ -2,7 +2,7 @@
 
 **Hostora** — Run the floor. From booking to last pour.
 
-**What it is:** All-in-one hospitality OS for restaurants, takeaways, event venues, hotels, and food carts (US, UK & Europe).
+**What it is:** All-in-one hospitality OS for restaurants, takeaways, event venues, hotels, and food carts (US, UK & Europe) — software with optional installed hardware.
 
 **Verticals:**
 - Restaurants · Takeaways · Event venues — packaged
@@ -11,13 +11,15 @@
 
 **Modules:** POS · Kitchen display · Guest QR & seating · Payments & sales reports · Analytics · Inventory · Staff / HR / attendance · Accounting (HMRC-ready) · Supervisor monitoring
 
+**Hardware (optional):** Local server · POS / tablet POS · Floor tablets · Thermal & receipt printers · Barcode & QR scanners · Payment terminals — see /hardware
+
 **Vendor:** K WAZIR LTD (UK · 17014542)  
 **Registered office:** 7 Wellesley Street, Gloucester, England, GL1 4QP  
 **Demo:** /contact · sales@hostorasoft.co.uk  
 **Company info:** /company  
 **Site:** https://hostorasoft.co.uk  
 **Rep pitch:** /pitch (fullscreen, arrow keys)  
-**Product proof:** /product · home demo video
+**Product proof:** /product · /hardware · home demo video
 
 **Pricing:** Custom — per venue; hotel F&B and food carts tailored per operator
 

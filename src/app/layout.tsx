@@ -24,7 +24,7 @@ const mono = Geist_Mono({
 
 const titleDefault =
   "Hostora — Restaurant, hotel F&B, takeaway & food cart software";
-const description = `Hostora is hospitality operations software by ${company.legalName} for restaurants, takeaways, event venues, hotels (F&B), and food carts. POS, kitchen display, guest QR, payments, inventory, HR, and reporting — ${company.markets}.`;
+const description = `Hostora is hospitality operations software by ${company.legalName} for restaurants, takeaways, event venues, hotels (F&B), and food carts — with optional hardware (local servers, tills, printers, scanners). POS, kitchen display, guest QR, payments, inventory, HR, and reporting — ${company.markets}.`;
 
 const ogImages = [
   {

@@ -106,6 +106,28 @@ export default function HomePage() {
         }
       />
 
+      <section className="border-t border-border px-6 py-24">
+        <FadeUp>
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="eyebrow">Hardware</p>
+            <h2 className="display mt-4 text-3xl font-bold md:text-5xl">
+              Servers, tills, printers, scanners —{" "}
+              <span className="text-accent">Hostora installed</span>
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-muted">
+              Optional kit with the software: local servers, POS and tablet
+              stations, thermal printers, QR scanners, and payment terminals.
+            </p>
+            <Link
+              href="/hardware"
+              className="mt-8 inline-flex rounded-full border border-border px-7 py-3.5 text-sm font-semibold transition hover:border-foreground/30"
+            >
+              See hardware
+            </Link>
+          </div>
+        </FadeUp>
+      </section>
+
       <section className="border-t border-border px-6 py-28">
         <FadeUp>
           <div className="mx-auto max-w-4xl text-center">

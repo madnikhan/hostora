@@ -17,7 +17,7 @@
 
 ## One-liner
 
-All-in-one hospitality operations platform — POS, kitchen display, bookings, payments, stock, and staff — for restaurants, takeaways, event venues, hotels (F&B/ops), and food carts across the US, UK and Europe. Sold by K WAZIR LTD (England and Wales).
+All-in-one hospitality operations platform — POS, kitchen display, bookings, payments, stock, and staff — with optional installed hardware (servers, tills, printers, scanners) for restaurants, takeaways, event venues, hotels (F&B/ops), and food carts across the US, UK and Europe. Sold by K WAZIR LTD (England and Wales).
 
 ## Voice
 

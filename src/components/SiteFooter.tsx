@@ -17,6 +17,9 @@ export function SiteFooter() {
           <Link href="/product" className="hover:text-foreground">
             Product
           </Link>
+          <Link href="/hardware" className="hover:text-foreground">
+            Hardware
+          </Link>
           <Link href="/solutions" className="hover:text-foreground">
             Solutions
           </Link>
