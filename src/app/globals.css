@@ -80,3 +80,12 @@ body {
   text-transform: uppercase;
   color: var(--accent);
 }
+
+/* Hide leftover Tawk widget on /pitch (client nav after script already loaded) */
+html.no-tawk iframe[src*="tawk.to"],
+html.no-tawk div[class*="tawk"],
+html.no-tawk div[id*="tawk"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
