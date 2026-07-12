@@ -22,6 +22,8 @@ export function DemoBookingForm() {
   const [success, setSuccess] = useState<{
     meetLink: string | null;
     start: string;
+    emailsSent: boolean;
+    emailError: string | null;
   } | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -91,7 +93,12 @@ export function DemoBookingForm() {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Booking failed");
-        setSuccess({ meetLink: data.meetLink ?? null, start: data.start });
+        setSuccess({
+          meetLink: data.meetLink ?? null,
+          start: data.start,
+          emailsSent: Boolean(data.emailsSent),
+          emailError: data.emailError ?? null,
+        });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Booking failed");
       }
@@ -103,11 +110,18 @@ export function DemoBookingForm() {
       <div className="rounded-[2rem] border border-border bg-surface p-8">
         <p className="eyebrow">Confirmed</p>
         <h2 className="display mt-3 text-2xl font-bold">
-          Check your email for the Google Meet link.
+          {success.emailsSent
+            ? "Check your email for confirmation."
+            : "Your demo is booked on the calendar."}
         </h2>
         <p className="mt-4 text-muted leading-relaxed">
-          Your Hostora demo is booked. We also notified our sales team.
+          {success.emailsSent
+            ? "Your Hostora demo is booked. We also notified our sales team."
+            : "The calendar invite was saved, but confirmation emails could not be sent. Our team will follow up — or email sales@hostorasoft.co.uk."}
         </p>
+        {success.emailError ? (
+          <p className="mt-3 text-sm text-red-400">{success.emailError}</p>
+        ) : null}
         {success.meetLink ? (
           <a
             href={success.meetLink}
@@ -119,8 +133,7 @@ export function DemoBookingForm() {
           </a>
         ) : (
           <p className="mt-6 text-sm text-muted">
-            If the Meet link isn&apos;t in your inbox yet, sales will send it
-            shortly.
+            If a Meet link isn&apos;t available yet, sales will send it shortly.
           </p>
         )}
       </div>

@@ -148,6 +148,8 @@ export async function POST(request: Request) {
     );
   }
 
+  let emailsSent = false;
+  let emailError: string | null = null;
   try {
     await sendBookingEmails({
       name: data.name,
@@ -158,8 +160,13 @@ export async function POST(request: Request) {
       meetLink: meeting.meetLink ?? null,
       htmlLink: meeting.htmlLink ?? null,
     });
+    emailsSent = true;
   } catch (err) {
     console.error("booking emails failed (event was created)", err);
+    emailError =
+      err instanceof Error
+        ? err.message
+        : "Could not send confirmation emails.";
   }
 
   return NextResponse.json({
@@ -167,5 +174,7 @@ export async function POST(request: Request) {
     meetLink: meeting.meetLink,
     start: meeting.start,
     htmlLink: meeting.htmlLink,
+    emailsSent,
+    emailError,
   });
 }

@@ -69,8 +69,9 @@ function createTransport() {
 
 export async function sendBookingEmails(p: BookingMailPayload): Promise<void> {
   if (!isSmtpConfigured()) {
-    console.warn("SMTP credentials missing — skipping emails");
-    return;
+    throw new Error(
+      "SMTP is not configured. Set SMTP_HOST, SMTP_USER, and SMTP_PASS on the server.",
+    );
   }
 
   const transport = createTransport();
