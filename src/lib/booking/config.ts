@@ -1,7 +1,15 @@
 import { company } from "@/lib/company";
 
 function env(name: string, fallback = ""): string {
-  return (process.env[name] ?? fallback).trim();
+  let value = (process.env[name] ?? fallback).trim();
+  // Vercel/dashboard pastes often include surrounding quotes
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    value = value.slice(1, -1).trim();
+  }
+  return value;
 }
 
 function parseHours(raw: string): { start: string; end: string } {

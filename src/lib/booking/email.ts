@@ -56,14 +56,19 @@ function internalHtml(p: BookingMailPayload): string {
 }
 
 function createTransport() {
+  const port = bookingConfig.smtpPort;
   return nodemailer.createTransport({
     host: bookingConfig.smtpHost,
-    port: bookingConfig.smtpPort,
-    secure: bookingConfig.smtpPort === 465,
+    port,
+    secure: port === 465,
+    requireTLS: port === 587,
     auth: {
       user: bookingConfig.smtpUser,
       pass: bookingConfig.smtpPass,
     },
+    connectionTimeout: 20_000,
+    greetingTimeout: 20_000,
+    socketTimeout: 20_000,
   });
 }
 
@@ -77,22 +82,33 @@ export async function sendBookingEmails(p: BookingMailPayload): Promise<void> {
   const transport = createTransport();
   const when = whenLabel(p.start);
   const replyTo = company.email;
+  const from = bookingConfig.fromEmail;
 
-  await transport.sendMail({
-    from: bookingConfig.fromEmail,
-    replyTo,
-    to: p.email,
-    subject: `Hostora demo confirmed — ${when}`,
-    html: customerHtml(p),
-  });
+  try {
+    await transport.sendMail({
+      from,
+      replyTo,
+      to: p.email,
+      subject: `Hostora demo confirmed — ${when}`,
+      html: customerHtml(p),
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new Error(`Customer email failed (${bookingConfig.smtpHost}): ${msg}`);
+  }
 
   if (bookingConfig.notifyEmails.length) {
-    await transport.sendMail({
-      from: bookingConfig.fromEmail,
-      replyTo,
-      to: bookingConfig.notifyEmails,
-      subject: `New Hostora demo: ${p.name} · ${p.companyName}`,
-      html: internalHtml(p),
-    });
+    try {
+      await transport.sendMail({
+        from,
+        replyTo,
+        to: bookingConfig.notifyEmails,
+        subject: `New Hostora demo: ${p.name} · ${p.companyName}`,
+        html: internalHtml(p),
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      throw new Error(`Sales notify email failed (${bookingConfig.smtpHost}): ${msg}`);
+    }
   }
 }
