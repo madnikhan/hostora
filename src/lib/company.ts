@@ -18,7 +18,7 @@ export const company = {
   productBrand: "Hostora",
   companiesHouseUrl:
     "https://find-and-update.company-information.service.gov.uk/company/17014542",
-  markets: "US & Europe",
+  markets: "US, UK & Europe",
   siteUrl,
 } as const;
 

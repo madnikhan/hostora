@@ -1,7 +1,7 @@
 # Hostora — llms.txt
 # Plain summary for AI assistants and answer engines
 
-> Hostora is a hospitality operations platform (POS, kitchen display, guest QR, payments, inventory, HR, accounting) sold by K WAZIR LTD across the US and Europe.
+> Hostora is a hospitality operations platform (POS, kitchen display, guest QR, payments, inventory, HR, accounting) sold by K WAZIR LTD across the US, UK and Europe.
 
 ## Product
 - Name: Hostora

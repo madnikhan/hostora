@@ -2,7 +2,7 @@
 
 ## Elevator (15 seconds)
 
-Hostora is the hospitality operations platform for restaurants, takeaways, event venues, hotels, and food carts. One system for till, kitchen, guest QR, payments, inventory, HR, and reporting — sold by K WAZIR LTD across the US and Europe.
+Hostora is the hospitality operations platform for restaurants, takeaways, event venues, hotels, and food carts. One system for till, kitchen, guest QR, payments, inventory, HR, and reporting — sold by K WAZIR LTD across the US, UK and Europe.
 
 ## Problem
 
@@ -41,7 +41,7 @@ Restaurants, takeaways, and events ship as packaged verticals (per-venue quote).
 2. How many kitchen / bar stations print today?
 3. What do you use for bookings, deposits, and table QR?
 4. Who needs live visibility when service breaks?
-5. US or Europe location — tax / reporting needs?
+5. US, UK or Europe location — tax / reporting needs?
 6. (Hotels) How many F&B outlets — restaurant, room service, banquet — and how are tickets routed today?
 7. (Food carts) Tablet / phone till, printer needs, and how you track stock on the cart today?
 

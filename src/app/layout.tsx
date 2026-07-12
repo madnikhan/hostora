@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
 import { JsonLd } from "@/components/JsonLd";
+import { TawkChat } from "@/components/TawkChat";
 import { company, ogImage, ogVideo, siteUrl } from "@/lib/company";
 import "./globals.css";
 
@@ -170,6 +171,7 @@ export default function RootLayout({
       >
         <JsonLd data={jsonLd} />
         {children}
+        <TawkChat />
       </body>
     </html>
   );

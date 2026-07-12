@@ -13,7 +13,7 @@ export default function HomePage() {
         <HeroMediaBubbles />
         <div className="relative z-10 mx-auto max-w-5xl text-center">
           <FadeUp>
-            <p className="eyebrow">Hospitality OS · US & Europe</p>
+            <p className="eyebrow">Hospitality OS · US, UK & Europe</p>
           </FadeUp>
           <FadeUp delay={0.08}>
             <h1 className="display mx-auto mt-6 max-w-4xl text-5xl font-extrabold sm:text-6xl md:text-7xl lg:text-8xl">

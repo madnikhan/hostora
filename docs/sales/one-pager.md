@@ -2,7 +2,7 @@
 
 **Hostora** — Run the floor. From booking to last pour.
 
-**What it is:** All-in-one hospitality OS for restaurants, takeaways, event venues, hotels, and food carts (US & Europe).
+**What it is:** All-in-one hospitality OS for restaurants, takeaways, event venues, hotels, and food carts (US, UK & Europe).
 
 **Verticals:**
 - Restaurants · Takeaways · Event venues — packaged

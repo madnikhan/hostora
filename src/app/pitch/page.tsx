@@ -27,7 +27,7 @@ const slides: Slide[] = [
     eyebrow: "Hostora",
     title: "Run the floor.",
     accent: "From booking to last pour.",
-    body: "Hospitality operations for restaurants, takeaways, event venues, hotels, and food carts — US & Europe.",
+    body: "Hospitality operations for restaurants, takeaways, event venues, hotels, and food carts — US, UK & Europe.",
     media: pitchClips.open,
   },
   {
@@ -69,7 +69,7 @@ const slides: Slide[] = [
   {
     eyebrow: "Money & insight",
     title: "Payments and reporting operators trust.",
-    body: "Sales reports, hourly analytics, and day / week / month views — framed for US and European operators.",
+    body: "Sales reports, hourly analytics, and day / week / month views — framed for US, UK, and European operators.",
     media: pitchClips.money,
   },
   {
