@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { addMinutes } from "date-fns";
 import { z } from "zod";
-import { isGoogleConfigured } from "@/lib/booking/config";
+import { bookingConfig, isGoogleConfigured } from "@/lib/booking/config";
 import { getBusyRanges } from "@/lib/booking/google";
 import { buildDaySlots, dayBoundsUtc, listBookableDates } from "@/lib/booking/slots";
 import { rateLimit } from "@/lib/booking/rateLimit";
@@ -44,11 +44,15 @@ export async function GET(request: Request) {
         addMinutes(bounds.end, 30),
       );
     } catch (err) {
-      console.error("freeBusy failed", err);
-      return NextResponse.json(
-        { error: "Could not load availability. Try again later." },
-        { status: 502 },
-      );
+      console.error("freeBusy failed", {
+        calendarId: bookingConfig.googleCalendarId,
+        err,
+      });
+      const message =
+        err instanceof Error && err.message.includes("not accessible")
+          ? err.message
+          : "Could not load availability. Check GOOGLE_CALENDAR_ID is shared with the service account.";
+      return NextResponse.json({ error: message }, { status: 502 });
     }
   }
 
