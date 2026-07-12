@@ -1,23 +1,41 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 export function DeviceMock({
   title,
   src,
   alt,
+  video,
   priority = false,
 }: {
   title: string;
   src: string;
   alt: string;
+  video?: string;
   priority?: boolean;
 }) {
   const reduce = useReducedMotion();
+  const frameRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const inView = useInView(frameRef, { amount: 0.35, margin: "0px 0px -10% 0px" });
+  const playVideo = Boolean(video) && !reduce;
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || !playVideo) return;
+    if (inView) {
+      void el.play().catch(() => {});
+    } else {
+      el.pause();
+    }
+  }, [inView, playVideo, video]);
 
   return (
     <motion.div
+      ref={frameRef}
       initial={reduce ? false : { opacity: 0.85, scale: 0.985 }}
       whileInView={reduce ? undefined : { opacity: 1, scale: 1 }}
       viewport={{ once: true, amount: 0.35 }}
@@ -31,14 +49,29 @@ export function DeviceMock({
         <span className="ml-3 text-xs text-muted">{title}</span>
       </div>
       <div className="relative aspect-16/10 bg-surface-2">
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          sizes="(max-width: 768px) 100vw, 560px"
-          className="object-cover object-top"
-        />
+        {playVideo ? (
+          <video
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover object-top"
+            muted
+            playsInline
+            loop
+            preload={inView || priority ? "auto" : "metadata"}
+            poster={src}
+            aria-label={alt}
+          >
+            <source src={video} type="video/mp4" />
+          </video>
+        ) : (
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            priority={priority}
+            sizes="(max-width: 768px) 100vw, 560px"
+            className="object-cover object-top"
+          />
+        )}
       </div>
     </motion.div>
   );

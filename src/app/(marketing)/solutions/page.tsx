@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FadeUp } from "@/components/FadeUp";
 import { DeviceMock } from "@/components/DeviceMock";
 import { JsonLd } from "@/components/JsonLd";
-import { productMedia } from "@/lib/productMedia";
+import { productMedia, pitchClips } from "@/lib/productMedia";
 
 export const metadata: Metadata = {
   title: "Solutions for restaurants, hotels, takeaways & food carts",
@@ -18,6 +18,8 @@ const solutions = [
     body: "Table maps, waiter workflows, kitchen routing, and guest QR — from quiet lunch to Saturday night chaos.",
     points: ["Floor & table control", "Multi-station kitchen", "Guest QR & seating"],
     media: productMedia.tables,
+    video: pitchClips.till.video,
+    poster: pitchClips.till.poster,
     frame: "Tables",
   },
   {
@@ -25,6 +27,8 @@ const solutions = [
     body: "Fast ticket flow, clear kitchen boards, and payment capture built for speed — without losing order accuracy.",
     points: ["Rapid order entry", "Station printing", "End-of-day reports"],
     media: productMedia.kds,
+    video: pitchClips.kitchen.video,
+    poster: pitchClips.kitchen.poster,
     frame: "Kitchen",
   },
   {
@@ -32,6 +36,8 @@ const solutions = [
     body: "Large covers, timed service, and live supervisor monitoring so private dining and events stay controlled.",
     points: ["High-capacity service", "Supervisor alerts", "Staff & shift visibility"],
     media: productMedia.supervisor,
+    video: pitchClips.control.video,
+    poster: pitchClips.control.poster,
     frame: "Control",
   },
   {
@@ -44,6 +50,8 @@ const solutions = [
       "Tailored per property",
     ],
     media: productMedia.kds,
+    video: pitchClips.guests.video,
+    poster: pitchClips.guests.poster,
     frame: "Hotel F&B",
   },
   {
@@ -56,6 +64,8 @@ const solutions = [
       "Built to your cart setup",
     ],
     media: productMedia.till,
+    video: pitchClips.till.video,
+    poster: pitchClips.till.poster,
     frame: "Cart till",
   },
 ];
@@ -131,8 +141,9 @@ export default function SolutionsPage() {
                   </div>
                   <DeviceMock
                     title={s.frame}
-                    src={s.media.src}
+                    src={s.poster}
                     alt={s.media.alt}
+                    video={s.video}
                     priority={i === 0}
                   />
                 </div>

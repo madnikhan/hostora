@@ -13,7 +13,7 @@ export default function ContactPage() {
   return (
     <div className="px-6 pb-28 pt-20">
       <div className="mx-auto grid max-w-5xl gap-14 md:grid-cols-2">
-        <FadeUp>
+        <FadeUp className="order-2 md:order-1">
           <p className="eyebrow">Contact</p>
           <h1 className="display mt-4 text-5xl font-extrabold md:text-6xl">
             Book a Hostora demo.
@@ -55,7 +55,7 @@ export default function ContactPage() {
           </div>
         </FadeUp>
 
-        <FadeUp delay={0.1}>
+        <FadeUp delay={0.1} className="order-1 md:order-2">
           <DemoBookingForm />
         </FadeUp>
       </div>

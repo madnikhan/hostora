@@ -4,7 +4,7 @@ import { DeviceMock } from "@/components/DeviceMock";
 import { HeroMediaBubbles } from "@/components/HeroMediaBubbles";
 import { ProductDemoVideo } from "@/components/ProductDemoVideo";
 import { StickyChapter } from "@/components/StickyChapter";
-import { productMedia } from "@/lib/productMedia";
+import { productMedia, pitchClips } from "@/lib/productMedia";
 
 export default function HomePage() {
   return (
@@ -56,8 +56,9 @@ export default function HomePage() {
         visual={
           <DeviceMock
             title="Hostora Till"
-            src={productMedia.till.src}
+            src={pitchClips.till.poster}
             alt={productMedia.till.alt}
+            video={pitchClips.till.video}
             priority
           />
         }
@@ -70,8 +71,9 @@ export default function HomePage() {
         visual={
           <DeviceMock
             title="Kitchen display"
-            src={productMedia.kds.src}
+            src={pitchClips.kitchen.poster}
             alt={productMedia.kds.alt}
+            video={pitchClips.kitchen.video}
           />
         }
       />
@@ -83,8 +85,9 @@ export default function HomePage() {
         visual={
           <DeviceMock
             title="Guest QR & seating"
-            src={productMedia.guestQr.src}
+            src={pitchClips.guests.poster}
             alt={productMedia.guestQr.alt}
+            video={pitchClips.guests.video}
           />
         }
       />
@@ -96,8 +99,9 @@ export default function HomePage() {
         visual={
           <DeviceMock
             title="Supervisor & control"
-            src={productMedia.supervisor.src}
+            src={pitchClips.control.poster}
             alt={productMedia.supervisor.alt}
+            video={pitchClips.control.video}
           />
         }
       />
