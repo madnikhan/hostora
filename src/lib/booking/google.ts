@@ -73,6 +73,23 @@ export async function createMeetEvent(input: {
   const calendar = calendarClient();
   const end = addMinutes(input.start, bookingConfig.durationMinutes);
   const requestId = `hostora-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  // Service accounts cannot invite attendees without Domain-Wide Delegation —
+  // put guest details in the description; confirmation goes out via SMTP.
+  const description = [
+    `Guest: ${input.attendeeName} <${input.attendeeEmail}>`,
+    input.description,
+  ].join("\n");
+
+  const timeBody = {
+    start: {
+      dateTime: input.start.toISOString(),
+      timeZone: bookingConfig.timezone,
+    },
+    end: {
+      dateTime: end.toISOString(),
+      timeZone: bookingConfig.timezone,
+    },
+  };
 
   try {
     const res = await calendar.events.insert({
@@ -81,21 +98,8 @@ export async function createMeetEvent(input: {
       sendUpdates: "none",
       requestBody: {
         summary: input.summary,
-        description: input.description,
-        start: {
-          dateTime: input.start.toISOString(),
-          timeZone: bookingConfig.timezone,
-        },
-        end: {
-          dateTime: end.toISOString(),
-          timeZone: bookingConfig.timezone,
-        },
-        attendees: [
-          {
-            email: input.attendeeEmail,
-            displayName: input.attendeeName,
-          },
-        ],
+        description,
+        ...timeBody,
         conferenceData: {
           createRequest: {
             requestId,
@@ -122,8 +126,8 @@ export async function createMeetEvent(input: {
   } catch (err) {
     const status = (err as { code?: number; response?: { status?: number } })
       ?.response?.status ?? (err as { code?: number }).code;
-    // Do not retry on missing calendar / auth — same failure again
-    if (status === 404 || status === 403 || status === 401) {
+    // Missing calendar / bad credentials — plain insert will fail the same way
+    if (status === 404 || status === 401) {
       throw err;
     }
 
@@ -134,21 +138,8 @@ export async function createMeetEvent(input: {
       sendUpdates: "none",
       requestBody: {
         summary: input.summary,
-        description: `${input.description}\n\n(Google Meet link could not be auto-created — sales will send a link shortly.)`,
-        start: {
-          dateTime: input.start.toISOString(),
-          timeZone: bookingConfig.timezone,
-        },
-        end: {
-          dateTime: end.toISOString(),
-          timeZone: bookingConfig.timezone,
-        },
-        attendees: [
-          {
-            email: input.attendeeEmail,
-            displayName: input.attendeeName,
-          },
-        ],
+        description: `${description}\n\n(Google Meet link could not be auto-created — sales will send a link shortly.)`,
+        ...timeBody,
       },
     });
 

@@ -132,6 +132,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
+            googleMsg ||
             "Calendar permission denied. Share the calendar with the service account as Make changes to events.",
         },
         { status: 502 },

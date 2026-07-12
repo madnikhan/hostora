@@ -68,7 +68,9 @@ WhatsApp shows a **static** card only — it does not animate OG video.
 
 If freeBusy returns `notFound` / bookings 502 with “Calendar not found”, the ID is wrong or the calendar is not shared with the service account.
 
-Meet auto-links usually need a **Google Workspace** calendar. On consumer Gmail, the event may still create without a Meet URL; sales can send the link manually.
+Service accounts **cannot invite guests** on the calendar event (no Domain-Wide Delegation). Guest details go in the event description; the client and sales get confirmation via **IONOS SMTP**.
+
+Meet auto-links usually need a **Google Workspace** calendar. On consumer Gmail, the event may still create without a Meet URL; the confirmation email notes that sales will send the link.
 
 ### 2. IONOS email (SMTP)
 Send confirmations **From** `sales@hostorasoft.co.uk` via your IONOS mailbox (no Resend).
