@@ -35,6 +35,12 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# Google service account keys — never commit
+inventivebytellc*.json
+**/credentials*.json
+
 
 # vercel
 .vercel

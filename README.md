@@ -50,6 +50,34 @@ After a deploy that changes the share image:
 
 WhatsApp shows a **static** card only — it does not animate OG video.
 
+## Demo booking (Google Calendar + Meet)
+
+`/contact` books a 30‑minute Google Meet demo against your calendar availability.
+
+### 1. Google Cloud
+1. Create a GCP project and enable **Google Calendar API**
+2. Create a **service account** and download a JSON key
+3. Copy `client_email` → `GOOGLE_SERVICE_ACCOUNT_EMAIL`
+4. Copy `private_key` → `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` (keep `\n` escaped in env)
+5. Set `GOOGLE_CALENDAR_ID` to the calendar that should own meetings (often `sales@hostorasoft.co.uk`)
+6. In Google Calendar → Settings → share that calendar with the service account email as **Make changes to events**
+
+Meet auto-links usually need a **Google Workspace** calendar. On consumer Gmail, the event may still create without a Meet URL; sales can send the link manually.
+
+### 2. Resend
+1. Create a Resend account and API key → `RESEND_API_KEY`
+2. Verify your domain (or use Resend’s onboarding sender for tests)
+3. Set `BOOKING_FROM_EMAIL` (e.g. `Hostora Bookings <bookings@hostorasoft.co.uk>`)
+4. Notifications go to `BOOKING_NOTIFY_EMAILS` (default: `sales@hostorasoft.co.uk,madnikhan1@gmail.com`)
+
+### 3. Env checklist
+Copy [`.env.example`](.env.example) to `.env.local` and fill values. See that file for `BOOKING_HOURS`, timezone, and duration.
+
+### 4. Test
+1. `npm run dev` → open `/contact`
+2. Book a weekday slot
+3. Confirm: Calendar event + customer email + emails to both notify addresses
+
 ## Presenting to prospects
 
 1. `npm run dev` (or deploy and share the URL)

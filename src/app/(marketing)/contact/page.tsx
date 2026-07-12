@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FadeUp } from "@/components/FadeUp";
+import { DemoBookingForm } from "@/components/DemoBookingForm";
 import { company } from "@/lib/company";
 
 export const metadata: Metadata = {
@@ -18,9 +19,8 @@ export default function ContactPage() {
             Book a Hostora demo.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
-            Tell us about your venue — restaurant, takeaway, events, hotel
-            F&amp;B, or food cart — and a sales representative will walk you
-            through Hostora for US or Europe operations.
+            Pick a time that works. We&apos;ll confirm by email with a Google
+            Meet link — name, email, company, and phone required.
           </p>
           <div className="mt-10 space-y-4 text-sm text-muted">
             <p>
@@ -48,44 +48,15 @@ export default function ContactPage() {
                 {company.email}
               </a>
             </p>
+            <p className="pt-2 text-xs leading-relaxed">
+              Meetings are 30 minutes, weekdays 09:00–17:00 UK time, subject to
+              calendar availability.
+            </p>
           </div>
         </FadeUp>
 
         <FadeUp delay={0.1}>
-          <form
-            action={`mailto:${company.email}`}
-            method="get"
-            className="rounded-[2rem] border border-border bg-surface p-8"
-          >
-            <label className="block text-sm text-muted">
-              Name
-              <input
-                name="subject"
-                required
-                placeholder="Your name"
-                className="mt-2 w-full rounded-xl border border-border bg-surface-2 px-4 py-3 text-foreground outline-none focus:border-accent"
-              />
-            </label>
-            <label className="mt-5 block text-sm text-muted">
-              Venue / company
-              <input
-                name="body"
-                required
-                placeholder="Venue name · city · type"
-                className="mt-2 w-full rounded-xl border border-border bg-surface-2 px-4 py-3 text-foreground outline-none focus:border-accent"
-              />
-            </label>
-            <p className="mt-5 text-xs leading-relaxed text-muted">
-              Submitting opens your email client with a demo request. Replace with
-              Formspree or a form API when you connect production hosting.
-            </p>
-            <button
-              type="submit"
-              className="mt-6 w-full rounded-full bg-accent py-3.5 text-sm font-semibold text-background transition hover:bg-accent-strong"
-            >
-              Request demo
-            </button>
-          </form>
+          <DemoBookingForm />
         </FadeUp>
       </div>
     </div>
