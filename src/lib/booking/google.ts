@@ -39,7 +39,7 @@ export async function getBusyRanges(
   const cal = res.data.calendars?.[bookingConfig.googleCalendarId];
   const calErrors = cal?.errors;
   if (calErrors?.length) {
-    const reason = calErrors.map((e) => e.reason || e.message).join(", ");
+    const reason = calErrors.map((e) => e.reason || "unknown").join(", ");
     throw new Error(
       `Calendar "${bookingConfig.googleCalendarId}" is not accessible (${reason}). Share it with the service account as Make changes to events, or set GOOGLE_CALENDAR_ID to the calendar ID from Google Calendar settings.`,
     );
