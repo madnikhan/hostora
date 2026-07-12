@@ -70,11 +70,19 @@ If freeBusy returns `notFound` / bookings 502 with “Calendar not found”, the
 
 Meet auto-links usually need a **Google Workspace** calendar. On consumer Gmail, the event may still create without a Meet URL; sales can send the link manually.
 
-### 2. Resend
-1. Create a Resend account and API key → `RESEND_API_KEY`
-2. Verify your domain (or use Resend’s onboarding sender for tests)
-3. Set `BOOKING_FROM_EMAIL` (e.g. `Hostora Bookings <bookings@hostorasoft.co.uk>`)
-4. Notifications go to `BOOKING_NOTIFY_EMAILS` (default: `sales@hostorasoft.co.uk,madnikhan1@gmail.com`)
+### 2. IONOS email (SMTP)
+Send confirmations **From** `sales@hostorasoft.co.uk` via your IONOS mailbox (no Resend).
+
+1. In IONOS, confirm the `sales@hostorasoft.co.uk` mailbox password
+2. Set env:
+   - `SMTP_HOST=smtp.ionos.co.uk`
+   - `SMTP_PORT=587`
+   - `SMTP_USER=sales@hostorasoft.co.uk`
+   - `SMTP_PASS=` (mailbox password)
+   - `BOOKING_FROM_EMAIL="Hostora <sales@hostorasoft.co.uk>"`
+3. Notifications go to `BOOKING_NOTIFY_EMAILS` (default: `sales@hostorasoft.co.uk,madnikhan1@gmail.com`)
+
+Add the same SMTP vars on Vercel for production.
 
 ### 3. Env checklist
 Copy [`.env.example`](.env.example) to `.env.local` and fill values. See that file for `BOOKING_HOURS`, timezone, and duration.

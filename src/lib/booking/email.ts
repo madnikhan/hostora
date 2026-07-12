@@ -1,6 +1,6 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { formatInTimeZone } from "date-fns-tz";
-import { bookingConfig } from "@/lib/booking/config";
+import { bookingConfig, isSmtpConfigured } from "@/lib/booking/config";
 import { company } from "@/lib/company";
 
 export type BookingMailPayload = {
@@ -55,25 +55,40 @@ function internalHtml(p: BookingMailPayload): string {
   </div>`;
 }
 
+function createTransport() {
+  return nodemailer.createTransport({
+    host: bookingConfig.smtpHost,
+    port: bookingConfig.smtpPort,
+    secure: bookingConfig.smtpPort === 465,
+    auth: {
+      user: bookingConfig.smtpUser,
+      pass: bookingConfig.smtpPass,
+    },
+  });
+}
+
 export async function sendBookingEmails(p: BookingMailPayload): Promise<void> {
-  if (!bookingConfig.resendApiKey) {
-    console.warn("RESEND_API_KEY missing — skipping emails");
+  if (!isSmtpConfigured()) {
+    console.warn("SMTP credentials missing — skipping emails");
     return;
   }
 
-  const resend = new Resend(bookingConfig.resendApiKey);
+  const transport = createTransport();
   const when = whenLabel(p.start);
+  const replyTo = company.email;
 
-  await resend.emails.send({
+  await transport.sendMail({
     from: bookingConfig.fromEmail,
+    replyTo,
     to: p.email,
     subject: `Hostora demo confirmed — ${when}`,
     html: customerHtml(p),
   });
 
   if (bookingConfig.notifyEmails.length) {
-    await resend.emails.send({
+    await transport.sendMail({
       from: bookingConfig.fromEmail,
+      replyTo,
       to: bookingConfig.notifyEmails,
       subject: `New Hostora demo: ${p.name} · ${p.companyName}`,
       html: internalHtml(p),

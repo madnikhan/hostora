@@ -26,22 +26,33 @@ export const bookingConfig = {
     .split(",")
     .map((e) => e.trim())
     .filter(Boolean),
-  fromEmail: env("BOOKING_FROM_EMAIL", "Hostora Bookings <onboarding@resend.dev>"),
+  fromEmail: env("BOOKING_FROM_EMAIL", `Hostora <${company.email}>`),
+  smtpHost: env("SMTP_HOST", "smtp.ionos.co.uk"),
+  smtpPort: Number(env("SMTP_PORT", "587")) || 587,
+  smtpUser: env("SMTP_USER", company.email),
+  smtpPass: env("SMTP_PASS"),
   googleCalendarId: env("GOOGLE_CALENDAR_ID"),
   googleClientEmail: env("GOOGLE_SERVICE_ACCOUNT_EMAIL"),
   googlePrivateKey: env("GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY").replace(
     /\\n/g,
     "\n",
   ),
-  resendApiKey: env("RESEND_API_KEY"),
 };
+
+export function isSmtpConfigured(): boolean {
+  return Boolean(
+    bookingConfig.smtpHost &&
+      bookingConfig.smtpUser &&
+      bookingConfig.smtpPass,
+  );
+}
 
 export function isBookingConfigured(): boolean {
   return Boolean(
     bookingConfig.googleCalendarId &&
       bookingConfig.googleClientEmail &&
       bookingConfig.googlePrivateKey &&
-      bookingConfig.resendApiKey,
+      isSmtpConfigured(),
   );
 }
 
