@@ -11,7 +11,7 @@
 
 **Modules:** POS · Kitchen display · Guest QR & seating · Payments & sales reports · Analytics · Inventory · Staff / HR / attendance · Accounting (HMRC-ready) · Supervisor monitoring
 
-**Hardware (optional):** Local server · POS / tablet POS · Floor tablets · Thermal & receipt printers · Barcode & QR scanners · Payment terminals — see /hardware
+**Hardware (optional):** Local Docker server (Hostora + PostgreSQL, all devices on the venue network) · POS / tablet POS · Floor tablets · Thermal & receipt printers · Barcode & QR scanners · Payment terminals — see /hardware
 
 **Vendor:** K WAZIR LTD (UK · 17014542)  
 **Registered office:** 7 Wellesley Street, Gloucester, England, GL1 4QP  

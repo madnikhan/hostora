@@ -11,10 +11,10 @@ export type HardwareItem = {
 export const hardwareItems: HardwareItem[] = [
   {
     id: "local-server",
-    name: "Local server",
-    desc: "On-prem appliance that keeps Hostora fast and available on the floor — even when the WAN wobbles.",
+    name: "Local Hostora server",
+    desc: "On-venue appliance with Hostora installed via Docker — app, PostgreSQL database, and services — so tills, tablets, KDS, and printers stay online on your network.",
     src: "/media/hardware/local-server.png",
-    alt: "Compact black local server appliance on a dark studio background",
+    alt: "Compact black mini server with status lights and Ethernet port on a dark studio background",
   },
   {
     id: "pos-till",

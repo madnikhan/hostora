@@ -114,9 +114,9 @@ export default function ProductPage() {
               Software with the kit installed
             </h2>
             <p className="mt-4 max-w-2xl text-muted leading-relaxed">
-              Local servers, POS tills, tablets, thermal printers, scanners, and
-              payment terminals — Hostora configured on the devices your floor
-              actually uses.
+              Local Docker server (Hostora app + PostgreSQL for every device on
+              the venue network), POS tills, tablets, thermal printers, scanners,
+              and payment terminals — configured for the floor you run.
             </p>
           </FadeUp>
           <div className="mt-10 grid gap-8 sm:grid-cols-3">

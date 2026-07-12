@@ -10,7 +10,7 @@ Busy venues run on a patchwork of tools. Missed kitchen tickets, slow payments, 
 
 ## Solution
 
-Hostora unifies the floor: POS, KDS, guest QR, bookings, sales reports, inventory, staff attendance, accounting, and supervisor control — designed for live service load. Optional hardware (local server, tills, tablets, printers, scanners, payment terminals) ships with Hostora installed and configured.
+Hostora unifies the floor: POS, KDS, guest QR, bookings, sales reports, inventory, staff attendance, accounting, and supervisor control — designed for live service load. Optional hardware includes a local Docker server (Hostora + PostgreSQL) that serves all floor devices on the venue network, plus tills, tablets, printers, scanners, and payment terminals.
 
 ## Modules (proof on site)
 
@@ -25,7 +25,7 @@ Hostora unifies the floor: POS, KDS, guest QR, bookings, sales reports, inventor
 
 ## Hardware kit (optional)
 
-- Local / on-prem server
+- **Local Hostora server** — Docker install on-venue: Hostora app + PostgreSQL (and related services); tills, tablets, KDS, and printers connect over the venue LAN
 - POS tills and tablet POS
 - Floor tablets
 - Thermal and receipt printers
@@ -61,7 +61,7 @@ Restaurants, takeaways, and events ship as packaged verticals (per-venue quote).
 | Objection | Response |
 |-----------|----------|
 | “We already have a till” | Hostora is operations — till plus kitchen, guest QR, and control in one spine. |
-| “Cloud POS is enough” | Real venues need station printing, local resilience, and floor-speed workflows; Hostora can ship with a local server and kit — ask for a live demo under load. |
+| “Cloud POS is enough” | Real venues need station printing, local resilience, and floor-speed workflows; Hostora can ship on a local Docker server (app + PostgreSQL) so every device stays online on your network — ask for a live demo under load. |
 | “Too expensive” | Per-venue licensing; quote against lost tickets + staff time, not against the cheapest till app. |
 | “Is this Fumari?” | Fumari is a client venue. Hostora is the product brand from K WAZIR LTD (UK). |
 | “Do you do hotel PMS?” | No — Hostora runs hotel F&B and floor ops (outlets, kitchen, staff). Rooms / front desk stay with your PMS. |
