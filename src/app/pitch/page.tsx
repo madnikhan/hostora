@@ -3,9 +3,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PitchSlideVideo } from "@/components/PitchSlideVideo";
 import { pitchClips } from "@/lib/productMedia";
+
+const SWIPE_THRESHOLD_PX = 56;
 
 type Slide = {
   eyebrow: string;
@@ -99,6 +101,7 @@ const slides: Slide[] = [
 
 export default function PitchPage() {
   const [index, setIndex] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
   const total = slides.length;
   const slide = slides[index];
 
@@ -129,8 +132,54 @@ export default function PitchPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev, total]);
 
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      tracking = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!tracking || e.changedTouches.length !== 1) {
+        tracking = false;
+        return;
+      }
+      tracking = false;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) < SWIPE_THRESHOLD_PX) return;
+      if (Math.abs(dx) <= Math.abs(dy)) return;
+      if (dx < 0) next();
+      else prev();
+    };
+
+    const onTouchCancel = () => {
+      tracking = false;
+    };
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    el.addEventListener("touchcancel", onTouchCancel, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchcancel", onTouchCancel);
+    };
+  }, [next, prev]);
+
   return (
-    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background hero-glow">
+    <div
+      ref={rootRef}
+      className="relative flex min-h-dvh flex-col overflow-hidden bg-background hero-glow"
+    >
       <div className="flex items-center justify-between px-6 py-5 md:px-10">
         <Link href="/" className="flex items-center gap-2.5">
           <Image src="/brand/mark.svg" alt="" width={28} height={28} className="rounded-md" />
@@ -140,6 +189,7 @@ export default function PitchPage() {
           <span>
             {index + 1} / {total}
           </span>
+          <span className="sm:hidden">Swipe</span>
           <span className="hidden sm:inline">← → navigate · F fullscreen</span>
           <Link href="/" className="hover:text-foreground">
             Exit

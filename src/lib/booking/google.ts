@@ -36,8 +36,16 @@ export async function getBusyRanges(
     },
   });
 
-  const busy =
-    res.data.calendars?.[bookingConfig.googleCalendarId]?.busy ?? [];
+  const cal = res.data.calendars?.[bookingConfig.googleCalendarId];
+  const calErrors = cal?.errors;
+  if (calErrors?.length) {
+    const reason = calErrors.map((e) => e.reason || e.message).join(", ");
+    throw new Error(
+      `Calendar "${bookingConfig.googleCalendarId}" is not accessible (${reason}). Share it with the service account as Make changes to events, or set GOOGLE_CALENDAR_ID to the calendar ID from Google Calendar settings.`,
+    );
+  }
+
+  const busy = cal?.busy ?? [];
 
   return busy
     .filter((b) => b.start && b.end)
@@ -70,7 +78,7 @@ export async function createMeetEvent(input: {
     const res = await calendar.events.insert({
       calendarId: bookingConfig.googleCalendarId,
       conferenceDataVersion: 1,
-      sendUpdates: "all",
+      sendUpdates: "none",
       requestBody: {
         summary: input.summary,
         description: input.description,
@@ -112,11 +120,18 @@ export async function createMeetEvent(input: {
       end: end.toISOString(),
     };
   } catch (err) {
+    const status = (err as { code?: number; response?: { status?: number } })
+      ?.response?.status ?? (err as { code?: number }).code;
+    // Do not retry on missing calendar / auth — same failure again
+    if (status === 404 || status === 403 || status === 401) {
+      throw err;
+    }
+
     // Fallback: create event without Meet (consumer Gmail / missing Workspace)
     console.warn("Meet conference failed; creating event without Meet", err);
     const res = await calendar.events.insert({
       calendarId: bookingConfig.googleCalendarId,
-      sendUpdates: "all",
+      sendUpdates: "none",
       requestBody: {
         summary: input.summary,
         description: `${input.description}\n\n(Google Meet link could not be auto-created — sales will send a link shortly.)`,

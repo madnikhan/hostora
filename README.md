@@ -59,8 +59,14 @@ WhatsApp shows a **static** card only — it does not animate OG video.
 2. Create a **service account** and download a JSON key
 3. Copy `client_email` → `GOOGLE_SERVICE_ACCOUNT_EMAIL`
 4. Copy `private_key` → `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` (keep `\n` escaped in env)
-5. Set `GOOGLE_CALENDAR_ID` to the calendar that should own meetings (often `sales@hostorasoft.co.uk`)
-6. In Google Calendar → Settings → share that calendar with the service account email as **Make changes to events**
+5. Set `GOOGLE_CALENDAR_ID` to a **Google Calendar** the service account can write to:
+   - Open [Google Calendar](https://calendar.google.com) while signed into the account that owns the calendar
+   - Settings → select the calendar → **Integrate calendar** → copy **Calendar ID**
+   - That is often `you@gmail.com`, a Workspace mailbox, or `….@group.calendar.google.com`
+   - An email like `sales@hostorasoft.co.uk` only works if that address is a real Google calendar (Workspace), not a plain forwarding inbox
+6. On that calendar: **Share with specific people** → add `GOOGLE_SERVICE_ACCOUNT_EMAIL` with **Make changes to events**
+
+If freeBusy returns `notFound` / bookings 502 with “Calendar not found”, the ID is wrong or the calendar is not shared with the service account.
 
 Meet auto-links usually need a **Google Workspace** calendar. On consumer Gmail, the event may still create without a Meet URL; sales can send the link manually.
 

@@ -88,14 +88,16 @@ export async function POST(request: Request) {
     }
   } catch (err) {
     console.error("slot recheck failed", err);
-    return NextResponse.json(
-      { error: "Could not verify availability." },
-      { status: 502 },
-    );
+    const message =
+      err instanceof Error && err.message.includes("not accessible")
+        ? err.message
+        : "Could not verify availability. Check that GOOGLE_CALENDAR_ID is shared with the service account.";
+    return NextResponse.json({ error: message }, { status: 502 });
   }
 
+  let meeting;
   try {
-    const meeting = await createMeetEvent({
+    meeting = await createMeetEvent({
       summary: `Hostora demo — ${data.companyName}`,
       description: [
         `Hostora product demo`,
@@ -108,7 +110,44 @@ export async function POST(request: Request) {
       attendeeEmail: data.email,
       attendeeName: data.name,
     });
+  } catch (err) {
+    console.error("booking create failed", err);
+    const gErr = err as {
+      code?: number;
+      message?: string;
+      response?: { status?: number; data?: { error?: { message?: string } } };
+    };
+    const status = gErr.response?.status ?? gErr.code;
+    const googleMsg = gErr.response?.data?.error?.message || gErr.message;
+    if (status === 404) {
+      return NextResponse.json(
+        {
+          error:
+            "Calendar not found. Share GOOGLE_CALENDAR_ID with the service account (Make changes to events), or use the calendar ID from Google Calendar → Settings.",
+        },
+        { status: 502 },
+      );
+    }
+    if (status === 403) {
+      return NextResponse.json(
+        {
+          error:
+            "Calendar permission denied. Share the calendar with the service account as Make changes to events.",
+        },
+        { status: 502 },
+      );
+    }
+    return NextResponse.json(
+      {
+        error:
+          googleMsg ||
+          "Could not create the booking. Please try again or email sales.",
+      },
+      { status: 502 },
+    );
+  }
 
+  try {
     await sendBookingEmails({
       name: data.name,
       email: data.email,
@@ -118,18 +157,14 @@ export async function POST(request: Request) {
       meetLink: meeting.meetLink ?? null,
       htmlLink: meeting.htmlLink ?? null,
     });
-
-    return NextResponse.json({
-      ok: true,
-      meetLink: meeting.meetLink,
-      start: meeting.start,
-      htmlLink: meeting.htmlLink,
-    });
   } catch (err) {
-    console.error("booking create failed", err);
-    return NextResponse.json(
-      { error: "Could not create the booking. Please try again or email sales." },
-      { status: 502 },
-    );
+    console.error("booking emails failed (event was created)", err);
   }
+
+  return NextResponse.json({
+    ok: true,
+    meetLink: meeting.meetLink,
+    start: meeting.start,
+    htmlLink: meeting.htmlLink,
+  });
 }
