@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { pitchClips, productMedia } from "@/lib/productMedia";
 
 type Bubble = {
@@ -157,67 +158,102 @@ const bubbles: Bubble[] = [
   },
 ];
 
+const videoBubbleIds = bubbles.filter((b) => b.video).map((b) => b.id);
+
+/**
+ * Hero ambience: posters for all bubbles; at most one video clip cycles at a time
+ * so we do not download ~6MB of MP4s in parallel on first paint.
+ */
 export function HeroMediaBubbles() {
   const reduce = useReducedMotion();
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (reduce || videoBubbleIds.length === 0) {
+      setActiveVideoId(null);
+      return;
+    }
+
+    let index = 0;
+    // Defer first video start so FCP/LCP aren't competing with MP4
+    const start = window.setTimeout(() => {
+      setActiveVideoId(videoBubbleIds[0]!);
+    }, 1200);
+
+    const timer = window.setInterval(() => {
+      index = (index + 1) % videoBubbleIds.length;
+      setActiveVideoId(videoBubbleIds[index]!);
+    }, 7000);
+
+    return () => {
+      window.clearTimeout(start);
+      window.clearInterval(timer);
+    };
+  }, [reduce]);
 
   return (
     <div
       aria-hidden
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
-      {bubbles.map((b) => (
-        <motion.div
-          key={b.id}
-          className={`absolute will-change-transform ${b.size} ${b.className}`}
-          initial={false}
-          animate={
-            reduce
-              ? { x: 0, y: 0, rotate: 0 }
-              : {
-                  x: b.x,
-                  y: b.y,
-                  rotate: b.rotate,
-                }
-          }
-          transition={
-            reduce
-              ? { duration: 0 }
-              : {
-                  duration: b.duration,
-                  delay: b.delay,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  times: [0, 0.25, 0.5, 0.75, 1],
-                }
-          }
-        >
-          <div className="relative h-full w-full overflow-hidden rounded-full border border-accent/30 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/15">
-            {b.video && !reduce ? (
-              <video
-                className="h-full w-full scale-125 object-cover object-top"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                poster={b.poster}
-              >
-                <source src={b.video} type="video/mp4" />
-              </video>
-            ) : (
-              <Image
-                src={b.poster}
-                alt=""
-                fill
-                sizes="240px"
-                className="scale-125 object-cover object-top"
-              />
-            )}
-          </div>
-        </motion.div>
-      ))}
+      {bubbles.map((b) => {
+        const showVideo =
+          Boolean(b.video) && !reduce && activeVideoId === b.id;
 
-      {/* Stronger center scrim so headline stays dominant */}
+        return (
+          <motion.div
+            key={b.id}
+            className={`absolute will-change-transform ${b.size} ${b.className}`}
+            initial={false}
+            animate={
+              reduce
+                ? { x: 0, y: 0, rotate: 0 }
+                : {
+                    x: b.x,
+                    y: b.y,
+                    rotate: b.rotate,
+                  }
+            }
+            transition={
+              reduce
+                ? { duration: 0 }
+                : {
+                    duration: b.duration,
+                    delay: b.delay,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    times: [0, 0.25, 0.5, 0.75, 1],
+                  }
+            }
+          >
+            <div className="relative h-full w-full overflow-hidden rounded-full border border-accent/30 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/15">
+              {showVideo ? (
+                <video
+                  key={b.video}
+                  className="h-full w-full scale-125 object-cover object-top"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  poster={b.poster}
+                >
+                  <source src={b.video} type="video/mp4" />
+                </video>
+              ) : (
+                <Image
+                  src={b.poster}
+                  alt=""
+                  fill
+                  sizes="240px"
+                  className="scale-125 object-cover object-top"
+                />
+              )}
+            </div>
+          </motion.div>
+        );
+      })}
+
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(11,11,12,0.92)_0%,rgba(11,11,12,0.72)_38%,rgba(11,11,12,0.28)_62%,transparent_100%)]" />
       <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background via-background/80 to-transparent" />
       <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-background/70 to-transparent" />

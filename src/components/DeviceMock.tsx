@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function DeviceMock({
   title,
@@ -20,18 +20,31 @@ export function DeviceMock({
   const reduce = useReducedMotion();
   const frameRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const inView = useInView(frameRef, { amount: 0.35, margin: "0px 0px -10% 0px" });
+  // Widen margin so we start loading slightly before sticky chapter is centered
+  const nearView = useInView(frameRef, {
+    amount: 0.15,
+    margin: "200px 0px 200px 0px",
+  });
+  const inView = useInView(frameRef, {
+    amount: 0.35,
+    margin: "0px 0px -10% 0px",
+  });
   const playVideo = Boolean(video) && !reduce;
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    if (nearView && playVideo) setShouldLoad(true);
+  }, [nearView, playVideo]);
 
   useEffect(() => {
     const el = videoRef.current;
-    if (!el || !playVideo) return;
+    if (!el || !playVideo || !shouldLoad) return;
     if (inView) {
       void el.play().catch(() => {});
     } else {
       el.pause();
     }
-  }, [inView, playVideo, video]);
+  }, [inView, playVideo, shouldLoad, video]);
 
   return (
     <motion.div
@@ -49,14 +62,14 @@ export function DeviceMock({
         <span className="ml-3 text-xs text-muted">{title}</span>
       </div>
       <div className="relative aspect-16/10 bg-surface-2">
-        {playVideo ? (
+        {playVideo && shouldLoad ? (
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover object-top"
             muted
             playsInline
             loop
-            preload={inView || priority ? "auto" : "metadata"}
+            preload="metadata"
             poster={src}
             aria-label={alt}
           >

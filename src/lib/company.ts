@@ -1,8 +1,10 @@
 /** Site + UK trading entity for Hostora (Companies House). */
 
-export const siteUrl =
+export const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-  "https://hostorasoft.co.uk";
+  "https://www.hostorasoft.co.uk"
+).replace(/^https:\/\/hostorasoft\.co\.uk$/i, "https://www.hostorasoft.co.uk");
+
 
 export const company = {
   legalName: "K WAZIR LTD",

@@ -1,13 +1,35 @@
 "use client";
 
-import { useReducedMotion } from "framer-motion";
+import { useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { productMedia } from "@/lib/productMedia";
 import { FadeUp } from "@/components/FadeUp";
 
 export function ProductDemoVideo() {
   const reduce = useReducedMotion();
   const { src, poster } = productMedia.demoVideo;
+  const frameRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const nearView = useInView(frameRef, {
+    amount: 0.2,
+    margin: "160px 0px",
+  });
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    if (nearView && !reduce) setShouldLoad(true);
+  }, [nearView, reduce]);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || !shouldLoad) return;
+    if (nearView) {
+      void el.play().catch(() => {});
+    } else {
+      el.pause();
+    }
+  }, [nearView, shouldLoad]);
 
   return (
     <section className="border-t border-border px-6 py-20 md:py-28">
@@ -31,8 +53,8 @@ export function ProductDemoVideo() {
               <span className="h-2.5 w-2.5 rounded-full bg-accent/80" />
               <span className="ml-3 text-xs text-muted">Hostora · live service</span>
             </div>
-            <div className="relative aspect-video bg-surface-2">
-              {reduce ? (
+            <div ref={frameRef} className="relative aspect-video bg-surface-2">
+              {reduce || !shouldLoad ? (
                 <Image
                   src={poster}
                   alt="Hostora product interface"
@@ -42,8 +64,8 @@ export function ProductDemoVideo() {
                 />
               ) : (
                 <video
+                  ref={videoRef}
                   className="h-full w-full object-cover"
-                  autoPlay
                   muted
                   loop
                   playsInline
