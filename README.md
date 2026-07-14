@@ -30,7 +30,7 @@ NEXT_PUBLIC_SITE_URL=https://hostorasoft.co.uk
 | `/` | Brand home (scroll story + demo video) |
 | `/product` | Product modules with UI screenshots |
 | `/hardware` | Hardware kit (servers, tills, printers, scanners) |
-| `/blog` | SEO articles (Soro webhook → `/api/blog/publish`) |
+| `/blog` | SEO articles (Hostora `/admin/seo` or Soro → `POST https://www.hostorasoft.co.uk/api/blog/publish`) |
 | `/solutions` | Restaurant / takeaway / events / hotels (F&B) / food carts |
 | `/contact` | Demo CTA |
 | `/company` | UK company / legal disclosures |

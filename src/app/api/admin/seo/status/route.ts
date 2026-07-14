@@ -18,6 +18,13 @@ export async function GET() {
     published: topics.filter((t) => t.status === "published").length,
   };
 
+  const publishSecretConfigured = Boolean(
+    process.env.BLOG_PUBLISH_SECRET?.trim() ||
+      process.env.SORO_WEBHOOK_SECRET?.trim(),
+  );
+  const soroWebhookReady =
+    storage.mode === "blob" && publishSecretConfigured;
+
   return NextResponse.json({
     storage,
     counts,
@@ -34,5 +41,7 @@ export async function GET() {
       process.env.SEO_LLM_API_KEY?.trim() ||
         process.env.OPENAI_API_KEY?.trim(),
     ),
+    publishSecretConfigured,
+    soroWebhookReady,
   });
 }

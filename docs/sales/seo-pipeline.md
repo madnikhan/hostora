@@ -60,7 +60,7 @@ Repo `content/seo/*` remains the **seed / offline CLI** source. On production, t
 
 ## Brand rules
 
-[`content/seo/brand-rules.json`](../../content/seo/brand-rules.json) — denied phrases, must include `/contact`, pack language. Enforced in CLI and `/admin/seo`.
+[`content/seo/brand-rules.json`](../../content/seo/brand-rules.json) — denied phrases, must include `/contact`, pack language. Enforced in CLI, `/admin/seo`, and the Soro publish webhook.
 
 ## CI
 
@@ -72,4 +72,5 @@ Repo secrets: `SEO_LLM_API_KEY` (and optional `SEO_LLM_MODEL` / `SEO_LLM_BASE_UR
 
 - Guest blog: `/blog`
 - Admin: `/admin/seo`
+- Optional Soro webhook: [soro-seo.md](./soro-seo.md) (same `/api/blog/publish`; Hostora admin remains the in-house draft UI)
 - Messaging: [`docs/MESSAGING.md`](../MESSAGING.md)

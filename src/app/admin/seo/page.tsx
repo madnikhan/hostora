@@ -28,6 +28,8 @@ type StatusPayload = {
     createdAt: string;
   }[];
   llmConfigured: boolean;
+  publishSecretConfigured?: boolean;
+  soroWebhookReady?: boolean;
 };
 
 export default function AdminSeoDashboard() {
@@ -146,6 +148,20 @@ export default function AdminSeoDashboard() {
           <code className="text-[#E8A54B]">SEO_LLM_API_KEY</code> is not set on
           this server — Generate draft will fail until you add it on Vercel.
         </div>
+      ) : null}
+
+      {data ? (
+        <p
+          className={
+            data.soroWebhookReady
+              ? "text-sm text-emerald-400/90"
+              : "text-sm text-white/45"
+          }
+        >
+          {data.soroWebhookReady
+            ? "Soro webhook ready — Blob + publish secret configured"
+            : "Soro webhook not ready — needs Blob + BLOG_PUBLISH_SECRET (or SORO_WEBHOOK_SECRET)"}
+        </p>
       ) : null}
 
       {error ? (

@@ -5,11 +5,14 @@ import { saveBlogPost, blogStorageMode } from "@/lib/blog/store";
 import { slugify } from "@/lib/blog/types";
 import { siteUrl } from "@/lib/company";
 import { rateLimit } from "@/lib/booking/rateLimit";
+import { brandLint } from "@/lib/seo/brandLint";
 
 /**
- * Blog publish webhook (Hostora SEO pipeline, optional third-party tools).
- * POST Authorization: Bearer <BLOG_PUBLISH_SECRET>
+ * Blog publish webhook (Soro + Hostora SEO CLI).
+ * POST Authorization: Bearer <BLOG_PUBLISH_SECRET|SORO_WEBHOOK_SECRET>
+ * Use www host — apex 308 can strip Authorization.
  * Body: { title, slug?, description?, body|content|html, coverImage?, publishedAt?, source? }
+ * Nested wrappers article|data|post are unwrapped.
  */
 const bodySchema = z.object({
   title: z.string().trim().min(3).max(200),
@@ -45,12 +48,49 @@ function authorized(request: Request): boolean {
   return bearer === secret || alt === secret;
 }
 
+function isPlainObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
+}
+
+/** Flatten Soro-style wrappers into one article object. */
+function unwrapPublishPayload(json: unknown): Record<string, unknown> {
+  if (!isPlainObject(json)) return {};
+  const nestedKeys = ["article", "data", "post"] as const;
+  let base: Record<string, unknown> = { ...json };
+  for (const key of nestedKeys) {
+    const inner = base[key];
+    if (isPlainObject(inner)) {
+      const { [key]: _drop, ...rest } = base;
+      base = { ...inner, ...rest };
+    }
+  }
+  return base;
+}
+
+function isWebhookTest(payload: Record<string, unknown>): boolean {
+  const event = String(payload.event ?? payload.type ?? "").toLowerCase();
+  if (event === "webhook.test" || event === "test") return true;
+  if (payload.test === true) return true;
+  return false;
+}
+
+function hasArticleFields(payload: Record<string, unknown>): boolean {
+  const title = payload.title;
+  const body = payload.body || payload.content || payload.html;
+  return (
+    typeof title === "string" &&
+    title.trim().length >= 3 &&
+    typeof body === "string" &&
+    body.trim().length > 0
+  );
+}
+
 export async function POST(request: Request) {
   if (!publishSecret()) {
     return NextResponse.json(
       {
         error:
-          "BLOG_PUBLISH_SECRET is not set. Add it on the server before publishing.",
+          "BLOG_PUBLISH_SECRET (or SORO_WEBHOOK_SECRET) is not set. Add it on the server before publishing.",
       },
       { status: 503 },
     );
@@ -76,7 +116,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const parsed = bodySchema.safeParse(json);
+  const flat = unwrapPublishPayload(json);
+
+  // Connectivity pings: explicit test events, or no title+body payload
+  if (isWebhookTest(flat) || !hasArticleFields(flat)) {
+    return NextResponse.json({
+      ok: true,
+      test: true,
+      message: "Webhook reachable; no post written.",
+      storage: blogStorageMode(),
+    });
+  }
+
+  const parsed = bodySchema.safeParse(flat);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Invalid payload. Need title and body/content/html." },
@@ -98,6 +150,21 @@ export async function POST(request: Request) {
     data.description ||
     body.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 220);
 
+  const lint = brandLint({
+    title: data.title,
+    description,
+    body,
+  });
+  if (!lint.ok) {
+    return NextResponse.json(
+      {
+        error: "Brand lint failed — fix before publish",
+        lintErrors: lint.errors,
+      },
+      { status: 422 },
+    );
+  }
+
   try {
     const post = await saveBlogPost({
       slug,
@@ -105,7 +172,8 @@ export async function POST(request: Request) {
       description,
       body,
       coverImage: data.coverImage ?? data.cover_image ?? null,
-      publishedAt: data.publishedAt || data.published_at || new Date().toISOString(),
+      publishedAt:
+        data.publishedAt || data.published_at || new Date().toISOString(),
       source: data.source ?? "soro",
     });
 
@@ -142,7 +210,9 @@ export async function GET() {
   return NextResponse.json({
     ok: true,
     endpoint: "/api/blog/publish",
+    publishUrl: "https://www.hostorasoft.co.uk/api/blog/publish",
     storage: blogStorageMode(),
-    auth: "Authorization: Bearer <BLOG_PUBLISH_SECRET>",
+    auth: "Authorization: Bearer <BLOG_PUBLISH_SECRET or SORO_WEBHOOK_SECRET>",
+    note: "Use the www host; apex redirects can strip Authorization.",
   });
 }
