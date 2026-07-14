@@ -19,6 +19,7 @@
     "sales:pack": "npm run sales:pptx && npm run sales:brochure && npm run sales:quote && npm run sales:manual"
   },
   "dependencies": {
+    "@vercel/blob": "^2.6.1",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "framer-motion": "^12.42.2",

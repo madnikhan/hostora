@@ -1,0 +1,9 @@
+{
+  "slug": "hotel-fb-ops-not-pms",
+  "title": "Hotel F&B ops vs hotel PMS: what Hostora actually runs",
+  "description": "Hostora runs restaurant, room-service, and banquet kitchen ops for hotels — not rooms, front desk, or housekeeping. Clear boundaries for buyers comparing systems.",
+  "body": "<p>Hotels often ask whether Hostora replaces their property management system. The short answer: <strong>no</strong>.</p><p>Hostora is hospitality operations for <strong>F&amp;B</strong> — outlet tills, kitchen display, room-service style tickets, banquet service, staff attendance on the floor. Rooms, front desk, and housekeeping stay with your PMS.</p><h2>Where Hostora sits</h2><ul><li>Restaurant and bar outlets</li><li>Room service / banquet kitchen routing</li><li>Supervisor visibility during service</li><li>Optional local Docker server so outlets and printers stay on the venue LAN</li></ul><h2>Why the split matters</h2><p>Buying a full PMS for kitchen tickets is the wrong tool. Running F&amp;B on a consumer till app leaves banquet nights fragile. Hostora is the floor ops layer between guest demand and the kitchen — configured for hotel F&amp;B, not rebuilt as a room system.</p><p><a href=\"/solutions\">See hotel F&amp;B solutions</a> or <a href=\"/contact\">book a demo</a>.</p>",
+  "coverImage": null,
+  "publishedAt": "2026-07-11T10:00:00.000Z",
+  "source": "seed"
+}

@@ -23,6 +23,9 @@ export function SiteFooter() {
           <Link href="/solutions" className="hover:text-foreground">
             Solutions
           </Link>
+          <Link href="/blog" className="hover:text-foreground">
+            Blog
+          </Link>
           <Link href="/pitch" className="hover:text-foreground">
             Sales pitch
           </Link>

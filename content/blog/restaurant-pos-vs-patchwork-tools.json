@@ -1,0 +1,9 @@
+{
+  "slug": "restaurant-pos-vs-patchwork-tools",
+  "title": "Restaurant POS vs patchwork tools: why one spine wins on a busy night",
+  "description": "How restaurants lose covers when till, kitchen tickets, and bookings live in separate apps — and what a unified hospitality ops platform changes on the floor.",
+  "body": "<p>On a peak Friday, the patchwork shows. Orders in one app. Kitchen tickets on paper or a second screen. Bookings bolted on from a widget. Supervisors chasing deletes in a spreadsheet.</p><p><strong>Hostora</strong> is built as one operational spine for hospitality — till, kitchen display, guest QR, payments, stock, and staff — so the floor stays aligned under load.</p><h2>What breaks with patchwork</h2><ul><li>Kitchen stations miss modifiers and notes</li><li>Takeaway and table service fight over the same stock</li><li>Supervisors cannot see deletions and stalls live</li></ul><h2>What “one spine” means</h2><p>Orders flow from till or guest QR into kitchen display and thermal printers by station. Payments and sales reports sit on the same night. Optional hardware — local Docker server with PostgreSQL, tills, tablets, printers — keeps devices online on your venue network.</p><h2>Who Hostora is for</h2><p>Restaurants, takeaways, event venues, hotel F&amp;B outlets (not hotel room PMS), and food carts across the US, UK and Europe.</p><p><a href=\"/contact\">Book a free Hostora demo</a> — or see the <a href=\"/product\">product modules</a> and <a href=\"/hardware\">hardware kit</a>.</p>",
+  "coverImage": null,
+  "publishedAt": "2026-07-10T10:00:00.000Z",
+  "source": "seed"
+}

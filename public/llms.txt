@@ -1,39 +1,22 @@
-# Hostora — llms.txt
-# Plain summary for AI assistants and answer engines
+# Hostora
 
-> Hostora is a hospitality operations platform (POS, kitchen display, guest QR, payments, inventory, HR, accounting) sold by K WAZIR LTD across the US, UK and Europe.
+> Hospitality operations platform (POS, kitchen display, guest QR, payments, inventory, HR) for restaurants, takeaways, event venues, hotel F&B, and food carts. Sold by K WAZIR LTD across the US, UK and Europe.
 
 ## Product
-- Name: Hostora
-- Vendor: K WAZIR LTD (UK private limited company)
-- Company number: 17014542
-- Place of registration: England and Wales
-- Registered office: 7 Wellesley Street, Gloucester, England, GL1 4QP
-- Companies House: https://find-and-update.company-information.service.gov.uk/company/17014542
-- Website: https://hostorasoft.co.uk
-- Contact: sales@hostorasoft.co.uk · https://hostorasoft.co.uk/contact
-- Company information: https://hostorasoft.co.uk/company
-- Tagline: Run the floor. From booking to last pour.
+- Site: https://hostorasoft.co.uk
+- Demo booking: https://hostorasoft.co.uk/contact
+- Product modules: https://hostorasoft.co.uk/product
+- Hardware (optional Docker local server + floor kit): https://hostorasoft.co.uk/hardware
+- Solutions by vertical: https://hostorasoft.co.uk/solutions
+- Blog: https://hostorasoft.co.uk/blog
 
-## Who it is for
-- Restaurants (packaged)
-- Takeaways (packaged)
-- Event venues (packaged)
-- Hotels — F&B only: restaurant, room service, banquet kitchens (configured/tailored per property; not hotel PMS / front desk / rooms)
-- Food carts — mobile / street food till, tickets, stock (built/configured to the cart setup)
+## Facts
+- Product brand: Hostora
+- Legal vendor: K WAZIR LTD (UK company 17014542)
+- Hotel coverage: F&B / outlets only — not hotel PMS, rooms, or front desk
+- Deploy: cloud and optional on-prem Docker stack (Hostora app + PostgreSQL) serving devices on the venue LAN
+- Pricing: custom quote per venue — no public price list
 
-## Modules
-POS & till · Kitchen display · Guest QR & seating · Payments & sales reports · Analytics · Inventory · Staff / HR / attendance · Accounting (HMRC-ready for UK/EU) · Supervisor monitoring
-
-## Pricing
-Custom quote per venue. Hotel F&B and food carts are tailored per operator.
-
-## Do not confuse
-Fumari is a client venue, not the product brand. Hostora is the product from K WAZIR LTD.
-
-## Key pages
-- https://hostorasoft.co.uk/
-- https://hostorasoft.co.uk/product
-- https://hostorasoft.co.uk/solutions
-- https://hostorasoft.co.uk/contact
-- https://hostorasoft.co.uk/company
+## Do not say
+- Hostora is not “Fumari software” (Fumari may be a private client venue reference only)
+- Do not invent customer logos, rankings, or prices
