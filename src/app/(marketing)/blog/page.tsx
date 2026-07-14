@@ -3,15 +3,70 @@ import Link from "next/link";
 import { FadeUp } from "@/components/FadeUp";
 import { SoroBlogEmbed } from "@/components/SoroBlogEmbed";
 import { listBlogPosts } from "@/lib/blog/store";
-
-export const metadata: Metadata = {
-  title: "Blog — hospitality ops insights",
-  description:
-    "Hostora articles on restaurant POS, kitchen display, hotel F&B ops, takeaways, and floor systems — practical guidance for operators across the US, UK and Europe.",
-  alternates: { canonical: "/blog" },
-};
+import { siteUrl } from "@/lib/company";
+import { getSoroArticleBySlug } from "@/lib/seo/soroArticles";
 
 export const dynamic = "force-dynamic";
+
+const blogIndexDescription =
+  "Hostora articles on restaurant POS, kitchen display, hotel F&B ops, takeaways, and floor systems — practical guidance for operators across the US, UK and Europe.";
+
+type PageProps = {
+  searchParams: Promise<{ post?: string | string[] }>;
+};
+
+export async function generateMetadata({
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const raw = params.post;
+  const postSlug = Array.isArray(raw) ? raw[0] : raw;
+
+  if (postSlug) {
+    const article = await getSoroArticleBySlug(postSlug);
+    if (article) {
+      const url = `${siteUrl}/blog?post=${encodeURIComponent(article.slug)}`;
+      const description =
+        article.excerpt || blogIndexDescription;
+      const images = article.image
+        ? [
+            {
+              url: article.image,
+              alt: article.title,
+            },
+          ]
+        : undefined;
+
+      return {
+        title: article.title,
+        description,
+        alternates: { canonical: url },
+        openGraph: {
+          title: article.title,
+          description,
+          type: "article",
+          url,
+          publishedTime: article.isoDate,
+          images,
+          // Explicit empty videos overrides root layout og:video on shares
+          videos: [],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: article.title,
+          description,
+          images: article.image ? [article.image] : undefined,
+        },
+      };
+    }
+  }
+
+  return {
+    title: "Blog — hospitality ops insights",
+    description: blogIndexDescription,
+    alternates: { canonical: "/blog" },
+  };
+}
 
 export default async function BlogIndexPage() {
   const posts = await listBlogPosts();

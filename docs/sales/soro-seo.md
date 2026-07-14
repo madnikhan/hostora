@@ -41,9 +41,17 @@ Hostora falls back to that Production ID if the env is unset.
 
 ### Limitations
 
-- Article chrome, URLs, and SEO inside the widget are **Soro-controlled**.
-- Hostora **cannot** brand-lint embed content the way `/admin/seo` or `/api/blog/publish` does.
+- Article chrome and deep links (`/blog?post=<slug>`) are **Soro-controlled**.
+- Hostora **cannot** brand-lint embed body HTML the way `/admin/seo` or `/api/blog/publish` does.
 - Paste brand voice into Soro anyway (below).
+
+### Share previews (Open Graph)
+
+Soro share links look like `/blog?post=restaurant-pos-software` (not `/blog/[slug]`). WhatsApp and similar crawlers only see **server** meta tags.
+
+Hostora reads article title, excerpt, and featured image from Soro’s embed script (`SORO_ARTICLES`) and sets `og:title` / `og:image` for that `?post=` URL so shares show the article photo instead of the default Hostora OG card.
+
+After publishing a new Soro post, re-share or refresh the link preview once the site has redeployed / cache has updated (embed metadata is revalidated every ~2 minutes).
 
 ## Brand guardrails (paste into Soro brand voice)
 

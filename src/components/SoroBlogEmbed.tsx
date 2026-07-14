@@ -1,9 +1,7 @@
 "use client";
 
 import Script from "next/script";
-
-/** Hostora Production default from Soro Connect → Embed. Override via env. */
-export const DEFAULT_SORO_EMBED_ID = "f4209b93-9cbd-4ae4-b286-ded667a515ef";
+import { DEFAULT_SORO_EMBED_ID } from "@/lib/seo/soroEmbedId";
 
 type Props = {
   embedId?: string;
