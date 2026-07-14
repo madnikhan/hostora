@@ -57,7 +57,8 @@ Set the same value on Vercel → Environment Variables, then redeploy.
 
 const url = (
   process.env.BLOG_PUBLISH_URL ||
-  "https://hostorasoft.co.uk/api/blog/publish"
+  // Use www — apex 308-redirects to www and drops Authorization → 401
+  "https://www.hostorasoft.co.uk/api/blog/publish"
 ).trim();
 
 const res = await fetch(url, {
