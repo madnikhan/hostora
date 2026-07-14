@@ -122,10 +122,16 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("blog publish failed", err);
+    const message =
+      err instanceof Error ? err.message : "Could not save blog post.";
+    const needsBlob =
+      /EROFS|read-only file system/i.test(message) ||
+      blogStorageMode() === "filesystem";
     return NextResponse.json(
       {
-        error:
-          err instanceof Error ? err.message : "Could not save blog post.",
+        error: needsBlob
+          ? "Vercel cannot write blog files. Set BLOB_READ_WRITE_TOKEN on the Vercel project (Production), then redeploy. Create a store in Vercel → Storage → Blob if you do not have a token yet."
+          : message,
       },
       { status: 502 },
     );
