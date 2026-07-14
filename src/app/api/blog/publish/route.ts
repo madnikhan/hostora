@@ -7,9 +7,9 @@ import { siteUrl } from "@/lib/company";
 import { rateLimit } from "@/lib/booking/rateLimit";
 
 /**
- * Soro / webhook publish endpoint.
- * POST Authorization: Bearer <SORO_WEBHOOK_SECRET>
- * Body: { title, slug?, description?, body|content|html, coverImage?, publishedAt? }
+ * Blog publish webhook (Hostora SEO pipeline, optional third-party tools).
+ * POST Authorization: Bearer <BLOG_PUBLISH_SECRET>
+ * Body: { title, slug?, description?, body|content|html, coverImage?, publishedAt?, source? }
  */
 const bodySchema = z.object({
   title: z.string().trim().min(3).max(200),
@@ -22,25 +22,35 @@ const bodySchema = z.object({
   cover_image: z.string().url().optional().nullable(),
   publishedAt: z.string().optional(),
   published_at: z.string().optional(),
+  source: z.enum(["soro", "hostora", "seed"]).optional(),
 });
 
+function publishSecret(): string {
+  return (
+    process.env.BLOG_PUBLISH_SECRET?.trim() ||
+    process.env.SORO_WEBHOOK_SECRET?.trim() ||
+    ""
+  );
+}
+
 function authorized(request: Request): boolean {
-  const secret = process.env.SORO_WEBHOOK_SECRET;
+  const secret = publishSecret();
   if (!secret) return false;
   const header = request.headers.get("authorization") || "";
   const bearer = header.match(/^Bearer\s+(.+)$/i)?.[1]?.trim();
   const alt =
-    request.headers.get("x-soro-secret") ||
-    request.headers.get("x-webhook-secret");
+    request.headers.get("x-blog-publish-secret") ||
+    request.headers.get("x-webhook-secret") ||
+    request.headers.get("x-soro-secret");
   return bearer === secret || alt === secret;
 }
 
 export async function POST(request: Request) {
-  if (!process.env.SORO_WEBHOOK_SECRET) {
+  if (!publishSecret()) {
     return NextResponse.json(
       {
         error:
-          "SORO_WEBHOOK_SECRET is not set. Add it on the server before connecting Soro.",
+          "BLOG_PUBLISH_SECRET is not set. Add it on the server before publishing.",
       },
       { status: 503 },
     );
@@ -96,7 +106,7 @@ export async function POST(request: Request) {
       body,
       coverImage: data.coverImage ?? data.cover_image ?? null,
       publishedAt: data.publishedAt || data.published_at || new Date().toISOString(),
-      source: "soro",
+      source: data.source ?? "soro",
     });
 
     revalidatePath("/blog");
@@ -127,6 +137,6 @@ export async function GET() {
     ok: true,
     endpoint: "/api/blog/publish",
     storage: blogStorageMode(),
-    auth: "Authorization: Bearer <SORO_WEBHOOK_SECRET>",
+    auth: "Authorization: Bearer <BLOG_PUBLISH_SECRET>",
   });
 }

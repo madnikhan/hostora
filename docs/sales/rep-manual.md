@@ -11,6 +11,7 @@ Source of truth for reps: the simple text file (easy to read and print).
 Also in this folder:
 
 - [one-pager.md](./one-pager.md)
+- [seo-pipeline.md](./seo-pipeline.md) — Hostora draft → approve → publish
 - [README.md](./README.md) — full sales pack (PPTX + brochure + manual)
 
 ```bash

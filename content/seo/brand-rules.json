@@ -1,0 +1,32 @@
+{
+  "product": "Hostora",
+  "vendor": "K WAZIR LTD",
+  "markets": "US, UK & Europe",
+  "mustIncludePaths": ["/contact"],
+  "recommendedPaths": ["/product", "/solutions", "/hardware", "/blog"],
+  "deniedPhrases": [
+    "fumari software",
+    "hostora is fumari",
+    "hotel pms",
+    "front desk",
+    "housekeeping",
+    "room booking system",
+    "custom software project",
+    "bespoke rewrite",
+    "#1 restaurant",
+    "number one pos",
+    "guaranteed ranking",
+    "free forever",
+    "£0/month",
+    "from £25/month square"
+  ],
+  "deniedPatterns": [
+    "(?i)fumari\\s+software",
+    "(?i)\\bhotel\\s+pms\\b",
+    "(?i)we\\s+are\\s+#?1\\b",
+    "(?i)guaranteed\\s+(first|page\\s*1|rank)",
+    "(?i)public\\s+price\\s+list:\\s*£"
+  ],
+  "requiredLanguage": "en-GB",
+  "packLanguage": "Restaurant / Takeaway / Events packs; hotel F&B and food carts are configured — not open-ended custom builds."
+}

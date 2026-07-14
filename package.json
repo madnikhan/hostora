@@ -17,7 +17,11 @@
     "sales:quote": "node scripts/generate-quote-onepager.mjs",
     "sales:manual": "node scripts/generate-rep-manual-pdf.mjs",
     "sales:pricebook": "node scripts/generate-internal-pricebook.mjs",
-    "sales:pack": "npm run sales:pptx && npm run sales:brochure && npm run sales:quote && npm run sales:manual"
+    "sales:pack": "npm run sales:pptx && npm run sales:brochure && npm run sales:quote && npm run sales:manual",
+    "seo:draft": "node scripts/seo/draft.mjs",
+    "seo:list-drafts": "node scripts/seo/list-drafts.mjs",
+    "seo:publish": "node scripts/seo/publish.mjs",
+    "seo:gsc": "node scripts/seo/gsc-topics.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.6.1",

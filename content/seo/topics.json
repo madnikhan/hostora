@@ -1,0 +1,163 @@
+[
+  {
+    "id": "kds-uk-busy-service",
+    "keyword": "kitchen display system UK restaurant",
+    "angle": "Why station KDS beats paper tickets on a busy UK service night",
+    "vertical": "restaurant",
+    "status": "drafted",
+    "priority": 100,
+    "draftSlug": "kitchen-display-system-uk-restaurant"
+  },
+  {
+    "id": "pos-vs-patchwork",
+    "keyword": "restaurant POS vs till and kitchen apps",
+    "angle": "Replace patchwork till + tickets + booking widgets with one Restaurant pack",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 98
+  },
+  {
+    "id": "takeaway-ticket-speed",
+    "keyword": "takeaway POS kitchen tickets UK",
+    "angle": "Fast ticket flow for high-volume takeaways — Takeaway pack talk track",
+    "vertical": "takeaway",
+    "status": "queued",
+    "priority": 96
+  },
+  {
+    "id": "hotel-fb-not-pms",
+    "keyword": "hotel restaurant POS not PMS",
+    "angle": "Hotel F&B ops (outlets, room service, banquet) — Hostora is not hotel PMS",
+    "vertical": "hotel",
+    "status": "queued",
+    "priority": 95
+  },
+  {
+    "id": "docker-venue-server",
+    "keyword": "on premise restaurant POS local server",
+    "angle": "Optional Docker Hostora + PostgreSQL on the venue LAN for resilience",
+    "vertical": "hardware",
+    "status": "queued",
+    "priority": 94
+  },
+  {
+    "id": "thermal-print-routing",
+    "keyword": "kitchen thermal printer restaurant stations",
+    "angle": "Station print routing and why misfires cost covers",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 90
+  },
+  {
+    "id": "guest-qr-seating",
+    "keyword": "restaurant table QR ordering UK",
+    "angle": "Guest QR and seating invites as part of the Restaurant pack — not a bolt-on toy",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 88
+  },
+  {
+    "id": "events-timed-service",
+    "keyword": "event venue catering POS timed service",
+    "angle": "Events pack for large covers, timed service, supervisor visibility",
+    "vertical": "events",
+    "status": "queued",
+    "priority": 86
+  },
+  {
+    "id": "food-cart-mobile-pos",
+    "keyword": "food cart POS tablet printer UK",
+    "angle": "Configured food-cart footprint: mobile till, tickets, tight stock",
+    "vertical": "food-cart",
+    "status": "queued",
+    "priority": 84
+  },
+  {
+    "id": "supervisor-monitoring",
+    "keyword": "restaurant supervisor POS alerts voids",
+    "angle": "Live supervisor monitoring when the floor gets loud — deletions and control",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 82
+  },
+  {
+    "id": "end-of-day-reports",
+    "keyword": "restaurant end of day sales reports",
+    "angle": "Day / week / month clarity without spreadsheet chaos",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 80
+  },
+  {
+    "id": "inventory-low-stock",
+    "keyword": "restaurant inventory low stock alerts",
+    "angle": "Stock movements and low-stock alerts that match live service",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 78
+  },
+  {
+    "id": "staff-attendance",
+    "keyword": "hospitality staff attendance POS",
+    "angle": "Roles, shifts, and attendance visibility beside the till",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 76
+  },
+  {
+    "id": "uk-hmrc-reporting",
+    "keyword": "UK restaurant accounting POS HMRC",
+    "angle": "HMRC-ready framing for UK / EU reporting without claiming to be a full accountant",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 74
+  },
+  {
+    "id": "multi-station-kitchen",
+    "keyword": "multi station restaurant kitchen display",
+    "angle": "Routing tickets by grill, fry, and pass under load",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 72
+  },
+  {
+    "id": "bookings-deposits",
+    "keyword": "restaurant reservations deposits POS",
+    "angle": "Bookings and deposits tied to floor ops — not a separate widget island",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 70
+  },
+  {
+    "id": "cloud-vs-local-resilience",
+    "keyword": "cloud POS unreliable internet restaurant",
+    "angle": "When cloud-only POS fails peak service — local Docker option",
+    "vertical": "hardware",
+    "status": "queued",
+    "priority": 68
+  },
+  {
+    "id": "pack-not-custom-build",
+    "keyword": "restaurant software pack not custom project",
+    "angle": "Sell Restaurant / Takeaway / Events packs — not a bespoke rewrite",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 66
+  },
+  {
+    "id": "split-bills-open-tabs",
+    "keyword": "restaurant split bills open tabs POS",
+    "angle": "Floor-speed till: open tabs, modifiers, split bills",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 64
+  },
+  {
+    "id": "go-live-days-not-months",
+    "keyword": "restaurant POS go live after survey",
+    "angle": "Floor survey → install pack → train → live service in days",
+    "vertical": "restaurant",
+    "status": "queued",
+    "priority": 62
+  }
+]

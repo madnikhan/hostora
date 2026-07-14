@@ -74,3 +74,11 @@ curl -s -X POST https://hostorasoft.co.uk/api/blog/publish \
 ```
 
 Then open `/blog` and confirm sitemap includes the new URL.
+
+## Hostora-owned draft pipeline (preferred long-term)
+
+You can generate and approve posts without Soro using the same publish API:
+
+See [seo-pipeline.md](./seo-pipeline.md) — `npm run seo:draft` → review → `npm run seo:publish -- --slug=…`.
+
+Soro remains optional if you want a third-party autopilot; Hostora’s pipeline never auto-publishes.

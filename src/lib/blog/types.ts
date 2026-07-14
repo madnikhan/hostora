@@ -7,7 +7,7 @@ export type BlogPost = {
   coverImage?: string | null;
   publishedAt: string;
   updatedAt?: string | null;
-  source?: "seed" | "soro";
+  source?: "seed" | "soro" | "hostora";
 };
 
 export function slugify(input: string): string {

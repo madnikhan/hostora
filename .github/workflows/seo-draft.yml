@@ -1,0 +1,51 @@
+name: SEO draft (approve later)
+
+on:
+  schedule:
+    # Mondays 08:00 UTC
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Generate draft
+        env:
+          SEO_LLM_API_KEY: ${{ secrets.SEO_LLM_API_KEY }}
+          SEO_LLM_BASE_URL: ${{ secrets.SEO_LLM_BASE_URL }}
+          SEO_LLM_MODEL: ${{ secrets.SEO_LLM_MODEL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npm run seo:draft
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(seo): weekly blog draft for review"
+          title: "SEO draft ready for approve → publish"
+          body: |
+            Automated Hostora SEO draft (approve only — does **not** publish).
+
+            1. Review `content/blog/drafts/*.json` and brand voice
+            2. Locally: `npm run seo:publish -- --slug=<slug>`
+               (needs `SORO_WEBHOOK_SECRET` / Blob on production)
+            3. Merge after publish or keep draft edits in this PR
+          branch: seo/draft-${{ github.run_id }}
+          delete-branch: true
+          add-paths: |
+            content/blog/drafts/**
+            content/seo/topics.json

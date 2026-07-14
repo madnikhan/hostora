@@ -14,6 +14,7 @@ npm run sales:pack
 | Sales rep manual (PDF) | [/sales/Hostora-Sales-Rep-Manual.pdf](/sales/Hostora-Sales-Rep-Manual.pdf) | Print of the text manual |
 | One-pager | [one-pager.md](./one-pager.md) | Quick talk track |
 | Soro SEO setup | [soro-seo.md](./soro-seo.md) | Connect [trysoro.com](https://trysoro.com/) webhook to `/blog` |
+| Hostora SEO pipeline | [seo-pipeline.md](./seo-pipeline.md) | Draft → approve → publish (no Soro required) |
 | Web pitch | https://hostorasoft.co.uk/pitch | Live animated deck |
 | **Internal price book (PDF)** | [/sales/Hostora-Internal-Price-Book.pdf](/sales/Hostora-Internal-Price-Book.pdf) | **CONFIDENTIAL — founders & reps only** |
 
