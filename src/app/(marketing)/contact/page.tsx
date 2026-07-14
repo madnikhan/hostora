@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FadeUp } from "@/components/FadeUp";
+import { ContactDemoTeaser } from "@/components/ContactDemoTeaser";
 import { DemoBookingForm } from "@/components/DemoBookingForm";
 import { company } from "@/lib/company";
 
@@ -8,6 +9,25 @@ export const metadata: Metadata = {
   description: `Book a Hostora demo for your restaurant, takeaway, event venue, hotel F&B, or food cart. Contact ${company.legalName} sales across the ${company.markets}.`,
   alternates: { canonical: "/contact" },
 };
+
+const faqs = [
+  {
+    q: "We already have a till",
+    a: "Hostora is operations — till plus kitchen, guest QR, and supervisor control in one spine, not another standalone till app.",
+  },
+  {
+    q: "Cloud POS is enough",
+    a: "Real venues need station printing, local resilience, and floor-speed workflows. Hostora can ship on a local Docker server (app + PostgreSQL) so every device stays online on your network.",
+  },
+  {
+    q: "Do you do hotel PMS?",
+    a: "No — Hostora runs hotel F&B and floor ops (outlets, kitchen, staff). Rooms and front desk stay with your PMS.",
+  },
+  {
+    q: "Is this Fumari?",
+    a: "Fumari is a client venue. Hostora is the product brand from K WAZIR LTD (UK).",
+  },
+];
 
 export default function ContactPage() {
   return (
@@ -20,7 +40,35 @@ export default function ContactPage() {
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
             Pick a time that works. We&apos;ll confirm by email with a Google
-            Meet link — name, email, company, and phone required.
+            Meet link — name, email, company, phone, and business type required.
+          </p>
+          <div className="mt-8">
+            <ContactDemoTeaser />
+          </div>
+          <ul className="mt-8 space-y-2 text-sm text-muted">
+            <li>
+              <span className="text-accent">·</span> Sold across the{" "}
+              <span className="text-foreground">{company.markets}</span>
+            </li>
+            <li>
+              <span className="text-accent">·</span>{" "}
+              <span className="text-foreground">HMRC-ready</span> accounting
+              framing for UK / EU
+            </li>
+            <li>
+              <span className="text-accent">·</span> Optional{" "}
+              <span className="text-foreground">Docker local server</span> +
+              floor hardware
+            </li>
+          </ul>
+          <p className="mt-6">
+            <a
+              href="/sales/Hostora-Quote-Pack.pdf"
+              download
+              className="text-sm font-semibold text-accent transition hover:text-accent-strong"
+            >
+              Download quote pack →
+            </a>
           </p>
         </FadeUp>
 
@@ -59,6 +107,73 @@ export default function ContactPage() {
               Meetings are 30 minutes, weekdays 09:00–17:00 UK time, subject to
               calendar availability.
             </p>
+
+            <div className="border-t border-border pt-8">
+              <p className="text-xs font-medium tracking-[0.18em] text-accent uppercase">
+                Common questions
+              </p>
+              <div className="mt-4 space-y-3">
+                {faqs.map((item) => (
+                  <details key={item.q} className="group">
+                    <summary className="cursor-pointer list-none text-sm font-medium text-foreground marker:content-none [&::-webkit-details-marker]:hidden">
+                      <span className="flex items-start justify-between gap-3">
+                        {item.q}
+                        <span className="text-accent transition group-open:rotate-45">
+                          +
+                        </span>
+                      </span>
+                    </summary>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">
+                      {item.a}
+                    </p>
+                  </details>
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t border-border pt-8">
+              <p className="text-xs font-medium tracking-[0.18em] text-accent uppercase">
+                Sales pack
+              </p>
+              <ul className="mt-3 space-y-2 text-sm">
+                <li>
+                  <a
+                    className="font-medium text-foreground hover:text-accent"
+                    href="/sales/Hostora-Quote-Pack.pdf"
+                    download
+                  >
+                    Quote pack (PDF)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-foreground hover:text-accent"
+                    href="/sales/Hostora-Sales-Presentation.pptx"
+                    download
+                  >
+                    Sales presentation (PPTX)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-foreground hover:text-accent"
+                    href="/sales/Hostora-Brochure.pdf"
+                    download
+                  >
+                    Brochure (PDF)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-foreground hover:text-accent"
+                    href="/sales/Hostora-Sales-Rep-Manual.pdf"
+                    download
+                  >
+                    Sales rep manual (PDF)
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </FadeUp>
       </div>

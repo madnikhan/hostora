@@ -48,8 +48,22 @@ Requires Playwright Chromium and ffmpeg.
 | 12–16s | Rising bars + pulse | “Save Time. Increase Sales.” | Reduce mistakes, speed up service, and grow your revenue. |
 | 16–20s | Mark + glowing CTA | Book demo + both URLs | Ready to simplify… Book your free Hostora demo today. |
 
+## CapCut brand pack
+
+Drop these into CapCut for end cards / lower-thirds (gold `#E8A54B` on dark `#0B0B0C`):
+
+| File | Use |
+|------|-----|
+| [`public/brand/hostora-mark.png`](../../public/brand/hostora-mark.png) | Mark only (transparent canvas) |
+| [`public/brand/hostora-lockup.png`](../../public/brand/hostora-lockup.png) | Mark + “Hostora” (transparent canvas) |
+| [`public/brand/hostora-lockup-dark.png`](../../public/brand/hostora-lockup-dark.png) | Same lockup on dark plate |
+| [`public/brand/hostora-logo-motion.mp4`](../../public/brand/hostora-logo-motion.mp4) | ~3s silent 1080×1080 sting (mark draw + wordmark) |
+
+Rebuild: `npm run brand:pack` (Playwright + ffmpeg).
+
 ## Upload tips
 
 - Use A/B/C for TikTok Ads creative testing.
+- Overlay `hostora-logo-motion.mp4` or a lockup PNG on your final CTA beat.
 - CTA: [hostorasoft.co.uk/contact](https://hostorasoft.co.uk/contact)
 - Music bed is synthetic (no third-party license); replace in CapCut if you want a licensed track.

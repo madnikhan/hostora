@@ -103,6 +103,23 @@ Copy [`.env.example`](.env.example) to `.env.local` and fill values. See that fi
 4. Use **← →** or **Space** to advance
 5. End on the CTA slide; book demo via `/contact`
 
+### Offline sales pack (PPTX + PDFs)
+
+```bash
+npm run sales:pack
+```
+
+Outputs (also downloadable on the live site under `/sales/…`):
+
+| File | Use |
+|------|-----|
+| `public/sales/Hostora-Sales-Presentation.pptx` | Emailable PowerPoint |
+| `public/sales/Hostora-Brochure.pdf` | Prospect brochure |
+| `public/sales/Hostora-Sales-Rep-Manual.txt` | Sales rep manual (simple text — primary) |
+| `public/sales/Hostora-Sales-Rep-Manual.pdf` | Printable PDF of the text manual |
+
+Edit the `.txt` manual, then run `npm run sales:manual` to refresh the PDF.
+
 ## TikTok ads
 
 Three motion-graphics vertical films (Restaurant / Hotel F&B / Events) — no product screenshots: preview `/ads/tiktok/restaurant` (etc.), export with `npm run ad:tiktok:all`. Files in [`public/ads/`](public/ads/). Docs: [docs/sales/tiktok-ad.md](docs/sales/tiktok-ad.md).
@@ -112,6 +129,8 @@ Three motion-graphics vertical films (Restaurant / Hotel F&B / Events) — no pr
 - [docs/BRAND.md](docs/BRAND.md)
 - [docs/MESSAGING.md](docs/MESSAGING.md)
 - [docs/sales/one-pager.md](docs/sales/one-pager.md)
+- [docs/sales/rep-manual.md](docs/sales/rep-manual.md)
+- [docs/sales/README.md](docs/sales/README.md)
 - [docs/sales/tiktok-ad.md](docs/sales/tiktok-ad.md)
 
 ## Deploy

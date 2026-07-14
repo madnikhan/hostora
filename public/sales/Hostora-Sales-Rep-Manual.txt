@@ -1,0 +1,253 @@
+================================================================================
+  HOSTORA — SALES REPRESENTATIVE MANUAL
+  Simple training guide for sales reps
+================================================================================
+
+  Product:   Hostora
+  Vendor:    K WAZIR LTD (UK company number 17014542)
+  Office:    7 Wellesley Street, Gloucester, England, GL1 4QP
+  Sales:     sales@hostorasoft.co.uk
+  Website:   https://hostorasoft.co.uk
+  Markets:   US, UK and Europe
+
+  Tagline:   Run the floor. From booking to last pour.
+
+  Pricing:   Always a CUSTOM QUOTE — per venue.
+             Never invent or publish a fixed price list.
+
+--------------------------------------------------------------------------------
+  HOW TO USE THIS MANUAL
+--------------------------------------------------------------------------------
+
+  1. Read sections 1–3 before your first call.
+  2. Use section 5–6 on discovery calls.
+  3. Use section 7–8 on demos and objections.
+  4. Send leave-behinds from section 10.
+
+================================================================================
+  1. ABOUT HOSTORA
+================================================================================
+
+  Hostora is an all-in-one hospitality operations platform sold by
+  K WAZIR LTD (England and Wales).
+
+  One-liner:
+  Hostora runs till, kitchen, guest QR, payments, inventory, staff and
+  reporting for restaurants, takeaways, event venues, hotel F&B and
+  food carts — with optional installed hardware.
+
+  IMPORTANT:
+  Fumari (or any named live venue) is a CLIENT, not the product name.
+  Never say "Fumari software." Say "Hostora."
+
+================================================================================
+  2. WHAT WE SELL / WHAT WE DO NOT SELL
+================================================================================
+
+  WE SELL
+  -------
+  * Hostora software licence (per venue)
+  * Optional hardware kit (server, tills, tablets, printers, scanners,
+    payment terminals)
+  * Setup for restaurants, takeaways and event venues
+  * Tailored setup for hotel F&B and food carts
+
+  WE DO NOT SELL
+  --------------
+  * Hotel PMS (rooms, front desk, housekeeping)
+  * The product under the name "Fumari"
+  * A public fixed price list
+  * Source code or white-label without a written vendor agreement
+
+================================================================================
+  3. PRODUCT MODULES — WHAT TO SAY
+================================================================================
+
+  POS and till
+    Open tabs, modifiers, split bills, fast cash and card payments.
+
+  Kitchen display
+    Live boards by station with notes and status so kitchens stay in sync.
+
+  Guest QR and seating
+    Table ordering QR, seating invites and reservation flows.
+
+  Payments and sales reports
+    Till payments, online deposits, day / week / month reports.
+
+  Analytics
+    Hourly and item insight for operators.
+
+  Inventory
+    Stock items, movements and low-stock alerts.
+
+  Staff, HR and attendance
+    Roles, shifts and attendance visibility.
+
+  Accounting
+    Purchases and reporting; HMRC-ready framing for UK / EU.
+
+  Supervisor monitoring
+    Live alerts, deletion audits and floor control on busy nights.
+
+  Proof on the website:
+    /product   /hardware   /pitch   (home demo video)
+
+================================================================================
+  4. HARDWARE — WHEN TO QUOTE
+================================================================================
+
+  Optional kit is quoted WITH software per venue when the prospect needs
+  local network resilience or does not already own floor devices.
+
+  Kit options:
+  * Local Docker server (Hostora + PostgreSQL on the venue LAN)
+  * POS tills and tablet POS
+  * Floor tablets / kitchen screens
+  * Thermal and receipt printers
+  * Barcode and QR scanners
+  * Payment terminals
+
+  Quote hardware when:
+  * Multi-station kitchen
+  * Unreliable internet
+  * New venue fit-out
+  * They ask for a turnkey floor
+
+  Skip a heavy hardware pitch when:
+  * They already have printers and tills
+  * They only need software and setup
+
+  See: https://hostorasoft.co.uk/hardware
+
+================================================================================
+  5. VERTICAL PLAYBOOKS
+================================================================================
+
+  RESTAURANTS
+    Lead with: table map, waiter flow, multi-station kitchen, guest QR,
+    bookings.
+    Ask: peak covers, how many print stations.
+
+  TAKEAWAYS
+    Lead with: fast ticket entry, kitchen boards, clear tickets,
+    end-of-day reports.
+    Ask: peak tickets per hour, printer layout.
+
+  EVENT VENUES
+    Lead with: large covers, timed service, supervisor visibility.
+    Ask: banquet vs standing, station count, who owns the night.
+
+  HOTELS (F&B ONLY)
+    Lead with: restaurant, room service, banquet kitchen, ticket routing.
+    Say clearly: Hostora is NOT a hotel PMS. Rooms and front desk stay
+    with their hotel system. Setup is tailored per property.
+
+  FOOD CARTS
+    Lead with: tablet or phone till, printer, stock on the cart.
+    Ask: power, connectivity, how they track inventory today.
+
+================================================================================
+  6. DISCOVERY QUESTIONS
+================================================================================
+
+  1. How many covers or tickets on a peak night?
+  2. How many kitchen or bar stations print today?
+  3. What do you use for bookings, deposits and table QR?
+  4. Who needs live visibility when service breaks?
+  5. US, UK or Europe — tax and reporting needs?
+  6. (Hotels) How many F&B outlets, and how are tickets routed today?
+  7. (Food carts) Till device, printer needs, stock tracking today?
+  8. Do you need an on-venue server, or is cloud plus existing printers
+     enough?
+
+  QUALIFIED
+    Decision-maker or ops lead, clear venue type, willing to book a demo.
+
+  NOT QUALIFIED
+    Only wants hotel PMS, or wants free unlimited multi-site with no
+    venue count.
+
+================================================================================
+  7. DEMO FLOW
+================================================================================
+
+  1. Open https://hostorasoft.co.uk/pitch
+     (Press F for fullscreen. Use arrow keys to advance.)
+  2. Walk modules on /product with screenshots.
+  3. If hardware matters, open /hardware.
+  4. Book next step on /contact (30-minute Google Meet).
+  5. Leave behind: PPTX and brochure from /sales/ or email attachments.
+
+  Talk track:
+    Problem
+      -> Who it is for
+      -> Product overview
+      -> One deep module they care about
+      -> Hardware only if relevant
+      -> Custom quote
+      -> Book demo
+
+================================================================================
+  8. OBJECTION HANDLING
+================================================================================
+
+  "We already have a till"
+    Hostora is operations — till plus kitchen, guest QR and control in
+    one system.
+
+  "Cloud POS is enough"
+    Real venues need station printing and floor-speed workflows. We can
+    ship a local Docker server so devices stay on the venue network.
+
+  "Too expensive"
+    Per-venue licensing. Quote against lost tickets and staff time, not
+    against the cheapest till app.
+
+  "Is this Fumari?"
+    Fumari is a client venue. Hostora is the product brand from
+    K WAZIR LTD.
+
+  "Do you do hotel PMS?"
+    No. Hostora runs hotel F&B and floor ops. Rooms and front desk stay
+    with their PMS.
+
+================================================================================
+  9. PRICING AND NEXT STEPS
+================================================================================
+
+  * Always: custom quote — per venue.
+  * Multi-site discounts by agreement.
+  * Hotel F&B and food carts: tailored quote per engagement.
+
+  Collect before quoting:
+    Venue type, location, stations, hardware need, timeline,
+    decision-maker name and email.
+
+  Next step:
+    Book demo via https://hostorasoft.co.uk/contact
+    or email sales@hostorasoft.co.uk
+
+================================================================================
+  10. LEAVE-BEHINDS CHECKLIST
+================================================================================
+
+  [ ] Sales presentation (PPTX)
+      https://hostorasoft.co.uk/sales/Hostora-Sales-Presentation.pptx
+
+  [ ] Brochure (PDF)
+      https://hostorasoft.co.uk/sales/Hostora-Brochure.pdf
+
+  [ ] This manual (TXT)
+      https://hostorasoft.co.uk/sales/Hostora-Sales-Rep-Manual.txt
+
+  [ ] This manual (PDF)
+      https://hostorasoft.co.uk/sales/Hostora-Sales-Rep-Manual.pdf
+
+  [ ] Website     https://hostorasoft.co.uk
+  [ ] Pitch deck  https://hostorasoft.co.uk/pitch
+  [ ] Book demo   https://hostorasoft.co.uk/contact
+
+================================================================================
+  END OF MANUAL — K WAZIR LTD — CONFIDENTIAL FOR SALES USE
+================================================================================

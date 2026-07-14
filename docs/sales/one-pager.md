@@ -16,6 +16,7 @@
 **Vendor:** K WAZIR LTD (UK · 17014542)  
 **Registered office:** 7 Wellesley Street, Gloucester, England, GL1 4QP  
 **Demo:** /contact · sales@hostorasoft.co.uk  
+**Quote pack PDF:** /sales/Hostora-Quote-Pack.pdf (`npm run sales:quote`)  
 **Company info:** /company  
 **Site:** https://hostorasoft.co.uk  
 **Rep pitch:** /pitch (fullscreen, arrow keys)  

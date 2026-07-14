@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
+import { DEMO_VERTICALS, type DemoVertical } from "@/lib/demoVerticals";
 
 type Slot = { start: string; label: string };
+
+const QUOTE_PACK_HREF = "/sales/Hostora-Quote-Pack.pdf";
 
 const inputClass =
   "mt-2 w-full rounded-xl border border-border bg-surface-2 px-4 py-3 text-foreground outline-none focus:border-accent";
@@ -12,6 +15,7 @@ export function DemoBookingForm() {
   const [email, setEmail] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [phone, setPhone] = useState("");
+  const [vertical, setVertical] = useState<DemoVertical | "">("");
   const [date, setDate] = useState("");
   const [dates, setDates] = useState<string[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -33,9 +37,7 @@ export function DemoBookingForm() {
   const dateSet = useMemo(() => new Set(dates), [dates]);
 
   useEffect(() => {
-    // Bootstrap allowed dates from slots API (today's first bookable date query)
-    const probe =
-      new Date().toISOString().slice(0, 10);
+    const probe = new Date().toISOString().slice(0, 10);
     void fetch(`/api/booking/slots?date=${probe}`)
       .then((r) => r.json())
       .then((data) => {
@@ -73,6 +75,10 @@ export function DemoBookingForm() {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (!vertical) {
+      setError("Please select your business type.");
+      return;
+    }
     if (!selectedStart) {
       setError("Please select a time slot.");
       return;
@@ -88,6 +94,7 @@ export function DemoBookingForm() {
             email,
             companyName,
             phone,
+            vertical,
             start: selectedStart,
           }),
         });
@@ -122,20 +129,29 @@ export function DemoBookingForm() {
         {success.emailError ? (
           <p className="mt-3 text-sm text-red-400">{success.emailError}</p>
         ) : null}
-        {success.meetLink ? (
+        <div className="mt-6 flex flex-wrap gap-3">
+          {success.meetLink ? (
+            <a
+              href={success.meetLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex rounded-full bg-accent px-6 py-3 text-sm font-semibold text-background"
+            >
+              Open Google Meet
+            </a>
+          ) : (
+            <p className="text-sm text-muted">
+              If a Meet link isn&apos;t available yet, sales will send it shortly.
+            </p>
+          )}
           <a
-            href={success.meetLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-flex rounded-full bg-accent px-6 py-3 text-sm font-semibold text-background"
+            href={QUOTE_PACK_HREF}
+            download
+            className="inline-flex rounded-full border border-border px-6 py-3 text-sm font-semibold transition hover:border-foreground/30"
           >
-            Open Google Meet
+            Download your quote pack
           </a>
-        ) : (
-          <p className="mt-6 text-sm text-muted">
-            If a Meet link isn&apos;t available yet, sales will send it shortly.
-          </p>
-        )}
+        </div>
       </div>
     );
   }
@@ -148,7 +164,7 @@ export function DemoBookingForm() {
       {demoMode ? (
         <p className="mb-5 rounded-xl border border-border bg-surface-2 px-4 py-3 text-xs text-muted">
           Calendar credentials are not configured on this server yet — times
-          show as open placeholders. Connect Google Calendar + Resend to enable
+          show as open placeholders. Connect Google Calendar + SMTP to enable
           live booking.
         </p>
       ) : null}
@@ -202,6 +218,29 @@ export function DemoBookingForm() {
           autoComplete="tel"
         />
       </label>
+
+      <fieldset className="mt-5">
+        <legend className="text-sm text-muted">Business type</legend>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {DEMO_VERTICALS.map((v) => {
+            const active = vertical === v;
+            return (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setVertical(v)}
+                className={`rounded-full border px-4 py-2 text-sm transition ${
+                  active
+                    ? "border-accent bg-accent text-background"
+                    : "border-border bg-surface-2 text-foreground hover:border-foreground/30"
+                }`}
+              >
+                {v}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
 
       <label className="mt-5 block text-sm text-muted">
         Date
@@ -262,7 +301,7 @@ export function DemoBookingForm() {
 
       <button
         type="submit"
-        disabled={pending || !selectedStart}
+        disabled={pending || !selectedStart || !vertical}
         className="mt-6 w-full rounded-full bg-accent py-3.5 text-sm font-semibold text-background transition hover:bg-accent-strong disabled:opacity-40"
       >
         {pending ? "Booking…" : "Confirm demo"}

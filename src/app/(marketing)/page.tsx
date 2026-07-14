@@ -106,6 +106,98 @@ export default function HomePage() {
         }
       />
 
+      <section className="border-t border-border px-6 py-24 md:py-28">
+        <div className="mx-auto max-w-5xl">
+          <FadeUp>
+            <p className="eyebrow">Proof</p>
+            <h2 className="display mt-4 max-w-3xl text-3xl font-bold md:text-5xl">
+              Patchwork tools out.{" "}
+              <span className="text-accent">One spine in.</span>
+            </h2>
+            <p className="mt-5 max-w-xl text-muted leading-relaxed">
+              Venues lose tickets and time switching between till apps, kitchen
+              screens, and booking widgets. Hostora replaces the patchwork.
+            </p>
+          </FadeUp>
+
+          <div className="mt-14 grid gap-10 md:grid-cols-2 md:gap-16">
+            <FadeUp>
+              <p className="text-xs font-medium tracking-[0.2em] text-muted uppercase">
+                Before
+              </p>
+              <ul className="mt-5 space-y-4 text-sm text-muted">
+                <li className="border-b border-border pb-4">
+                  Separate till app
+                </li>
+                <li className="border-b border-border pb-4">
+                  Paper or orphan kitchen tickets
+                </li>
+                <li className="border-b border-border pb-4">
+                  Booking widget bolted on
+                </li>
+              </ul>
+            </FadeUp>
+            <FadeUp delay={0.06}>
+              <p className="text-xs font-medium tracking-[0.2em] text-accent uppercase">
+                After
+              </p>
+              <div className="mt-5 rounded-2xl border border-accent/30 bg-accent-soft px-6 py-8">
+                <p className="display text-2xl font-bold text-foreground md:text-3xl">
+                  Hostora
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  One operational spine — till, kitchen, guest QR, payments,
+                  stock, and staff — on your network, with optional Docker
+                  local server and kit.
+                </p>
+              </div>
+            </FadeUp>
+          </div>
+
+          <FadeUp>
+            <p className="mt-16 text-xs font-medium tracking-[0.2em] text-accent uppercase">
+              Go-live
+            </p>
+            <ol className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  n: "01",
+                  t: "Survey",
+                  d: "Covers, stations, printers, vertical.",
+                },
+                {
+                  n: "02",
+                  t: "Configure",
+                  d: "Software ± Docker server and floor kit.",
+                },
+                {
+                  n: "03",
+                  t: "Train",
+                  d: "Floor and kitchen on the live workflows.",
+                },
+                {
+                  n: "04",
+                  t: "Live service",
+                  d: "One spine under peak load.",
+                },
+              ].map((step) => (
+                <li key={step.n}>
+                  <p className="text-xs text-accent">{step.n}</p>
+                  <p className="display mt-2 text-xl font-bold">{step.t}</p>
+                  <p className="mt-2 text-sm text-muted">{step.d}</p>
+                </li>
+              ))}
+            </ol>
+            <Link
+              href="/contact"
+              className="mt-12 inline-flex rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-background transition hover:bg-accent-strong"
+            >
+              Book a demo
+            </Link>
+          </FadeUp>
+        </div>
+      </section>
+
       <section className="border-t border-border px-6 py-24">
         <FadeUp>
           <div className="mx-auto max-w-4xl text-center">

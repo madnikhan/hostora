@@ -8,6 +8,7 @@ export type BookingMailPayload = {
   email: string;
   companyName: string;
   phone: string;
+  vertical: string;
   start: Date;
   meetLink: string | null;
   htmlLink?: string | null;
@@ -33,6 +34,7 @@ function customerHtml(p: BookingMailPayload): string {
     <p style="color:#9a958c;margin:0 0 24px">Thanks ${p.name} — you're booked.</p>
     <p><strong>When:</strong> ${when}</p>
     <p><strong>Company:</strong> ${p.companyName}</p>
+    <p><strong>Business type:</strong> ${p.vertical}</p>
     ${meet}
     <p style="margin-top:32px;color:#9a958c;font-size:13px">${company.legalName} · ${company.email}</p>
   </div>`;
@@ -47,6 +49,7 @@ function internalHtml(p: BookingMailPayload): string {
       <li><strong>Name:</strong> ${p.name}</li>
       <li><strong>Email:</strong> ${p.email}</li>
       <li><strong>Company:</strong> ${p.companyName}</li>
+      <li><strong>Vertical:</strong> ${p.vertical}</li>
       <li><strong>Phone:</strong> ${p.phone}</li>
       <li><strong>When:</strong> ${when}</li>
       <li><strong>Meet:</strong> ${p.meetLink || "(pending)"}</li>

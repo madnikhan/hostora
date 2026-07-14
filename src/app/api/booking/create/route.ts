@@ -17,6 +17,13 @@ const bodySchema = z.object({
     .min(7)
     .max(40)
     .regex(/^[+\d\s().-]+$/),
+  vertical: z.enum([
+    "Restaurant",
+    "Takeaway",
+    "Events",
+    "Hotel F&B",
+    "Food cart",
+  ]),
   start: z.string().datetime(),
 });
 
@@ -53,7 +60,10 @@ export async function POST(request: Request) {
   const parsed = bodySchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Please check name, email, company, phone, and time slot." },
+      {
+        error:
+          "Please check name, email, company, phone, business type, and time slot.",
+      },
       { status: 400 },
     );
   }
@@ -105,6 +115,7 @@ export async function POST(request: Request) {
         `Email: ${data.email}`,
         `Company: ${data.companyName}`,
         `Phone: ${data.phone}`,
+        `Vertical: ${data.vertical}`,
       ].join("\n"),
       start,
       attendeeEmail: data.email,
@@ -156,6 +167,7 @@ export async function POST(request: Request) {
       email: data.email,
       companyName: data.companyName,
       phone: data.phone,
+      vertical: data.vertical,
       start,
       meetLink: meeting.meetLink ?? null,
       htmlLink: meeting.htmlLink ?? null,
