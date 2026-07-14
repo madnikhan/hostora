@@ -1,67 +1,49 @@
 # Soro SEO + Hostora blog
 
-How [Soro](https://trysoro.com/) connects to this Next.js site as an **optional** second publisher alongside Hostora’s own SEO admin.
+How [Soro](https://trysoro.com/) appears on this Next.js site.
 
-Keep [`/admin/seo`](../../src/app/admin/seo) for in-house drafts. Use Soro when you want their keyword autopilot — both write into the same Blob blog store.
+**Soro’s product path here is Embed only** (no webhook in their Connect UI). Hostora still owns `/admin/seo` and `/blog/[slug]` for first-party posts.
 
-## What Soro does
+## How it works
 
-Keyword research, article writing, images/links, meta optimization. Publishes via **webhook** to our API (no WordPress-style plugin).
+| Piece | Role |
+|-------|------|
+| `/blog` | Hostora hero + **Soro embed widget** + “Hostora notes” list |
+| `/blog/[slug]` | Native Hostora articles (admin / CLI / seed) + JSON-LD |
+| `/admin/seo` | Hostora draft → approve → Blob publish |
+| `POST /api/blog/publish` | Hostora tools only — **not** used by Soro embed |
 
-## Site surface
+```mermaid
+flowchart LR
+  soroUI[Soro articles]
+  embed[Soro embed on /blog]
+  admin["/admin/seo"]
+  slug["/blog/slug"]
 
-| URL | Role |
-|-----|------|
-| `/blog` | Article index |
-| `/blog/[slug]` | Article page + Article JSON-LD |
-| `POST /api/blog/publish` | Authenticated publish endpoint (Soro + CLI) |
-| `/admin/seo` | Hostora-owned draft → approve → publish |
+  soroUI --> embed
+  admin --> slug
+```
 
-Seed posts live in `content/blog/*.json`. Production publishes (Soro or admin) need **Vercel Blob** (`BLOB_READ_WRITE_TOKEN`).
+## Connect Soro (embed)
 
-## Connect Soro
-
-1. In Vercel Production, set and redeploy:
-   - `BLOG_PUBLISH_SECRET` — long random string (primary; paste the same value into Soro)
-   - `SORO_WEBHOOK_SECRET` — optional legacy alias if you prefer that name
-   - `BLOB_READ_WRITE_TOKEN` — required so writes persist on Vercel
-2. Confirm Blob:
+1. Copy the embed ID from Soro → Settings → Connect → Embed (script URL ends with `/api/embed/<id>`).
+2. Set on Vercel Production (and `.env.local`) then redeploy:
 
 ```bash
-curl -sL https://www.hostorasoft.co.uk/api/blog/publish
-# expect: "storage":"blob"
+NEXT_PUBLIC_SORO_EMBED_ID=f4209b93-9cbd-4ae4-b286-ded667a515ef
 ```
 
-3. In Soro, add website `https://www.hostorasoft.co.uk` and custom/webhook URL:
+Hostora falls back to that Production ID if the env is unset.
 
-```text
-POST https://www.hostorasoft.co.uk/api/blog/publish
-Authorization: Bearer <BLOG_PUBLISH_SECRET>
-Content-Type: application/json
-```
+3. Open `https://www.hostorasoft.co.uk/blog` and confirm the widget mounts (`#soro-blog`).
+4. In Soro, click **I’ve Added the Code**.
+5. Prefer **approve then publish** inside Soro (avoid blind auto-publish).
 
-**Use www**, not the apex. Apex → www `308` can strip `Authorization`.
+### Limitations
 
-Example body (flat or wrapped in `article` / `data` / `post`):
-
-```json
-{
-  "title": "Kitchen display systems for busy restaurants",
-  "slug": "kitchen-display-systems-busy-restaurants",
-  "description": "How KDS and station printing keep tickets moving under load.",
-  "html": "<p>…</p><p><a href=\"/contact\">Book a Hostora demo</a></p>",
-  "coverImage": "https://…",
-  "publishedAt": "2026-07-14T09:00:00.000Z"
-}
-```
-
-Accepted aliases: `body` / `content` / `html`, `cover_image`, `published_at`. Nested `article` / `data` / `post` objects are unwrapped. Source defaults to `soro`.
-
-Brand lint runs before save (must include `/contact`, no denied phrases). Failures return `422` with `lintErrors`.
-
-4. **Publish mode: approve then publish** (do not blind auto-publish).
-
-Webhook connectivity tests (`event`/`type`: `webhook.test`, or empty body) return `{ ok: true, test: true }` without writing a post.
+- Article chrome, URLs, and SEO inside the widget are **Soro-controlled**.
+- Hostora **cannot** brand-lint embed content the way `/admin/seo` or `/api/blog/publish` does.
+- Paste brand voice into Soro anyway (below).
 
 ## Brand guardrails (paste into Soro brand voice)
 
@@ -78,30 +60,14 @@ Webhook connectivity tests (`event`/`type`: `webhook.test`, or empty body) retur
 
 **Preferred topics:** restaurant POS UK, kitchen display / KDS, takeaway till, hotel F&B ops, food cart POS, on-prem Docker hospitality server, thermal printing by station.
 
-Full machine rules: [`content/seo/brand-rules.json`](../../content/seo/brand-rules.json).
+Full machine rules (Hostora pipeline): [`content/seo/brand-rules.json`](../../content/seo/brand-rules.json).
 
-## Verify
+## Hostora-owned path (controlled posts)
 
-```bash
-curl -sL https://www.hostorasoft.co.uk/api/blog/publish
-# → { ok, endpoint, publishUrl, storage, auth, note }
+For articles with stable Hostora URLs and brand lint, use [seo-pipeline.md](./seo-pipeline.md) — `/admin/seo` or `npm run seo:draft` → review → publish. Those appear under **Hostora notes** on `/blog` and at `/blog/<slug>`.
 
-curl -sL -X POST https://www.hostorasoft.co.uk/api/blog/publish \
-  -H "Authorization: Bearer $BLOG_PUBLISH_SECRET" \
-  -H "Content-Type: application/json" \
-  -d '{"event":"webhook.test"}'
-# → { ok: true, test: true }
+## Hostora publish API (not used by Soro embed)
 
-curl -sL -X POST https://www.hostorasoft.co.uk/api/blog/publish \
-  -H "Authorization: Bearer $BLOG_PUBLISH_SECRET" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Test post from Soro","html":"<p>Hello from Soro test.</p><p><a href=\"/contact\">Book a demo</a></p>"}'
-```
+`POST https://www.hostorasoft.co.uk/api/blog/publish` remains for CLI/admin tooling (`BLOG_PUBLISH_SECRET`, Blob). Soro’s embed does not call it.
 
-Then open `/blog` and confirm sitemap includes the new URL.
-
-## Hostora-owned path (preferred for controlled posts)
-
-See [seo-pipeline.md](./seo-pipeline.md) — `/admin/seo` or `npm run seo:draft` → review → publish.
-
-Soro is optional third-party autopilot; Hostora’s pipeline never auto-publishes.
+See also [seo-pipeline.md](./seo-pipeline.md).
