@@ -2,12 +2,10 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { pitchClips, productMedia } from "@/lib/productMedia";
+import { productMedia } from "@/lib/productMedia";
 
 type Bubble = {
   id: string;
-  video?: string;
   poster: string;
   size: string;
   className: string;
@@ -18,10 +16,10 @@ type Bubble = {
   rotate: number[];
 };
 
+/** Poster-only ambience — no MP4 in the hero (keeps first paint / full load light). */
 const bubbles: Bubble[] = [
   {
     id: "till",
-    video: pitchClips.till.video,
     poster: productMedia.till.src,
     size: "h-32 w-32 sm:h-40 sm:w-40 md:h-52 md:w-52 lg:h-60 lg:w-60",
     className: "left-[-6%] top-[14%] opacity-35 md:opacity-40",
@@ -33,7 +31,6 @@ const bubbles: Bubble[] = [
   },
   {
     id: "kitchen",
-    video: pitchClips.kitchen.video,
     poster: productMedia.kds.src,
     size: "h-28 w-28 sm:h-36 sm:w-36 md:h-44 md:w-44 lg:h-52 lg:w-52",
     className: "right-[-5%] top-[8%] opacity-35 md:opacity-42",
@@ -45,7 +42,6 @@ const bubbles: Bubble[] = [
   },
   {
     id: "guests",
-    video: pitchClips.guests.video,
     poster: productMedia.guestQr.src,
     size: "h-24 w-24 sm:h-32 sm:w-32 md:h-40 md:w-40",
     className: "left-[4%] bottom-[6%] opacity-32 md:opacity-38",
@@ -79,7 +75,6 @@ const bubbles: Bubble[] = [
   },
   {
     id: "admin",
-    video: pitchClips.open.video,
     poster: productMedia.admin.src,
     size: "h-20 w-20 sm:h-28 sm:w-28 md:h-36 md:w-36",
     className: "left-[10%] top-[44%] opacity-28 md:opacity-34",
@@ -124,7 +119,6 @@ const bubbles: Bubble[] = [
   },
   {
     id: "analytics",
-    video: pitchClips.money.video,
     poster: productMedia.analyticsHourly.src,
     size: "h-20 w-20 sm:h-24 sm:w-24 md:h-32 md:w-32",
     className: "right-[8%] top-[1%] opacity-30 md:opacity-38",
@@ -158,101 +152,51 @@ const bubbles: Bubble[] = [
   },
 ];
 
-const videoBubbleIds = bubbles.filter((b) => b.video).map((b) => b.id);
-
-/**
- * Hero ambience: posters for all bubbles; at most one video clip cycles at a time
- * so we do not download ~6MB of MP4s in parallel on first paint.
- */
 export function HeroMediaBubbles() {
   const reduce = useReducedMotion();
-  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (reduce || videoBubbleIds.length === 0) {
-      setActiveVideoId(null);
-      return;
-    }
-
-    let index = 0;
-    // Defer first video start so FCP/LCP aren't competing with MP4
-    const start = window.setTimeout(() => {
-      setActiveVideoId(videoBubbleIds[0]!);
-    }, 1200);
-
-    const timer = window.setInterval(() => {
-      index = (index + 1) % videoBubbleIds.length;
-      setActiveVideoId(videoBubbleIds[index]!);
-    }, 7000);
-
-    return () => {
-      window.clearTimeout(start);
-      window.clearInterval(timer);
-    };
-  }, [reduce]);
 
   return (
     <div
       aria-hidden
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
-      {bubbles.map((b) => {
-        const showVideo =
-          Boolean(b.video) && !reduce && activeVideoId === b.id;
-
-        return (
-          <motion.div
-            key={b.id}
-            className={`absolute will-change-transform ${b.size} ${b.className}`}
-            initial={false}
-            animate={
-              reduce
-                ? { x: 0, y: 0, rotate: 0 }
-                : {
-                    x: b.x,
-                    y: b.y,
-                    rotate: b.rotate,
-                  }
-            }
-            transition={
-              reduce
-                ? { duration: 0 }
-                : {
-                    duration: b.duration,
-                    delay: b.delay,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    times: [0, 0.25, 0.5, 0.75, 1],
-                  }
-            }
-          >
-            <div className="relative h-full w-full overflow-hidden rounded-full border border-accent/30 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/15">
-              {showVideo ? (
-                <video
-                  key={b.video}
-                  className="h-full w-full scale-125 object-cover object-top"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                  poster={b.poster}
-                >
-                  <source src={b.video} type="video/mp4" />
-                </video>
-              ) : (
-                <Image
-                  src={b.poster}
-                  alt=""
-                  fill
-                  sizes="240px"
-                  className="scale-125 object-cover object-top"
-                />
-              )}
-            </div>
-          </motion.div>
-        );
-      })}
+      {bubbles.map((b) => (
+        <motion.div
+          key={b.id}
+          className={`absolute will-change-transform ${b.size} ${b.className}`}
+          initial={false}
+          animate={
+            reduce
+              ? { x: 0, y: 0, rotate: 0 }
+              : {
+                  x: b.x,
+                  y: b.y,
+                  rotate: b.rotate,
+                }
+          }
+          transition={
+            reduce
+              ? { duration: 0 }
+              : {
+                  duration: b.duration,
+                  delay: b.delay,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  times: [0, 0.25, 0.5, 0.75, 1],
+                }
+          }
+        >
+          <div className="relative h-full w-full overflow-hidden rounded-full border border-accent/30 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-white/15">
+            <Image
+              src={b.poster}
+              alt=""
+              fill
+              sizes="240px"
+              className="scale-125 object-cover object-top"
+            />
+          </div>
+        </motion.div>
+      ))}
 
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(11,11,12,0.92)_0%,rgba(11,11,12,0.72)_38%,rgba(11,11,12,0.28)_62%,transparent_100%)]" />
       <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background via-background/80 to-transparent" />

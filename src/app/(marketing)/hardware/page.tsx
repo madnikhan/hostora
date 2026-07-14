@@ -59,7 +59,7 @@ export default function HardwarePage() {
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover"
-                      priority={i < 3}
+                      priority={i === 0}
                     />
                   </div>
                   <h3 className="display mt-5 text-xl font-bold">{item.name}</h3>

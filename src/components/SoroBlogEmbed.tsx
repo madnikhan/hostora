@@ -24,7 +24,7 @@ export function SoroBlogEmbed({ embedId }: Props) {
       <div id="soro-blog" />
       <Script
         src={`https://app.trysoro.com/api/embed/${id}?theme=dark`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
     </div>
   );
