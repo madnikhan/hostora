@@ -16,10 +16,34 @@ export async function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
 }
 
+function articleShareImages(slug: string, coverImage?: string | null) {
+  if (coverImage) {
+    return [
+      {
+        url: coverImage,
+        alt: "Article cover",
+      },
+    ];
+  }
+  return [
+    {
+      url: `${siteUrl}/blog/${slug}/opengraph-image`,
+      width: 1200,
+      height: 630,
+      alt: "Hostora article",
+    },
+  ];
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPost(slug);
   if (!post) return { title: "Article not found" };
+  const images = articleShareImages(post.slug, post.coverImage);
+  const twitterImage = post.coverImage
+    ? post.coverImage
+    : `${siteUrl}/blog/${post.slug}/twitter-image`;
+
   return {
     title: post.title,
     description: post.description,
@@ -30,7 +54,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       publishedTime: post.publishedAt,
       url: `${siteUrl}/blog/${post.slug}`,
-      images: post.coverImage ? [{ url: post.coverImage }] : undefined,
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [twitterImage],
     },
   };
 }
@@ -39,6 +69,9 @@ export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getBlogPost(slug);
   if (!post) notFound();
+
+  const shareImage =
+    post.coverImage || `${siteUrl}/blog/${post.slug}/opengraph-image`;
 
   const articleLd = {
     "@context": "https://schema.org",
@@ -57,7 +90,7 @@ export default async function BlogPostPage({ params }: Props) {
       url: siteUrl,
     },
     mainEntityOfPage: `${siteUrl}/blog/${post.slug}`,
-    image: post.coverImage || undefined,
+    image: shareImage,
   };
 
   return (
@@ -84,6 +117,18 @@ export default async function BlogPostPage({ params }: Props) {
             {post.description}
           </p>
         </FadeUp>
+
+        {post.coverImage ? (
+          <FadeUp delay={0.04}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={post.coverImage}
+              alt=""
+              className="mt-10 w-full object-cover"
+              style={{ aspectRatio: "1200 / 630" }}
+            />
+          </FadeUp>
+        ) : null}
 
         <FadeUp delay={0.06}>
           <BlogBody post={post} />
