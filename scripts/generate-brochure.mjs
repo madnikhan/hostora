@@ -178,7 +178,7 @@ newPage();
 eyebrow("Hardware (optional)", M);
 y = h1("Deploy where the venue is.", M + 28);
 y = para(
-  "Optional floor kit — including a local Docker server running Hostora and PostgreSQL so every device stays online on your venue network. Quoted with software per venue.",
+  "Optional floor kit — including a local Docker server running Hostora and PostgreSQL so every device stays online on your venue network. Quoted with your pack.",
   y + 14,
 );
 y += 28;
@@ -227,7 +227,7 @@ const why = [
   "Supervisor visibility when the floor gets loud",
   "Optional on-venue server for LAN resilience",
   "Markets across the US, UK, and Europe",
-  "Custom quotes — packaged verticals plus tailored hotel F&B and carts",
+  "Package quotes for Restaurant / Takeaway / Events — configured hotel F&B and carts",
 ];
 y += 20;
 for (const w of why) {
@@ -244,7 +244,7 @@ newPage();
 eyebrow("Next step", M);
 y = h1("Book a Hostora demo.", M + 28);
 y = para(
-  "Per-venue licensing. Multi-site and tailored configurations by agreement. No public price list — we quote to your operation.",
+  "Restaurant / Takeaway / Events packs after demo. Configured installs for hotel F&B and carts. No public price list — we quote to your stations and kit.",
   y + 14,
 );
 y += 40;

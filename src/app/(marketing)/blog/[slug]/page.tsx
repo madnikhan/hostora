@@ -95,8 +95,9 @@ export default async function BlogPostPage({ params }: Props) {
               Ready to run the floor?
             </h2>
             <p className="mt-3 max-w-xl text-muted">
-              Book a Hostora demo — software with optional Docker local server
-              and floor hardware, quoted per venue.
+              Book a Hostora demo — Restaurant, Takeaway, or Events pack, or a
+              configured hotel F&amp;B / cart install, with optional Docker local
+              server and floor hardware.
             </p>
             <Link
               href="/contact"

@@ -16,8 +16,12 @@ const faqs = [
     a: "Hostora is operations — till plus kitchen, guest QR, and supervisor control in one spine, not another standalone till app.",
   },
   {
+    q: "We don’t buy custom software",
+    a: "Right. Restaurant, Takeaway, and Events packs are a fixed ops spine that go live in days after a short floor survey — not a bespoke rewrite. Hotel F&B and food carts are configured to the outlets or footprint, same product.",
+  },
+  {
     q: "Cloud POS is enough",
-    a: "Real venues need station printing, local resilience, and floor-speed workflows. Hostora can ship on a local Docker server (app + PostgreSQL) so every device stays online on your network.",
+    a: "Real venues need station printing, local resilience, and floor-speed workflows. Packs can include a local Docker server (app + PostgreSQL) so every device stays online on your network.",
   },
   {
     q: "Do you do hotel PMS?",
@@ -39,8 +43,9 @@ export default function ContactPage() {
             Book a Hostora demo.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
-            Pick a time that works. We&apos;ll confirm by email with a Google
-            Meet link — name, email, company, phone, and business type required.
+            Pick a pack or a configured install. We&apos;ll confirm by email with
+            a Google Meet link — name, email, company, phone, and business type
+            required.
           </p>
           <div className="mt-8">
             <ContactDemoTeaser />

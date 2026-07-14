@@ -7,7 +7,7 @@ import { hardwareItems } from "@/lib/hardwareMedia";
 export const metadata: Metadata = {
   title: "Hardware — servers, tills, printers & scanners",
   description:
-    "Hostora software with installed hardware: Docker local servers (app + PostgreSQL), POS tills, tablet POS, payment terminals, thermal and receipt printers, barcode and QR scanners. Quoted per venue.",
+    "Hostora software with installed hardware: Docker local servers (app + PostgreSQL), POS tills, tablet POS, payment terminals, thermal and receipt printers, barcode and QR scanners. Quoted with your pack.",
   alternates: { canonical: "/hardware" },
 };
 
@@ -80,8 +80,9 @@ export default function HardwarePage() {
             <p className="mt-4 max-w-2xl text-muted leading-relaxed md:mx-0 mx-auto">
               Tell us how many stations print, how many tills you need, and
               whether you want a local Docker server (Hostora + PostgreSQL on
-              your network for all devices). We quote software and hardware
-              together — per venue.
+              your network for all devices). We quote the kit with your Restaurant,
+              Takeaway, or Events pack — or with a configured hotel F&amp;B / cart
+              install.
             </p>
             <Link
               href="/contact"

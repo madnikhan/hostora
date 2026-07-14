@@ -10,7 +10,7 @@ export const brand = {
   product: "Hostora",
   tagline: "Run the floor. From booking to last pour.",
   oneLiner:
-    "All-in-one hospitality operations for restaurants, takeaways, event venues, hotels (F&B), and food carts — US, UK & Europe.",
+    "Restaurant / Takeaway / Events packs, plus hotel F&B and food carts configured to the operator — POS, kitchen, bookings, payments, stock, and staff. US, UK & Europe.",
   legalName: "K WAZIR LTD",
   companyNumber: "17014542",
   registeredOffice: "7 Wellesley Street, Gloucester, England, GL1 4QP",
@@ -39,11 +39,11 @@ export const colorsHex = {
 };
 
 export const verticals = [
-  "Restaurants",
-  "Takeaways",
-  "Event venues",
-  "Hotels (F&B / ops)",
-  "Food carts",
+  "Restaurant pack",
+  "Takeaway pack",
+  "Events pack",
+  "Hotels (F&B — configured)",
+  "Food carts (configured)",
 ];
 
 export const modules = [

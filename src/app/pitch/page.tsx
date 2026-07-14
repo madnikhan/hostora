@@ -39,7 +39,7 @@ const slides: Slide[] = [
   {
     eyebrow: "Who it's for",
     title: "Five businesses. One spine.",
-    body: "Restaurants · Takeaways · Event venues · Hotels · Food carts — packaged for venues; hotel F&B and carts configured and built to each operator.",
+    body: "Restaurant · Takeaway · Events packs for fast go-live. Hotel F&B and food carts configured to the outlets or footprint — same spine, not a bespoke rewrite.",
     media: pitchClips.icp,
   },
   {
@@ -93,7 +93,7 @@ const slides: Slide[] = [
   {
     eyebrow: "Next step",
     title: "Book a Hostora demo.",
-    body: "Per-venue licensing. Custom quotes for multi-site. Sales reps: leave this slide open and take discovery notes.",
+    body: "Package quote after demo for Restaurant / Takeaway / Events. Configured quote for hotel F&B and carts. Sales reps: leave this slide open and take discovery notes.",
     cta: true,
     media: pitchClips.cta,
   },

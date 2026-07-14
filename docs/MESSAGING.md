@@ -2,7 +2,7 @@
 
 ## Elevator (15 seconds)
 
-Hostora is the hospitality operations platform for restaurants, takeaways, event venues, hotels, and food carts. One system for till, kitchen, guest QR, payments, inventory, HR, and reporting — with optional local servers and floor hardware — sold by K WAZIR LTD across the US, UK and Europe.
+Hostora is the hospitality operations platform for restaurants, takeaways, event venues, hotels, and food carts. One system for till, kitchen, guest QR, payments, inventory, HR, and reporting — with optional floor hardware — sold by K WAZIR LTD across the US, UK and Europe.
 
 ## Problem
 
@@ -10,7 +10,7 @@ Busy venues run on a patchwork of tools. Missed kitchen tickets, slow payments, 
 
 ## Solution
 
-Hostora unifies the floor: POS, KDS, guest QR, bookings, sales reports, inventory, staff attendance, accounting, and supervisor control — designed for live service load. Optional hardware includes a local Docker server (Hostora + PostgreSQL) that serves all floor devices on the venue network, plus tills, tablets, printers, scanners, and payment terminals.
+Hostora replaces the patchwork: POS, KDS, guest QR, bookings, sales reports, inventory, staff attendance, accounting, and supervisor control — designed for live service load. Optional local Docker server (Hostora + PostgreSQL) and kit keep every device online on the venue network.
 
 ## Modules (proof on site)
 
@@ -25,14 +25,14 @@ Hostora unifies the floor: POS, KDS, guest QR, bookings, sales reports, inventor
 
 ## Hardware kit (optional)
 
-- **Local Hostora server** — Docker install on-venue: Hostora app + PostgreSQL (and related services); tills, tablets, KDS, and printers connect over the venue LAN
+- **Local Hostora server** — Docker install on-venue: Hostora app + PostgreSQL; tills, tablets, KDS, and printers on the venue LAN
 - POS tills and tablet POS
 - Floor tablets
 - Thermal and receipt printers
 - Barcode and QR scanners
 - Payment terminals
 
-Quoted with software per venue — see `/hardware`.
+Quoted with the software package — see `/hardware`.
 
 ## ICP
 
@@ -42,9 +42,17 @@ Quoted with software per venue — see `/hardware`.
 - Hotels (F&B only: restaurant, room service, banquet kitchens — not PMS / front desk)
 - Food carts / mobile street-food operators
 
-## Custom stance
+## How we sell (packs vs configured)
 
-Restaurants, takeaways, and events ship as packaged verticals (per-venue quote). **Hotels** and **food carts** get Hostora configured and tailored to the property or cart setup — still F&B/ops, not a rebuilt product or full hotel PMS.
+| Vertical | Offer |
+|----------|--------|
+| Restaurant | **Restaurant pack** — till, kitchen, guest QR, reports; go-live in days after a short floor survey |
+| Takeaway | **Takeaway pack** — fast tickets, station printing, end-of-day reports |
+| Events | **Events pack** — timed service, high covers, supervisor control |
+| Hotel F&B | **Configured** for outlets / room service / banquet (not hotel PMS) |
+| Food cart | **Configured** for mobile till, tickets, tight-footprint stock |
+
+Lead with **replace till + kitchen tickets + booking widget**, not “bespoke software project.” Same product spine; packaging differs by vertical.
 
 ## Discovery questions
 
@@ -61,14 +69,15 @@ Restaurants, takeaways, and events ship as packaged verticals (per-venue quote).
 | Objection | Response |
 |-----------|----------|
 | “We already have a till” | Hostora is operations — till plus kitchen, guest QR, and control in one spine. |
-| “Cloud POS is enough” | Real venues need station printing, local resilience, and floor-speed workflows; Hostora can ship on a local Docker server (app + PostgreSQL) so every device stays online on your network — ask for a live demo under load. |
-| “Too expensive” | Per-venue licensing; quote against lost tickets + staff time, not against the cheapest till app. |
+| “Cloud POS is enough” | Real venues need station printing and local resilience; Hostora packs can include a Docker local server so every device stays online on your network. |
+| “Too expensive” | Quote the **package** against lost tickets and staff time — not against the cheapest till app, and not as an open-ended custom build. |
+| “We don’t buy custom software” | Right — restaurants, takeaways, and events get a **pack**, not a rewrite. Hotel F&B and carts are configured to the outlets / footprint, same product. |
 | “Is this Fumari?” | Fumari is a client venue. Hostora is the product brand from K WAZIR LTD (UK). |
-| “Do you do hotel PMS?” | No — Hostora runs hotel F&B and floor ops (outlets, kitchen, staff). Rooms / front desk stay with your PMS. |
+| “Do you do hotel PMS?” | No — Hostora runs hotel F&B and floor ops. Rooms / front desk stay with your PMS. |
 
 ## Pricing stance
 
-Custom quote — per venue. No public price list until packages are set. Multi-site discounts by agreement. Hotel properties and food carts: tailored configuration quoted per engagement.
+**Package quote** after demo for Restaurant / Takeaway / Events (stations + optional kit). **Configured quote** for hotel F&B and food carts. No public price list. Multi-site discounts by agreement.
 
 ## Pitch URL
 

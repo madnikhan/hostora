@@ -18,4 +18,4 @@ npm run sales:pack
 
 **Vendor:** K WAZIR LTD · sales@hostorasoft.co.uk · https://hostorasoft.co.uk
 
-Never brand the product as Fumari. Pricing is custom quote — per venue.
+Never brand the product as Fumari. Lead with Restaurant / Takeaway / Events **packs**; hotel F&B and carts are **configured**. Package quote after demo — not “custom software project.”

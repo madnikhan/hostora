@@ -154,8 +154,9 @@ export default function ProductPage() {
             </h2>
             <p className="mt-4 max-w-2xl text-muted leading-relaxed">
               Hostora is designed for real venues — on-prem printing, multi-station
-              kitchens, and supervisor controls — not just cloud demos. Pricing is
-              per venue. Custom quotes for multi-site operators.
+              kitchens, and supervisor controls — not just cloud demos. Restaurant,
+              Takeaway, and Events packs are quoted after demo; multi-site and
+              hotel F&amp;B / carts get a configured quote.
             </p>
             <Link
               href="/contact"

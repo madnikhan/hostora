@@ -139,7 +139,7 @@ const jsonLd = [
       "@type": "Offer",
       price: "0",
       priceCurrency: "GBP",
-      description: "Custom quote per venue — contact sales",
+      description: "Package quote after demo — contact sales",
       url: `${siteUrl}/contact`,
     },
     provider: {

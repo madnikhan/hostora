@@ -163,11 +163,11 @@ export default function HomePage() {
                 {
                   n: "01",
                   t: "Survey",
-                  d: "Covers, stations, printers, vertical.",
+                  d: "Pick your pack — covers, stations, printers.",
                 },
                 {
                   n: "02",
-                  t: "Configure",
+                  t: "Install pack",
                   d: "Software ± Docker server and floor kit.",
                 },
                 {
@@ -178,7 +178,7 @@ export default function HomePage() {
                 {
                   n: "04",
                   t: "Live service",
-                  d: "One spine under peak load.",
+                  d: "One spine under peak load — in days, not a project.",
                 },
               ].map((step) => (
                 <li key={step.n}>
@@ -223,14 +223,14 @@ export default function HomePage() {
       <section className="border-t border-border px-6 py-28">
         <FadeUp>
           <div className="mx-auto max-w-4xl text-center">
-            <p className="eyebrow">Built to sell</p>
+            <p className="eyebrow">Packs & verticals</p>
             <h2 className="display mt-4 text-4xl font-bold md:text-6xl">
-              One platform. Five businesses.
+              Packs for venues. Configured where it must be.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-              Restaurants, takeaways, event venues, hotels, and food carts share
-              the same operational spine — packaged for venues, tailored for
-              hotel F&amp;B and mobile carts.
+              Restaurant, Takeaway, and Events packs share one ops spine — go
+              live in days after a short floor survey. Hotel F&amp;B and food
+              carts are configured to the outlets or footprint, not rewritten.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Link

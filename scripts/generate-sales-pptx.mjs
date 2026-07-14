@@ -175,7 +175,7 @@ const hasMark = fs.existsSync(markPng);
   title(s, "Five businesses. One spine.");
   body(
     s,
-    "Packaged for restaurants, takeaways, and events. Hotel F&B and food carts configured to each operator — still F&B/ops, not a hotel PMS.",
+    "Restaurant / Takeaway / Events packs for fast go-live. Hotel F&B and food carts configured to the outlets or footprint — still F&B/ops, not a hotel PMS.",
     2.6,
   );
   verticals.forEach((v, i) => {
@@ -317,7 +317,7 @@ const hasMark = fs.existsSync(markPng);
   title(s, "Software plus floor kit when you need it.", { fontSize: 32 });
   body(
     s,
-    "Optional local Docker server (Hostora + PostgreSQL) so tills, tablets, KDS, and printers stay on the venue network — quoted with software per venue.",
+    "Optional local Docker server (Hostora + PostgreSQL) so tills, tablets, KDS, and printers stay on the venue network — quoted with your pack.",
     2.5,
   );
   hardware.forEach((h, i) => {
@@ -342,7 +342,7 @@ const hasMark = fs.existsSync(markPng);
   title(s, "Proven under live service load.");
   body(
     s,
-    "Hostora is the commercial brand for a platform already running multi-station hospitality venues. Markets: US, UK & Europe. Licensing is per venue — custom quotes for multi-site, hotel F&B, and food carts.",
+    "Hostora is the commercial brand for a platform already running multi-station hospitality venues. Markets: US, UK & Europe. Restaurant / Takeaway / Events packs; hotel F&B and food carts configured — package quote after demo.",
   );
   s.addText("Do not call the product “Fumari.” Client venues are private case studies only.", {
     x: 0.7,
@@ -364,7 +364,7 @@ const hasMark = fs.existsSync(markPng);
   title(s, "Book a Hostora demo.");
   body(
     s,
-    "Per-venue licensing. Custom quotes for multi-site. Leave this slide open and take discovery notes.",
+    "Package quote after demo for Restaurant / Takeaway / Events. Configured quote for hotel F&B and carts. Leave this slide open and take discovery notes.",
   );
   s.addText(
     [

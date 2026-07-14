@@ -173,7 +173,7 @@ doc
   .fontSize(10)
   .font("Helvetica")
   .text(
-    "Custom quote per venue. Hotel F&B and food carts tailored per engagement. No public price list — we scope stations, hardware, and go-live with you on the demo.",
+    "Package quote after demo for Restaurant / Takeaway / Events. Configured quote for hotel F&B and food carts. No public price list — we scope stations, hardware, and go-live on the demo.",
     M,
     y,
     { width: contentW, lineGap: 3 },

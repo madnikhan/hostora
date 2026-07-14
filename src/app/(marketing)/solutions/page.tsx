@@ -8,46 +8,46 @@ import { productMedia, pitchClips } from "@/lib/productMedia";
 export const metadata: Metadata = {
   title: "Solutions for restaurants, hotels, takeaways & food carts",
   description:
-    "Hostora hospitality software for restaurants, takeaways, event venues, hotel F&B, and food carts — packaged for venues, tailored for hotels and mobile operators.",
+    "Hostora Restaurant, Takeaway, and Events packs — plus hotel F&B and food carts configured to the operator. Hospitality ops software, not a bespoke build.",
   alternates: { canonical: "/solutions" },
 };
 
 const solutions = [
   {
-    title: "Restaurants",
-    body: "Table maps, waiter workflows, kitchen routing, and guest QR — from quiet lunch to Saturday night chaos.",
-    points: ["Floor & table control", "Multi-station kitchen", "Guest QR & seating"],
+    title: "Restaurant pack",
+    body: "Replace till + kitchen tickets + booking widgets with one spine. Table maps, waiter workflows, kitchen routing, and guest QR — go-live in days after a short floor survey.",
+    points: ["Floor & table control", "Multi-station kitchen", "Guest QR & seating", "Pack — not a rewrite"],
     media: productMedia.tables,
     video: pitchClips.till.video,
     poster: pitchClips.till.poster,
     frame: "Tables",
   },
   {
-    title: "Takeaways",
-    body: "Fast ticket flow, clear kitchen boards, and payment capture built for speed — without losing order accuracy.",
-    points: ["Rapid order entry", "Station printing", "End-of-day reports"],
+    title: "Takeaway pack",
+    body: "Fast ticket flow, clear kitchen boards, and payment capture built for speed — a fixed pack operators can run Monday, without a custom project.",
+    points: ["Rapid order entry", "Station printing", "End-of-day reports", "Pack — not a rewrite"],
     media: productMedia.kds,
     video: pitchClips.kitchen.video,
     poster: pitchClips.kitchen.poster,
     frame: "Kitchen",
   },
   {
-    title: "Event venues",
-    body: "Large covers, timed service, and live supervisor monitoring so private dining and events stay controlled.",
-    points: ["High-capacity service", "Supervisor alerts", "Staff & shift visibility"],
+    title: "Events pack",
+    body: "Large covers, timed service, and live supervisor monitoring so private dining and events stay controlled — packaged for high-stakes service nights.",
+    points: ["High-capacity service", "Supervisor alerts", "Staff & shift visibility", "Pack — not a rewrite"],
     media: productMedia.supervisor,
     video: pitchClips.control.video,
     poster: pitchClips.control.poster,
     frame: "Control",
   },
   {
-    title: "Hotels",
-    body: "Hotel restaurants, room service, and banquet kitchens on one ops spine — configured to the property’s outlets and service style.",
+    title: "Hotel F&B",
+    body: "Hotel restaurants, room service, and banquet kitchens on one ops spine — configured to the property’s outlets and service style. Not a hotel PMS.",
     points: [
       "Room service & outlet tills",
       "Banquet / multi-station kitchen",
       "Staff & supervisor visibility",
-      "Tailored per property",
+      "Configured per property",
     ],
     media: productMedia.kds,
     video: pitchClips.guests.video,
@@ -61,7 +61,7 @@ const solutions = [
       "Mobile till & payments",
       "Fast ticket flow",
       "Stock for a tight footprint",
-      "Built to your cart setup",
+      "Configured to the cart",
     ],
     media: productMedia.till,
     video: pitchClips.till.video,
@@ -73,19 +73,19 @@ const solutions = [
 const faqs = [
   {
     q: "What software does Hostora provide for restaurants?",
-    a: "Hostora is an all-in-one hospitality ops platform: POS/till, kitchen display, guest QR, payments, inventory, HR/attendance, and reporting — designed for live floor service.",
+    a: "The Restaurant pack: POS/till, kitchen display, guest QR, payments, inventory, HR/attendance, and reporting — a packaged ops spine for live floor service, not a bespoke build.",
   },
   {
     q: "Do you offer hotel software?",
-    a: "Yes for hotel F&B — restaurants, room service, and banquet kitchens. Hostora is not a hotel PMS; rooms and front desk stay with your property system. Hotel deployments are configured per property.",
+    a: "Yes for hotel F&B — restaurants, room service, and banquet kitchens, configured per property. Hostora is not a hotel PMS; rooms and front desk stay with your property system.",
   },
   {
     q: "Can takeaways and food carts use Hostora?",
-    a: "Yes. Takeaways use packaged fast-ticket workflows. Food carts get a tailored setup for mobile till, tickets, payments, and tight-footprint stock.",
+    a: "Yes. Takeaways get the Takeaway pack (fast tickets + kitchen + reports). Food carts get a configured mobile setup — same product, not a rewrite.",
   },
   {
     q: "Who builds and sells Hostora?",
-    a: "Hostora is a product brand of K WAZIR LTD, a UK private limited company (Companies House 17014542), sold across the US, UK and Europe. Pricing is a custom quote per venue.",
+    a: "Hostora is a product brand of K WAZIR LTD (Companies House 17014542), sold across the US, UK and Europe. Restaurant / Takeaway / Events packs are quoted after demo; hotel F&B and carts get a configured quote.",
   },
 ];
 
@@ -113,8 +113,10 @@ export default function SolutionsPage() {
             Built for how hospitality actually works.
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted leading-relaxed">
-            Software for restaurants, takeaways, event venues, hotel F&amp;B, and
-            food carts — one ops spine, configured for how each business runs.
+            Restaurant, Takeaway, and Events packs for operators who need a
+            system that goes live in days — plus hotel F&amp;B and food carts
+            configured to the outlets or footprint. Same spine. Not a bespoke
+            rewrite.
           </p>
         </FadeUp>
 

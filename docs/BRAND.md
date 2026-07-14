@@ -17,12 +17,12 @@
 
 ## One-liner
 
-All-in-one hospitality operations platform — POS, kitchen display, bookings, payments, stock, and staff — with optional installed hardware (servers, tills, printers, scanners) for restaurants, takeaways, event venues, hotels (F&B/ops), and food carts across the US, UK and Europe. Sold by K WAZIR LTD (England and Wales).
+All-in-one hospitality ops platform — POS, kitchen, bookings, payments, stock, and staff — sold as **Restaurant / Takeaway / Events packs**, with hotel F&B and food carts **configured** to the operator. Optional installed hardware. US, UK & Europe. Sold by K WAZIR LTD (England and Wales).
 
 ## Voice
 
 - Confident, operational, sparse
-- Lead with outcomes on the floor, not feature laundry lists
+- Lead with outcomes on the floor and packaged go-live — not “custom project” language
 - Never call the product “Fumari”
 
 ## Visual identity
