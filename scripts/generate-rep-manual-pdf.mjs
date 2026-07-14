@@ -1,6 +1,7 @@
 /**
  * Print Hostora-Sales-Rep-Manual.txt as a clean light PDF.
  * Little design: white paper, amber top rule, Helvetica body, page footer.
+ * Footer must stay above PDFKit's bottom margin or auto page breaks create blanks.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -19,14 +20,17 @@ if (!fs.existsSync(txtPath)) {
 
 const lines = fs.readFileSync(txtPath, "utf8").replace(/\r\n/g, "\n").split("\n");
 
-const MARGIN = { top: 50, bottom: 50, left: 52, right: 52 };
+const MARGIN = { top: 50, bottom: 52, left: 52, right: 52 };
 const FG = "#222222";
 const MUTED = "#444444";
 const ACCENT = "#B8860B";
 const RULE = "#E0E0E0";
+const FOOTER_BAND = 22;
 
 const doc = new PDFDocument({
   size: "A4",
+  bufferPages: true,
+  autoFirstPage: true,
   margins: MARGIN,
   info: {
     Title: `${brand.product} Sales Representative Manual`,
@@ -38,40 +42,48 @@ const stream = fs.createWriteStream(out);
 doc.pipe(stream);
 
 const maxW = doc.page.width - MARGIN.left - MARGIN.right;
-const maxY = doc.page.height - MARGIN.bottom - 12;
+/** Body must stop above the footer line. */
+const maxY = doc.page.height - MARGIN.bottom - FOOTER_BAND - 12;
+
+let pageNum = 1;
 
 function drawFooter() {
-  const y = doc.page.height - 36;
+  // Stay above PDFKit’s bottom margin or .text() auto-adds a blank page.
+  const fy = doc.page.height - MARGIN.bottom - 10;
   doc
     .strokeColor(RULE)
     .lineWidth(0.5)
-    .moveTo(MARGIN.left, y - 6)
-    .lineTo(doc.page.width - MARGIN.right, y - 6)
+    .moveTo(MARGIN.left, fy - 8)
+    .lineTo(doc.page.width - MARGIN.right, fy - 8)
     .stroke();
   doc
     .fillColor("#777777")
     .font("Helvetica")
     .fontSize(8)
     .text(
-      `${brand.product}  |  Sales Rep Manual  |  ${brand.legalName}  |  Page ${doc.page.number}`,
+      `${brand.product}  |  Sales Rep Manual  |  ${brand.legalName}  |  Page ${pageNum}`,
       MARGIN.left,
-      y,
+      fy,
       { width: maxW, lineBreak: false },
     );
 }
 
-function ensureSpace(h) {
-  if (doc.y + h > maxY) {
-    doc.addPage();
-    drawFooter();
-    doc.y = MARGIN.top;
-  }
-}
+doc.on("pageAdded", () => {
+  pageNum += 1;
+  drawFooter();
+});
 
 drawFooter();
 doc.y = MARGIN.top;
 
-// Small header band
+function ensureSpace(h) {
+  if (doc.y + h > maxY) {
+    doc.addPage();
+    doc.y = MARGIN.top;
+  }
+}
+
+// Small header band (first page only)
 doc
   .fillColor(ACCENT)
   .font("Helvetica-Bold")
@@ -110,7 +122,7 @@ for (let i = 0; i < lines.length; i++) {
   }
 
   if (text === "") {
-    doc.moveDown(0.3);
+    if (doc.y + 10 <= maxY) doc.moveDown(0.3);
     continue;
   }
 
@@ -134,14 +146,18 @@ for (let i = 0; i < lines.length; i++) {
     continue;
   }
 
-  // Bullets
+  // Bullets / checklist
   if (text.startsWith("* ") || text.startsWith("[ ]") || text.startsWith("[x]")) {
     ensureSpace(20);
+    const pretty = text
+      .replace(/^\* /, "•  ")
+      .replace(/^\[ \]/, "[ ] ")
+      .replace(/^\[x\]/, "[x] ");
     doc
       .fillColor(MUTED)
       .font("Helvetica")
       .fontSize(9.5)
-      .text(text.replace(/^\* /, "•  ").replace(/^\[ \]/, "☐ ").replace(/^\[x\]/, "☑ "), {
+      .text(pretty, {
         width: maxW,
         indent: 6,
         lineGap: 1.5,
@@ -172,6 +188,11 @@ for (let i = 0; i < lines.length; i++) {
     .text(text, { width: maxW, lineGap: 1.5, align: "left" });
 }
 
+const pages = doc.bufferedPageRange().count;
+if (pages < 1) {
+  throw new Error("Sales rep manual PDF produced no pages");
+}
+
 doc.end();
 
 await new Promise((resolve, reject) => {
@@ -179,4 +200,4 @@ await new Promise((resolve, reject) => {
   stream.on("error", reject);
 });
 
-console.log("Wrote", out);
+console.log("Wrote", out, `(${pages} pages)`);

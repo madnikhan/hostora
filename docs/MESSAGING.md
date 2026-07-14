@@ -79,6 +79,8 @@ Lead with **replace till + kitchen tickets + booking widget**, not “bespoke so
 
 **Package quote** after demo for Restaurant / Takeaway / Events (stations + optional kit). **Configured quote** for hotel F&B and food carts. No public price list. Multi-site discounts by agreement.
 
+**Commercial model (internal):** **hybrid** — full one-time hardware + pack software at **£50–£90/mo** + one-time go-live setup; **90-day** warranty; on-site / overage remote on the visit rate card. Exact GBP lists live only in the internal price book (`npm run sales:pricebook` → `/sales/Hostora-Internal-Price-Book.pdf`). Capital one-time software buyout = founder approval only. Never publish £ on the site or guest PDFs.
+
 ## Pitch URL
 
 Open `/pitch` fullscreen (press **F**). Arrow keys navigate. Leave the final CTA slide open while booking next steps.

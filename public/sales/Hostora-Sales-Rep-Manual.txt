@@ -12,8 +12,8 @@
 
   Tagline:   Run the floor. From booking to last pour.
 
-  Pricing:   Always a CUSTOM QUOTE — per venue.
-             Never invent or publish a fixed price list.
+  Pricing:   Quote after demo (no guest-facing price list).
+             Reps: use Internal Price Book (hybrid hardware + monthly).
 
 --------------------------------------------------------------------------------
   HOW TO USE THIS MANUAL
@@ -46,17 +46,17 @@
 
   WE SELL
   -------
-  * Hostora software licence (per venue)
+  * Hostora software packs (Restaurant / Takeaway / Events) — monthly licence
   * Optional hardware kit (server, tills, tablets, printers, scanners,
-    payment terminals)
-  * Setup for restaurants, takeaways and event venues
-  * Tailored setup for hotel F&B and food carts
+    payment terminals) — one-time
+  * Go-live setup for restaurants, takeaways and event venues
+  * Configured setup for hotel F&B and food carts
 
   WE DO NOT SELL
   --------------
   * Hotel PMS (rooms, front desk, housekeeping)
   * The product under the name "Fumari"
-  * A public fixed price list
+  * A public guest-facing fixed price list
   * Source code or white-label without a written vendor agreement
 
 ================================================================================
@@ -124,26 +124,26 @@
   5. VERTICAL PLAYBOOKS
 ================================================================================
 
-  RESTAURANTS
+  RESTAURANTS (Restaurant pack)
     Lead with: table map, waiter flow, multi-station kitchen, guest QR,
     bookings.
     Ask: peak covers, how many print stations.
 
-  TAKEAWAYS
+  TAKEAWAYS (Takeaway pack)
     Lead with: fast ticket entry, kitchen boards, clear tickets,
     end-of-day reports.
     Ask: peak tickets per hour, printer layout.
 
-  EVENT VENUES
+  EVENT VENUES (Events pack)
     Lead with: large covers, timed service, supervisor visibility.
     Ask: banquet vs standing, station count, who owns the night.
 
-  HOTELS (F&B ONLY)
+  HOTELS (F&B — configured)
     Lead with: restaurant, room service, banquet kitchen, ticket routing.
     Say clearly: Hostora is NOT a hotel PMS. Rooms and front desk stay
-    with their hotel system. Setup is tailored per property.
+    with their hotel system. Setup is configured per property.
 
-  FOOD CARTS
+  FOOD CARTS (configured)
     Lead with: tablet or phone till, printer, stock on the cart.
     Ask: power, connectivity, how they track inventory today.
 
@@ -185,7 +185,7 @@
       -> Product overview
       -> One deep module they care about
       -> Hardware only if relevant
-      -> Custom quote
+      -> Hybrid quote (kit + go-live + monthly)
       -> Book demo
 
 ================================================================================
@@ -216,9 +216,17 @@
   9. PRICING AND NEXT STEPS
 ================================================================================
 
-  * Always: custom quote — per venue.
-  * Multi-site discounts by agreement.
-  * Hotel F&B and food carts: tailored quote per engagement.
+  Public / prospects:
+  * No guest-facing price list — quote after demo only.
+  * Never invent random £ figures on a call.
+
+  Reps (INTERNAL):
+  * Use Hostora-Internal-Price-Book.pdf (npm run sales:pricebook).
+  * Default model: hardware one-time + software £50–£90/mo by pack
+    + go-live setup fee. Visit rates for chargeable on-site work.
+  * Never email the Internal Price Book to a prospect.
+  * Multi-site software discount: see price book rules.
+  * Capital one-time software buyout: founder approval only.
 
   Collect before quoting:
     Venue type, location, stations, hardware need, timeline,
@@ -232,21 +240,26 @@
   10. LEAVE-BEHINDS CHECKLIST
 ================================================================================
 
+  Guest leave-behinds (OK to send):
   [ ] Sales presentation (PPTX)
       https://hostorasoft.co.uk/sales/Hostora-Sales-Presentation.pptx
 
   [ ] Brochure (PDF)
       https://hostorasoft.co.uk/sales/Hostora-Brochure.pdf
 
-  [ ] This manual (TXT)
-      https://hostorasoft.co.uk/sales/Hostora-Sales-Rep-Manual.txt
-
-  [ ] This manual (PDF)
-      https://hostorasoft.co.uk/sales/Hostora-Sales-Rep-Manual.pdf
+  [ ] Quote pack (PDF) — no £ list
+      https://hostorasoft.co.uk/sales/Hostora-Quote-Pack.pdf
 
   [ ] Website     https://hostorasoft.co.uk
   [ ] Pitch deck  https://hostorasoft.co.uk/pitch
   [ ] Book demo   https://hostorasoft.co.uk/contact
+
+  Internal only (do NOT email to prospects):
+  [ ] Internal Price Book (PDF)
+      /sales/Hostora-Internal-Price-Book.pdf
+  [ ] This manual (TXT / PDF)
+      /sales/Hostora-Sales-Rep-Manual.txt
+      /sales/Hostora-Sales-Rep-Manual.pdf
 
 ================================================================================
   END OF MANUAL — K WAZIR LTD — CONFIDENTIAL FOR SALES USE

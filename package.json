@@ -16,6 +16,7 @@
     "sales:brochure": "node scripts/generate-brochure.mjs",
     "sales:quote": "node scripts/generate-quote-onepager.mjs",
     "sales:manual": "node scripts/generate-rep-manual-pdf.mjs",
+    "sales:pricebook": "node scripts/generate-internal-pricebook.mjs",
     "sales:pack": "npm run sales:pptx && npm run sales:brochure && npm run sales:quote && npm run sales:manual"
   },
   "dependencies": {
