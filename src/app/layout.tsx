@@ -1,25 +1,20 @@
 import type { Metadata } from "next";
-import { Syne, DM_Sans, Geist_Mono } from "next/font/google";
+import { Syne, DM_Sans } from "next/font/google";
 import { JsonLd } from "@/components/JsonLd";
 import { TawkChat } from "@/components/TawkChat";
-import { company, ogImage, ogVideo, siteUrl } from "@/lib/company";
+import { company, ogImage, siteUrl } from "@/lib/company";
 import "./globals.css";
 
 const display = Syne({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["600", "700"],
 });
 
 const body = DM_Sans({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const mono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 const titleDefault =
@@ -69,15 +64,6 @@ export const metadata: Metadata = {
     title: titleDefault,
     description,
     images: ogImages,
-    videos: [
-      {
-        url: ogVideo.url,
-        secureUrl: ogVideo.url,
-        type: "video/mp4",
-        width: 1280,
-        height: 720,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -163,7 +149,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} h-full antialiased`}
     >
       <body
         className="min-h-full bg-background text-foreground"

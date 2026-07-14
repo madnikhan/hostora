@@ -34,7 +34,3 @@ export const ogImage = {
   alt: "Hostora — hospitality operations software",
 };
 
-export const ogVideo = {
-  path: "/brand/og-teaser.mp4",
-  url: `${siteUrl}/brand/og-teaser.mp4`,
-};

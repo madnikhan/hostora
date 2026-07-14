@@ -16,7 +16,7 @@ type Bubble = {
   rotate: number[];
 };
 
-/** Poster-only ambience — no MP4 in the hero (keeps first paint / full load light). */
+/** Poster-only ambience — capped set keeps LCP viewport light. */
 const bubbles: Bubble[] = [
   {
     id: "till",
@@ -85,39 +85,6 @@ const bubbles: Bubble[] = [
     rotate: [0, -9, 7, -3, 0],
   },
   {
-    id: "inventory",
-    poster: productMedia.inventory.src,
-    size: "h-16 w-16 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-36 lg:w-36",
-    className: "left-[-2%] top-[58%] hidden opacity-32 sm:block md:opacity-38",
-    duration: 19,
-    delay: 0.6,
-    x: [0, 26, -10, 18, 0],
-    y: [0, -20, 34, -14, 0],
-    rotate: [0, 6, -10, 4, 0],
-  },
-  {
-    id: "hr",
-    poster: productMedia.hr.src,
-    size: "h-16 w-16 sm:h-24 sm:w-24 md:h-28 md:w-28",
-    className: "right-[-3%] top-[55%] hidden opacity-30 sm:block md:opacity-36",
-    duration: 21,
-    delay: 1.8,
-    x: [0, -18, 22, -14, 0],
-    y: [0, 32, -16, 22, 0],
-    rotate: [0, -5, 8, -6, 0],
-  },
-  {
-    id: "accounting",
-    poster: productMedia.accounting.src,
-    size: "h-20 w-20 md:h-32 md:w-32 lg:h-40 lg:w-40",
-    className: "left-[2%] top-[2%] hidden opacity-28 md:block md:opacity-34",
-    duration: 27,
-    delay: 2.5,
-    x: [0, 12, -28, 16, 0],
-    y: [0, 18, -26, 12, 0],
-    rotate: [0, 4, -7, 5, 0],
-  },
-  {
     id: "analytics",
     poster: productMedia.analyticsHourly.src,
     size: "h-20 w-20 sm:h-24 sm:w-24 md:h-32 md:w-32",
@@ -129,26 +96,15 @@ const bubbles: Bubble[] = [
     rotate: [0, 7, -9, 3, 0],
   },
   {
-    id: "tables",
-    poster: productMedia.tables.src,
-    size: "h-16 w-16 md:h-24 md:w-24 lg:h-32 lg:w-32",
-    className: "left-[18%] bottom-[18%] hidden opacity-26 lg:block lg:opacity-32",
-    duration: 23,
-    delay: 3,
-    x: [0, -12, 28, -8, 0],
-    y: [0, -28, 18, -22, 0],
-    rotate: [0, -8, 5, -4, 0],
-  },
-  {
-    id: "modifiers",
-    poster: productMedia.modifiers.src,
-    size: "h-14 w-14 md:h-24 md:w-24",
-    className: "right-[20%] bottom-[22%] hidden opacity-26 lg:block lg:opacity-34",
-    duration: 17,
-    delay: 1.6,
-    x: [0, 20, -16, 24, 0],
-    y: [0, -18, 28, -12, 0],
-    rotate: [0, 9, -5, 6, 0],
+    id: "inventory",
+    poster: productMedia.inventory.src,
+    size: "h-16 w-16 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-36 lg:w-36",
+    className: "left-[-2%] top-[58%] opacity-32 md:opacity-38",
+    duration: 19,
+    delay: 0.6,
+    x: [0, 26, -10, 18, 0],
+    y: [0, -20, 34, -14, 0],
+    rotate: [0, 6, -10, 4, 0],
   },
 ];
 
@@ -191,7 +147,8 @@ export function HeroMediaBubbles() {
               src={b.poster}
               alt=""
               fill
-              sizes="240px"
+              loading="lazy"
+              sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, 160px"
               className="scale-125 object-cover object-top"
             />
           </div>
