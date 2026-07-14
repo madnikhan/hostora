@@ -25,7 +25,7 @@ export function SoroBlogEmbed({ embedId }: Props) {
     <div className="mt-14 min-h-[12rem]">
       <div id="soro-blog" />
       <Script
-        src={`https://app.trysoro.com/api/embed/${id}`}
+        src={`https://app.trysoro.com/api/embed/${id}?theme=dark`}
         strategy="afterInteractive"
       />
     </div>
