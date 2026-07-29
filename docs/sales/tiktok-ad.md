@@ -61,6 +61,20 @@ Drop these into CapCut for end cards / lower-thirds (gold `#E8A54B` on dark `#0B
 
 Rebuild: `npm run brand:pack` (Playwright + ffmpeg).
 
+## Kling AI overlays (transparent GIFs)
+
+Five **5s** transparent motion GIFs (1080×1080) with site typography — **Syne**, cream `#F4F1EA`, gold `#E8A54B`. Drop one onto each ~5s Kling clip:
+
+| File | Beat |
+|------|------|
+| [`public/brand/kling/01-hook.gif`](../../public/brand/kling/01-hook.gif) | “Still managing everything manually?” |
+| [`public/brand/kling/02-brand.gif`](../../public/brand/kling/02-brand.gif) | Mark + Hostora + Hospitality OS |
+| [`public/brand/kling/03-system.gif`](../../public/brand/kling/03-system.gif) | One smart system |
+| [`public/brand/kling/04-proof.gif`](../../public/brand/kling/04-proof.gif) | Save time. Increase sales. |
+| [`public/brand/kling/05-cta.gif`](../../public/brand/kling/05-cta.gif) | Book a free demo + contact URL |
+
+Rebuild: `npm run brand:kling` (Playwright + ffmpeg).
+
 ## Upload tips
 
 - Use A/B/C for TikTok Ads creative testing.

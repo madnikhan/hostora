@@ -12,6 +12,7 @@
     "ad:tiktok:audio": "node scripts/generate_tiktok_audio.mjs",
     "ad:tiktok:legacy-clips": "bash scripts/build_tiktok_ad.sh",
     "brand:pack": "node scripts/export_brand_pack.mjs",
+    "brand:kling": "node scripts/export_kling_overlays.mjs",
     "sales:pptx": "node scripts/generate-sales-pptx.mjs",
     "sales:brochure": "node scripts/generate-brochure.mjs",
     "sales:quote": "node scripts/generate-quote-onepager.mjs",
