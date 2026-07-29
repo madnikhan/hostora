@@ -4,9 +4,30 @@ Staff pipeline for every **Book a demo** request from `/contact`.
 
 ## Access
 
-1. Same password as SEO admin (`ADMIN_SEO_PASSWORD` / `ADMIN_SEO_SECRET`)
+1. Password: `ADMIN_SEO_PASSWORD`, or fallback `BLOG_PUBLISH_SECRET`
 2. Open [https://www.hostorasoft.co.uk/admin/leads](https://www.hostorasoft.co.uk/admin/leads)
-3. Login via `/admin/seo/login` if prompted (session cookie is shared)
+3. Login via `/admin/seo/login` if prompted (session cookie is shared; SEO UI is redirected to Leads)
+
+## Critical: Blob on Production
+
+**Demo leads will not appear in `/admin/leads` without Blob.**
+
+On Vercel Production you **must** set:
+
+```bash
+BLOB_READ_WRITE_TOKEN=...
+```
+
+Use the same Vercel Blob store as blog/SEO drafts. Without it, booking still creates a Calendar event and sends email, but CRM save fails (you’ll see a warning on the confirmation card and in the sales notify email).
+
+Filesystem `content/leads/` is **local dev only** — it is not durable on serverless.
+
+### Verify after deploy
+
+1. Confirm `BLOB_READ_WRITE_TOKEN` is set on Production and the project was **redeployed**
+2. Book a test demo on `/contact`
+3. Open `/admin/leads` — the company should list within seconds (Refresh if needed)
+4. If confirmation shows a CRM warning, fix the Blob token and re-book
 
 ## What gets stored
 
@@ -17,6 +38,8 @@ On each successful calendar booking, Hostora also writes a lead (Vercel Blob `le
 - Status pipeline: `new` → `contacted` → `demo_done` → `quoted` → `won` | `lost` | `no_show`
 - Notes, call log, follow-up tasks (auto-creates a post-demo call task +1 day)
 - Optional UTM / `ref` from the contact URL
+
+Listing scans all `leads/*.json` files (does not rely only on an index file).
 
 ## Staff actions
 
@@ -60,7 +83,7 @@ Stored on the lead for reporting.
 
 ## Requirements
 
-- `BLOB_READ_WRITE_TOKEN` on Production (durable leads)
+- `BLOB_READ_WRITE_TOKEN` on Production (required for durable leads)
 - SMTP env already used for booking confirmations
 - Booking Google Calendar flow unchanged — CRM is additive
 

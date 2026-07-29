@@ -21,7 +21,21 @@ const INDEX_PATH = "leads/index.json";
 type LeadIndex = { ids: string[]; updatedAt: string };
 
 function hasBlob() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
+}
+
+function isProduction() {
+  return process.env.NODE_ENV === "production";
+}
+
+/** Production must use Blob; local dev may use filesystem. */
+function assertWritable() {
+  if (hasBlob()) return;
+  if (isProduction()) {
+    throw new Error(
+      "BLOB_READ_WRITE_TOKEN is not set. Add it on Vercel Production (same Blob store as blog) and redeploy — demo leads cannot use the serverless filesystem.",
+    );
+  }
 }
 
 function leadsDir() {
@@ -33,6 +47,7 @@ function defaultAssignee(): string {
 }
 
 async function putJson(pathname: string, data: unknown) {
+  assertWritable();
   if (!hasBlob()) {
     throw new Error("BLOB_READ_WRITE_TOKEN is not set.");
   }
@@ -85,6 +100,7 @@ async function writeIndex(ids: string[]) {
     await putJson(INDEX_PATH, idx);
     return;
   }
+  assertWritable();
   await ensureFsDir();
   await fs.writeFile(
     path.join(leadsDir(), "index.json"),
@@ -99,6 +115,7 @@ async function writeLeadFile(lead: Lead) {
     await putJson(pathname, lead);
     return;
   }
+  assertWritable();
   await ensureFsDir();
   await fs.writeFile(
     path.join(leadsDir(), `${lead.id}.json`),
@@ -146,6 +163,7 @@ export type CreateLeadInput = {
 };
 
 export async function createLead(input: CreateLeadInput): Promise<Lead> {
+  assertWritable();
   const now = new Date().toISOString();
   const id = randomUUID();
   const demoStart = new Date(input.start);
@@ -183,14 +201,24 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
   };
 
   await writeLeadFile(lead);
-  const idx = await readIndex();
-  await writeIndex([lead.id, ...idx.ids]);
+  try {
+    const idx = await readIndex();
+    await writeIndex([lead.id, ...idx.ids]);
+  } catch (err) {
+    // Lead file is source of truth; index is optional cache
+    console.error("lead index update failed", err);
+  }
   return lead;
 }
 
 export async function getLead(id: string): Promise<Lead | null> {
   const clean = id.trim();
   if (!clean) return null;
+  if (isProduction() && !hasBlob()) {
+    throw new Error(
+      "BLOB_READ_WRITE_TOKEN is not set. Add it on Vercel Production and redeploy.",
+    );
+  }
   if (hasBlob()) {
     return readJsonBlob<Lead>(`${LEAD_PREFIX}${clean}.json`);
   }
@@ -205,37 +233,43 @@ export async function getLead(id: string): Promise<Lead | null> {
   }
 }
 
+/** Primary listing: scan all lead JSON files (index is not required). */
 export async function listLeads(): Promise<Lead[]> {
-  const idx = await readIndex();
-  const leads: Lead[] = [];
-  for (const id of idx.ids) {
-    const lead = await getLead(id);
-    if (lead) leads.push(lead);
+  if (isProduction() && !hasBlob()) {
+    throw new Error(
+      "BLOB_READ_WRITE_TOKEN is not set. Add it on Vercel Production and redeploy.",
+    );
   }
 
-  // Fallback: scan filesystem / blob if index empty
-  if (!leads.length) {
-    if (hasBlob()) {
-      const { blobs } = await list({ prefix: LEAD_PREFIX });
-      for (const blob of blobs) {
-        if (!blob.pathname.endsWith(".json")) continue;
-        if (blob.pathname === INDEX_PATH) continue;
+  const leads: Lead[] = [];
+
+  if (hasBlob()) {
+    const { blobs } = await list({ prefix: LEAD_PREFIX });
+    for (const blob of blobs) {
+      if (!blob.pathname.endsWith(".json")) continue;
+      if (blob.pathname === INDEX_PATH) continue;
+      if (!blob.pathname.startsWith(LEAD_PREFIX)) continue;
+      try {
         const res = await fetch(blob.url, { cache: "no-store" });
         if (!res.ok) continue;
-        leads.push((await res.json()) as Lead);
-      }
-    } else {
-      try {
-        await ensureFsDir();
-        const files = await fs.readdir(leadsDir());
-        for (const file of files) {
-          if (!file.endsWith(".json") || file === "index.json") continue;
-          const raw = await fs.readFile(path.join(leadsDir(), file), "utf8");
-          leads.push(JSON.parse(raw) as Lead);
-        }
+        const lead = (await res.json()) as Lead;
+        if (lead?.id) leads.push(lead);
       } catch {
-        /* empty */
+        /* skip corrupt */
       }
+    }
+  } else {
+    try {
+      await ensureFsDir();
+      const files = await fs.readdir(leadsDir());
+      for (const file of files) {
+        if (!file.endsWith(".json") || file === "index.json") continue;
+        const raw = await fs.readFile(path.join(leadsDir(), file), "utf8");
+        const lead = JSON.parse(raw) as Lead;
+        if (lead?.id) leads.push(lead);
+      }
+    } catch {
+      /* empty */
     }
   }
 
@@ -386,6 +420,10 @@ export async function deleteLead(id: string): Promise<void> {
       /* ignore */
     }
   }
-  const idx = await readIndex();
-  await writeIndex(idx.ids.filter((x) => x !== id));
+  try {
+    const idx = await readIndex();
+    await writeIndex(idx.ids.filter((x) => x !== id));
+  } catch {
+    /* ignore */
+  }
 }

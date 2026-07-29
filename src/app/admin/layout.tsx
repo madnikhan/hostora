@@ -29,12 +29,6 @@ export default function AdminLayout({
               >
                 Leads
               </Link>
-              <Link
-                href="/admin/seo"
-                className="text-white/60 transition hover:text-white"
-              >
-                SEO
-              </Link>
             </nav>
           </div>
           <Link

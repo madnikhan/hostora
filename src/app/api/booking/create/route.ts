@@ -170,28 +170,6 @@ export async function POST(request: Request) {
     );
   }
 
-  let emailsSent = false;
-  let emailError: string | null = null;
-  try {
-    await sendBookingEmails({
-      name: data.name,
-      email: data.email,
-      companyName: data.companyName,
-      phone: data.phone,
-      vertical: data.vertical,
-      start,
-      meetLink: meeting.meetLink ?? null,
-      htmlLink: meeting.htmlLink ?? null,
-    });
-    emailsSent = true;
-  } catch (err) {
-    console.error("booking emails failed (event was created)", err);
-    emailError =
-      err instanceof Error
-        ? err.message
-        : "Could not send confirmation emails.";
-  }
-
   let leadId: string | null = null;
   let leadError: string | null = null;
   try {
@@ -219,6 +197,30 @@ export async function POST(request: Request) {
     console.error("lead persist failed (booking still ok)", err);
     leadError =
       err instanceof Error ? err.message : "Could not save lead for CRM.";
+  }
+
+  let emailsSent = false;
+  let emailError: string | null = null;
+  try {
+    await sendBookingEmails({
+      name: data.name,
+      email: data.email,
+      companyName: data.companyName,
+      phone: data.phone,
+      vertical: data.vertical,
+      start,
+      meetLink: meeting.meetLink ?? null,
+      htmlLink: meeting.htmlLink ?? null,
+      leadId,
+      leadError,
+    });
+    emailsSent = true;
+  } catch (err) {
+    console.error("booking emails failed (event was created)", err);
+    emailError =
+      err instanceof Error
+        ? err.message
+        : "Could not send confirmation emails.";
   }
 
   return NextResponse.json({

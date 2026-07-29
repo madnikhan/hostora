@@ -36,6 +36,8 @@ export function DemoBookingForm() {
     start: string;
     emailsSent: boolean;
     emailError: string | null;
+    leadId: string | null;
+    leadError: string | null;
   } | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -128,6 +130,8 @@ export function DemoBookingForm() {
           start: data.start,
           emailsSent: Boolean(data.emailsSent),
           emailError: data.emailError ?? null,
+          leadId: data.leadId ?? null,
+          leadError: data.leadError ?? null,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Booking failed");
@@ -151,6 +155,13 @@ export function DemoBookingForm() {
         </p>
         {success.emailError ? (
           <p className="mt-3 text-sm text-red-400">{success.emailError}</p>
+        ) : null}
+        {success.leadError ? (
+          <p className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+            Demo is on the calendar, but the CRM lead was not saved. Staff: set{" "}
+            <code className="text-amber-50">BLOB_READ_WRITE_TOKEN</code> on
+            Vercel and redeploy. ({success.leadError})
+          </p>
         ) : null}
         <div className="mt-6 flex flex-wrap gap-3">
           {success.meetLink ? (

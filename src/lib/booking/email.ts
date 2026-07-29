@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import { formatInTimeZone } from "date-fns-tz";
 import { bookingConfig, isSmtpConfigured } from "@/lib/booking/config";
-import { company } from "@/lib/company";
+import { company, siteUrl } from "@/lib/company";
 
 export type BookingMailPayload = {
   name: string;
@@ -12,6 +12,8 @@ export type BookingMailPayload = {
   start: Date;
   meetLink: string | null;
   htmlLink?: string | null;
+  leadId?: string | null;
+  leadError?: string | null;
 };
 
 function whenLabel(start: Date): string {
@@ -42,6 +44,11 @@ function customerHtml(p: BookingMailPayload): string {
 
 function internalHtml(p: BookingMailPayload): string {
   const when = whenLabel(p.start);
+  const leadUrl = p.leadId ? `${siteUrl}/admin/leads/${p.leadId}` : null;
+  const crmLine = leadUrl
+    ? `<li><strong>CRM lead:</strong> <a href="${leadUrl}">${leadUrl}</a></li>`
+    : `<li><strong>CRM:</strong> <span style="color:#b45309">Lead save failed${p.leadError ? ` — ${p.leadError}` : ""}. Check BLOB_READ_WRITE_TOKEN on Vercel.</span></li>`;
+
   return `
   <div style="font-family:system-ui,sans-serif;padding:24px">
     <h2>New Hostora demo booking</h2>
@@ -54,6 +61,7 @@ function internalHtml(p: BookingMailPayload): string {
       <li><strong>When:</strong> ${when}</li>
       <li><strong>Meet:</strong> ${p.meetLink || "(pending)"}</li>
       <li><strong>Calendar:</strong> ${p.htmlLink || "n/a"}</li>
+      ${crmLine}
     </ul>
   </div>`;
 }
