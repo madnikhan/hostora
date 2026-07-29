@@ -9,7 +9,8 @@ How [Soro](https://trysoro.com/) appears on this Next.js site.
 | Piece | Role |
 |-------|------|
 | `/blog` | Hostora hero + **Soro embed widget** + “Hostora notes” list |
-| `/blog/[slug]` | Native Hostora articles (admin / CLI / seed) + JSON-LD |
+| `/blog/[slug]` | Native Hostora articles **or** SSR shell for Soro articles (title, excerpt, image, JSON-LD) + embed |
+| `/sitemap.xml` | Static pages + Hostora posts + **Soro article URLs** (`/blog/{slug}`) |
 | `/admin/seo` | Hostora draft → approve → Blob publish |
 | `POST /api/blog/publish` | Hostora tools only — **not** used by Soro embed |
 
@@ -17,12 +18,32 @@ How [Soro](https://trysoro.com/) appears on this Next.js site.
 flowchart LR
   soroUI[Soro articles]
   embed[Soro embed on /blog]
+  slug["/blog/slug SSR shell"]
+  sitemap[sitemap.xml]
   admin["/admin/seo"]
-  slug["/blog/slug"]
+  native["/blog/slug native"]
 
   soroUI --> embed
-  admin --> slug
+  soroUI --> slug
+  soroUI --> sitemap
+  admin --> native
+  native --> sitemap
 ```
+
+## Why Google only saw ~10 pages before
+
+Hostora’s sitemap listed static routes plus **native** Blob/seed posts only. Daily Soro calendar articles lived in the client embed (`content: null` in the script payload) and were **never** added as `/blog/{slug}` URLs. GSC “Discovered pages: 10” matched that sitemap exactly.
+
+After this fix, `/sitemap.xml` includes each Soro slug as `https://www.hostorasoft.co.uk/blog/{slug}`, and those routes render a crawlable HTML shell.
+
+**Limitation:** Full article body still loads inside Soro’s widget. Google gets discoverable URLs + title/excerpt/image; deep body ranking improves only if Soro exposes HTML or you mirror posts via Hostora `/admin/seo`.
+
+## Google Search Console (www)
+
+1. Add and verify the property **`https://www.hostorasoft.co.uk/`** (www), not only the apex.
+2. Submit sitemap: `https://www.hostorasoft.co.uk/sitemap.xml`
+3. Apex `https://hostorasoft.co.uk/` **308 redirects to www**. GSC “Page with redirect” on apex `/` and `/company` is expected — use the **www** property as primary.
+4. After deploy, wait for Google to re-read the sitemap (days, not minutes). Indexed count will lag discovery.
 
 ## Connect Soro (embed)
 
@@ -41,17 +62,17 @@ Hostora falls back to that Production ID if the env is unset.
 
 ### Limitations
 
-- Article chrome and deep links (`/blog?post=<slug>`) are **Soro-controlled**.
+- Article chrome and legacy deep links (`/blog?post=<slug>`) are still **Soro-controlled** for the widget UI.
+- Prefer sharing **`/blog/{slug}`** (Hostora path) for indexing and stable canonicals.
 - Hostora **cannot** brand-lint embed body HTML the way `/admin/seo` or `/api/blog/publish` does.
 - Paste brand voice into Soro anyway (below).
 
 ### Share previews (Open Graph)
 
-Soro share links look like `/blog?post=restaurant-pos-software` (not `/blog/[slug]`). WhatsApp and similar crawlers only see **server** meta tags.
+- **`/blog/{slug}`** (Soro or Hostora): server metadata + JSON-LD on the slug page.
+- Legacy **`/blog?post=...`**: Hostora still sets `og:title` / `og:image` from Soro’s embed script (`SORO_ARTICLES`).
 
-Hostora reads article title, excerpt, and featured image from Soro’s embed script (`SORO_ARTICLES`) and sets `og:title` / `og:image` for that `?post=` URL so shares show the article photo instead of the default Hostora OG card.
-
-After publishing a new Soro post, re-share or refresh the link preview once the site has redeployed / cache has updated (embed metadata is revalidated every ~2 minutes).
+Embed metadata is revalidated about every ~2 minutes.
 
 ## Brand guardrails (paste into Soro brand voice)
 
@@ -72,7 +93,7 @@ Full machine rules (Hostora pipeline): [`content/seo/brand-rules.json`](../../co
 
 ## Hostora-owned path (controlled posts)
 
-For articles with stable Hostora URLs and brand lint, use [seo-pipeline.md](./seo-pipeline.md) — `/admin/seo` or `npm run seo:draft` → review → publish. Those appear under **Hostora notes** on `/blog` and at `/blog/<slug>`.
+For articles with full body HTML, stable Hostora URLs and brand lint, use [seo-pipeline.md](./seo-pipeline.md) — `/admin/seo` or `npm run seo:draft` → review → publish. Those appear under **Hostora notes** on `/blog` and at `/blog/<slug>`.
 
 ## Hostora publish API (not used by Soro embed)
 

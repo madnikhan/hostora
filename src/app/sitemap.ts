@@ -1,12 +1,18 @@
 import type { MetadataRoute } from "next";
 import { listBlogPosts } from "@/lib/blog/store";
 import { siteUrl } from "@/lib/company";
+import { listSoroArticles } from "@/lib/seo/soroArticles";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
-  const posts = await listBlogPosts();
+  const [posts, soroArticles] = await Promise.all([
+    listBlogPosts(),
+    listSoroArticles(),
+  ]);
+
+  const nativeSlugs = new Set(posts.map((p) => p.slug.toLowerCase()));
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: siteUrl, lastModified, changeFrequency: "weekly", priority: 1 },
@@ -55,5 +61,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...blogRoutes];
+  const soroRoutes: MetadataRoute.Sitemap = soroArticles
+    .filter((a) => a.slug && !nativeSlugs.has(a.slug.toLowerCase()))
+    .map((article) => ({
+      url: `${siteUrl}/blog/${article.slug}`,
+      lastModified: article.isoDate
+        ? new Date(article.isoDate)
+        : lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.65,
+    }));
+
+  return [...staticRoutes, ...blogRoutes, ...soroRoutes];
 }
