@@ -23,6 +23,14 @@ export function DemoBookingForm() {
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [utm, setUtm] = useState<{
+    source?: string;
+    medium?: string;
+    campaign?: string;
+    content?: string;
+    term?: string;
+    ref?: string;
+  }>({});
   const [success, setSuccess] = useState<{
     meetLink: string | null;
     start: string;
@@ -35,6 +43,20 @@ export function DemoBookingForm() {
   const maxDate = dates[dates.length - 1] ?? "";
 
   const dateSet = useMemo(() => new Set(dates), [dates]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sp = new URLSearchParams(window.location.search);
+    const next = {
+      source: sp.get("utm_source") || undefined,
+      medium: sp.get("utm_medium") || undefined,
+      campaign: sp.get("utm_campaign") || undefined,
+      content: sp.get("utm_content") || undefined,
+      term: sp.get("utm_term") || undefined,
+      ref: sp.get("ref") || undefined,
+    };
+    if (Object.values(next).some(Boolean)) setUtm(next);
+  }, []);
 
   useEffect(() => {
     const probe = new Date().toISOString().slice(0, 10);
@@ -96,6 +118,7 @@ export function DemoBookingForm() {
             phone,
             vertical,
             start: selectedStart,
+            ...(Object.values(utm).some(Boolean) ? { utm } : {}),
           }),
         });
         const data = await res.json();

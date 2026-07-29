@@ -118,13 +118,21 @@ export default function AdminSeoDashboard() {
             Generate, edit, approve, publish to Blob
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => void logout()}
-          className="text-sm text-white/45 hover:text-white/80"
-        >
-          Log out
-        </button>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/admin/leads"
+            className="text-sm text-[#E8A54B] hover:underline"
+          >
+            Demo leads
+          </Link>
+          <button
+            type="button"
+            onClick={() => void logout()}
+            className="text-sm text-white/45 hover:text-white/80"
+          >
+            Log out
+          </button>
+        </div>
       </div>
 
       {data && !data.storage.canPublishLive ? (

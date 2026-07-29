@@ -32,7 +32,8 @@ NEXT_PUBLIC_SITE_URL=https://hostorasoft.co.uk
 | `/hardware` | Hardware kit (servers, tills, printers, scanners) |
 | `/blog` | SEO articles (Soro embed + Hostora notes; admin → `/blog/[slug]`) |
 | `/solutions` | Restaurant / takeaway / events / hotels (F&B) / food carts |
-| `/contact` | Demo CTA |
+| `/contact` | Demo CTA + booking |
+| `/admin/leads` | Staff demo CRM (password) |
 | `/company` | UK company / legal disclosures |
 | `/pitch` | Animated sales deck for reps |
 
@@ -95,6 +96,16 @@ Copy [`.env.example`](.env.example) to `.env.local` and fill values. See that fi
 1. `npm run dev` → open `/contact`
 2. Book a weekday slot
 3. Confirm: Calendar event + customer email + emails to both notify addresses
+4. Open `/admin/leads` (same SEO admin password) — the lead should appear for follow-up
+
+## Demo leads CRM
+
+Staff pipeline for demo requests: [`/admin/leads`](https://www.hostorasoft.co.uk/admin/leads). Docs: [docs/sales/leads-crm.md](docs/sales/leads-crm.md).
+
+- Stores every booking (Blob `leads/` or local `content/leads/`)
+- Pipeline status, call log, notes, follow-up tasks
+- Template follow-up emails via SMTP
+- Daily cron reminders at 08:00 UTC (`vercel.json`) — set `CRON_SECRET` on Vercel
 
 ## Presenting to prospects
 

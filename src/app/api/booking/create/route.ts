@@ -6,6 +6,7 @@ import { sendBookingEmails } from "@/lib/booking/email";
 import { createMeetEvent, getBusyRanges } from "@/lib/booking/google";
 import { rateLimit } from "@/lib/booking/rateLimit";
 import { buildDaySlots } from "@/lib/booking/slots";
+import { createLead } from "@/lib/leads/store";
 
 const bodySchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -25,6 +26,16 @@ const bodySchema = z.object({
     "Food cart",
   ]),
   start: z.string().datetime(),
+  utm: z
+    .object({
+      source: z.string().trim().max(120).optional(),
+      medium: z.string().trim().max(120).optional(),
+      campaign: z.string().trim().max(200).optional(),
+      content: z.string().trim().max(200).optional(),
+      term: z.string().trim().max(200).optional(),
+      ref: z.string().trim().max(200).optional(),
+    })
+    .optional(),
 });
 
 export async function POST(request: Request) {
@@ -181,6 +192,35 @@ export async function POST(request: Request) {
         : "Could not send confirmation emails.";
   }
 
+  let leadId: string | null = null;
+  let leadError: string | null = null;
+  try {
+    const utm = data.utm
+      ? Object.fromEntries(
+          Object.entries(data.utm).filter(
+            ([, v]) => typeof v === "string" && v.length > 0,
+          ),
+        )
+      : undefined;
+    const lead = await createLead({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      companyName: data.companyName,
+      vertical: data.vertical,
+      start: meeting.start || data.start,
+      meetLink: meeting.meetLink ?? null,
+      calendarEventId: meeting.eventId ?? null,
+      htmlLink: meeting.htmlLink ?? null,
+      utm: utm && Object.keys(utm).length ? utm : undefined,
+    });
+    leadId = lead.id;
+  } catch (err) {
+    console.error("lead persist failed (booking still ok)", err);
+    leadError =
+      err instanceof Error ? err.message : "Could not save lead for CRM.";
+  }
+
   return NextResponse.json({
     ok: true,
     meetLink: meeting.meetLink,
@@ -188,5 +228,7 @@ export async function POST(request: Request) {
     htmlLink: meeting.htmlLink,
     emailsSent,
     emailError,
+    leadId,
+    leadError,
   });
 }
