@@ -113,6 +113,28 @@ export default function ContactPage() {
               calendar availability.
             </p>
 
+            <div
+              id="reference"
+              className="scroll-mt-24 border-t border-border pt-8"
+            >
+              <p className="text-xs font-medium tracking-[0.18em] text-accent uppercase">
+                Request a reference
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                We do not invent customer logos or public rankings. On a demo we
+                can walk a private case under live service load — and, where a
+                venue has agreed, introduce a reference. Email{" "}
+                <a
+                  className="text-accent hover:underline"
+                  href={`mailto:${company.email}?subject=Hostora%20reference%20request`}
+                >
+                  {company.email}
+                </a>{" "}
+                with &quot;reference request&quot; in the subject, or note it
+                when you book a demo.
+              </p>
+            </div>
+
             <div className="border-t border-border pt-8">
               <p className="text-xs font-medium tracking-[0.18em] text-accent uppercase">
                 Common questions

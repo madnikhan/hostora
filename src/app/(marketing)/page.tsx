@@ -128,12 +128,86 @@ export default function HomePage() {
                 </li>
               ))}
             </ol>
-            <Link
-              href="/contact"
-              className="mt-12 inline-flex rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-background transition hover:bg-accent-strong"
-            >
-              Book a demo
-            </Link>
+          </FadeUp>
+
+          <FadeUp delay={0.06}>
+            <div className="mt-16 border-t border-border pt-12">
+              <p className="text-xs font-medium tracking-[0.2em] text-accent uppercase">
+                Why operators can verify us
+              </p>
+              <ul className="mt-6 grid gap-6 sm:grid-cols-2">
+                <li className="text-sm leading-relaxed text-muted">
+                  <span className="font-semibold text-foreground">
+                    UK company on record.
+                  </span>{" "}
+                  K WAZIR LTD — Companies House{" "}
+                  <a
+                    className="text-accent hover:underline"
+                    href="https://find-and-update.company-information.service.gov.uk/company/17014542"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    17014542
+                  </a>
+                  . Full trading detail on{" "}
+                  <Link href="/company" className="text-accent hover:underline">
+                    /company
+                  </Link>
+                  .
+                </li>
+                <li className="text-sm leading-relaxed text-muted">
+                  <span className="font-semibold text-foreground">
+                    Live product, not slides.
+                  </span>{" "}
+                  Till, kitchen, guests, and control on this site — then a demo
+                  with a private case walkthrough when you ask.
+                </li>
+                <li className="text-sm leading-relaxed text-muted">
+                  <span className="font-semibold text-foreground">
+                    Data handling you can read.
+                  </span>{" "}
+                  Optional on-prem Docker on the venue LAN — see{" "}
+                  <Link
+                    href="/security"
+                    className="text-accent hover:underline"
+                  >
+                    /security
+                  </Link>
+                  . No invented SOC badges.
+                </li>
+                <li className="text-sm leading-relaxed text-muted">
+                  <span className="font-semibold text-foreground">
+                    Package quote, not a vanity price.
+                  </span>{" "}
+                  How quotes work on{" "}
+                  <Link href="/pricing" className="text-accent hover:underline">
+                    /pricing
+                  </Link>
+                  . Sales:{" "}
+                  <a
+                    className="text-accent hover:underline"
+                    href="mailto:sales@hostorasoft.co.uk"
+                  >
+                    sales@hostorasoft.co.uk
+                  </a>
+                  .
+                </li>
+              </ul>
+              <div className="mt-10 flex flex-wrap gap-4">
+                <Link
+                  href="/contact"
+                  className="inline-flex rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-background transition hover:bg-accent-strong"
+                >
+                  Book a demo
+                </Link>
+                <Link
+                  href="/contact#reference"
+                  className="inline-flex rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition hover:border-foreground/30"
+                >
+                  Request a reference
+                </Link>
+              </div>
+            </div>
           </FadeUp>
         </div>
       </section>
@@ -171,6 +245,13 @@ export default function HomePage() {
               Restaurant, Takeaway, and Events packs share one ops spine — go
               live in days after a short floor survey. Hotel F&amp;B and food
               carts are configured to the outlets or footprint, not rewritten.
+            </p>
+            <p className="mx-auto mt-4 max-w-xl text-sm text-muted">
+              Serving operators across major cities in the UK, Europe, and USA —{" "}
+              <Link href="/locations" className="text-accent hover:underline">
+                see cities we serve
+              </Link>
+              .
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Link
