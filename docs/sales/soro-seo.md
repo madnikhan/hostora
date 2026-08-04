@@ -4,6 +4,19 @@ How [Soro](https://trysoro.com/) appears on this Next.js site.
 
 **Soro’s product path here is Embed only** (no webhook in their Connect UI). Hostora still owns `/admin/seo` and `/blog/[slug]` for first-party posts.
 
+## What Soro does (and does not) do
+
+| Expectation | Reality |
+|-------------|---------|
+| Publish long-tail articles on Hostora | **Yes** — embed + sitemap `/blog/{slug}` shells |
+| Rank #1 for “restaurant POS” / “best hospitality software” in Google or ChatGPT | **No** — head terms are owned by Toast, Square, Lightspeed, etc. |
+| Help ChatGPT/Gemini on brand or niche queries | **Gradually** — when pages are crawlable and specific |
+| City long-tail (“restaurant software Birmingham”) | **Hostora `/locations` pages** — not Soro; see below |
+
+Soro is a **content + discovery** pipeline. Ranking needs time, unique HTML, and the right keyword targets (article titles and city pages — not vanity “common word” AI tests).
+
+**Thin body limitation:** Soro embed payload often has `content: null`. Hostora SSR shells give title/excerpt/image/JSON-LD; full body ranking improves when Soro exposes HTML or you mirror priority posts via `/admin/seo`.
+
 ## How it works
 
 | Piece | Role |
@@ -94,6 +107,14 @@ Full machine rules (Hostora pipeline): [`content/seo/brand-rules.json`](../../co
 ## Hostora-owned path (controlled posts)
 
 For articles with full body HTML, stable Hostora URLs and brand lint, use [seo-pipeline.md](./seo-pipeline.md) — `/admin/seo` or `npm run seo:draft` → review → publish. Those appear under **Hostora notes** on `/blog` and at `/blog/<slug>`.
+
+## City pages (`/locations`)
+
+Separate from Soro: Hostora ships **45 city pages** (15 UK + 15 Europe + 15 USA) under `/locations` and `/locations/{city}` for long-tail queries like “restaurant POS Birmingham”. Framed as **serving operators** in those cities (remote demos / pack installs) — not fake storefronts.
+
+- Measure GSC impressions for `{city} + POS|KDS|hospitality software`
+- Do **not** expect overnight #1 for “restaurant software near me” (Maps / Google Business Profile is a separate ops channel)
+- Do **not** expect ChatGPT to crown Hostora for generic “best restaurant software” from city pages alone
 
 ## Hostora publish API (not used by Soro embed)
 

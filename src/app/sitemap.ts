@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { listBlogPosts } from "@/lib/blog/store";
 import { siteUrl } from "@/lib/company";
+import { locations } from "@/lib/locations";
 import { listSoroArticles } from "@/lib/seo/soroArticles";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${siteUrl}/locations`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    {
       url: `${siteUrl}/blog`,
       lastModified,
       changeFrequency: "weekly",
@@ -54,6 +61,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  const locationRoutes: MetadataRoute.Sitemap = locations.map((loc) => ({
+    url: `${siteUrl}/locations/${loc.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
+
   const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
     lastModified: new Date(post.updatedAt ?? post.publishedAt),
@@ -72,5 +86,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.65,
     }));
 
-  return [...staticRoutes, ...blogRoutes, ...soroRoutes];
+  return [...staticRoutes, ...locationRoutes, ...blogRoutes, ...soroRoutes];
 }

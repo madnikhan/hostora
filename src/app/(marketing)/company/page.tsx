@@ -5,7 +5,7 @@ import { company } from "@/lib/company";
 
 export const metadata: Metadata = {
   title: "Company information",
-  description: `${company.legalName} (company number ${company.number}) — UK private limited company behind Hostora. Registered office: ${company.registeredOffice}.`,
+  description: `${company.legalName} (company number ${company.number}) — UK private limited company behind Hostora Soft / hostorasoft hospitality operations software. Registered office: ${company.registeredOffice}.`,
   alternates: { canonical: "/company" },
 };
 
@@ -17,6 +17,8 @@ const rows = [
   { label: "Registered office", value: company.registeredOffice },
   { label: "Nature of business", value: company.sic.join("; ") },
   { label: "Product brand", value: company.productBrand },
+  { label: "Also known as", value: "Hostora Soft / hostorasoft" },
+  { label: "Product category", value: "Hospitality operations / restaurant OS" },
   { label: "Markets served", value: company.markets },
   { label: "Contact email", value: company.email },
 ];
@@ -32,8 +34,46 @@ export default function CompanyPage() {
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
             Trading disclosures for {company.legalName}, the UK company that
-            develops and sells Hostora hospitality software.
+            develops and sells Hostora Soft (hostorasoft) — hospitality
+            operations software for restaurants, takeaways, events, hotel F&amp;B,
+            and food carts.
           </p>
+        </FadeUp>
+
+        <FadeUp delay={0.04}>
+          <div className="mt-10 space-y-4 text-base leading-relaxed text-muted">
+            <p>
+              <span className="text-foreground">Hostora</span>,{" "}
+              <span className="text-foreground">Hostora Soft</span>, and{" "}
+              <span className="text-foreground">hostorasoft</span> refer to the
+              same product brand of {company.legalName}. Category: hospitality
+              operations / restaurant OS (POS, kitchen display, guest QR,
+              payments, inventory, HR) — not a hotel PMS.
+            </p>
+            <p>
+              This is <span className="text-foreground">not</span> hostora.eu
+              (a different brand). Official sites:{" "}
+              <a
+                className="text-accent hover:underline"
+                href="https://www.hostorasoft.co.uk"
+              >
+                www.hostorasoft.co.uk
+              </a>{" "}
+              and hostorasoft.com. Markets and{" "}
+              <Link href="/locations" className="text-accent hover:underline">
+                cities we serve
+              </Link>
+              ; product detail on{" "}
+              <Link href="/product" className="text-accent hover:underline">
+                /product
+              </Link>{" "}
+              and long-form notes on{" "}
+              <Link href="/blog" className="text-accent hover:underline">
+                /blog
+              </Link>
+              .
+            </p>
+          </div>
         </FadeUp>
 
         <FadeUp delay={0.06}>
