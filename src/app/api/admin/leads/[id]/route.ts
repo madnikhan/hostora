@@ -7,6 +7,7 @@ import {
   completeLeadTask,
   getLead,
   updateLeadAssignee,
+  updateLeadMeta,
   updateLeadStatus,
 } from "@/lib/leads/store";
 import {
@@ -15,6 +16,7 @@ import {
   TASK_TYPES,
 } from "@/lib/leads/types";
 import { isAdminAuthenticated } from "@/lib/seo/adminAuth";
+import { buildLeadActivities } from "@/lib/leads/activities";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -27,7 +29,7 @@ export async function GET(_request: Request, ctx: Ctx) {
   if (!lead) {
     return NextResponse.json({ error: "Lead not found" }, { status: 404 });
   }
-  return NextResponse.json({ lead });
+  return NextResponse.json({ lead, activities: buildLeadActivities(lead) });
 }
 
 const patchSchema = z.discriminatedUnion("action", [
@@ -58,6 +60,12 @@ const patchSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("complete_task"),
     taskId: z.string().trim().min(1),
+  }),
+  z.object({
+    action: z.literal("meta"),
+    quoteAmount: z.number().min(0).nullable().optional(),
+    lostReason: z.string().trim().max(500).nullable().optional(),
+    sourceDetail: z.string().trim().max(500).optional(),
   }),
 ]);
 
@@ -103,10 +111,20 @@ export async function PATCH(request: Request, ctx: Ctx) {
     case "complete_task":
       lead = await completeLeadTask(id, data.taskId);
       break;
+    case "meta":
+      lead = await updateLeadMeta(id, {
+        quoteAmount: data.quoteAmount,
+        lostReason: data.lostReason,
+        sourceDetail: data.sourceDetail,
+      });
+      break;
   }
 
   if (!lead) {
     return NextResponse.json({ error: "Lead not found" }, { status: 404 });
   }
-  return NextResponse.json({ lead });
+  return NextResponse.json({
+    lead,
+    activities: buildLeadActivities(lead),
+  });
 }

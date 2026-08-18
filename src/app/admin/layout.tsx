@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+const nav = [
+  { href: "/admin", label: "Dashboard" },
+  { href: "/admin/leads", label: "Leads" },
+  { href: "/admin/outreach", label: "Outreach" },
+];
+
 export default function AdminLayout({
   children,
 }: {
@@ -14,21 +20,24 @@ export default function AdminLayout({
   return (
     <div className="admin-seo-shell min-h-screen bg-[#0B0B0C] text-[#F4F1EA] antialiased">
       <header className="border-b border-white/10 px-4 py-3 sm:px-6">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             <Link
-              href="/admin/leads"
+              href="/admin"
               className="font-[family-name:var(--font-display)] text-lg tracking-tight text-[#E8A54B]"
             >
-              Hostora · Admin
+              Hostora · Sales
             </Link>
-            <nav className="hidden items-center gap-4 text-sm sm:flex">
-              <Link
-                href="/admin/leads"
-                className="text-white/60 transition hover:text-white"
-              >
-                Leads
-              </Link>
+            <nav className="flex flex-wrap items-center gap-3 text-sm sm:gap-4">
+              {nav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-white/60 transition hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </nav>
           </div>
           <Link
@@ -39,7 +48,7 @@ export default function AdminLayout({
           </Link>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">{children}</main>
     </div>
   );
 }

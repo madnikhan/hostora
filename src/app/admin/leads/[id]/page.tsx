@@ -8,10 +8,15 @@ import {
   FOLLOW_UP_TEMPLATES,
   LEAD_STATUSES,
   TASK_TYPES,
+  leadSourceLabel,
   type FollowUpTemplateId,
   type Lead,
+  type LeadActivity,
   type LeadStatus,
 } from "@/lib/leads/types";
+import { ActivityTimeline } from "@/components/admin/leads/ActivityTimeline";
+import { SourceBadge } from "@/components/admin/leads/AssigneePicker";
+import { AdminButton } from "@/components/admin/AdminButton";
 
 function waLink(phone: string) {
   const digits = phone.replace(/\D/g, "");
@@ -23,6 +28,8 @@ export default function AdminLeadDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [lead, setLead] = useState<Lead | null>(null);
+  const [activities, setActivities] = useState<LeadActivity[]>([]);
+  const [team, setTeam] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
@@ -46,12 +53,17 @@ export default function AdminLeadDetailPage() {
         router.replace(`/admin/seo/login?next=/admin/leads/${id}`);
         return;
       }
-      const json = (await res.json()) as { lead?: Lead; error?: string };
+      const json = (await res.json()) as {
+        lead?: Lead;
+        activities?: LeadActivity[];
+        error?: string;
+      };
       if (!res.ok) {
         setError(json.error || "Failed to load");
         return;
       }
       setLead(json.lead || null);
+      setActivities(json.activities || []);
     } catch {
       setError("Network error");
     }
@@ -59,6 +71,10 @@ export default function AdminLeadDetailPage() {
 
   useEffect(() => {
     void load();
+    void fetch("/api/admin/leads")
+      .then((r) => r.json())
+      .then((j: { team?: string[] }) => setTeam(j.team || []))
+      .catch(() => {});
   }, [load]);
 
   async function patch(body: Record<string, unknown>) {
@@ -71,12 +87,17 @@ export default function AdminLeadDetailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const json = (await res.json()) as { lead?: Lead; error?: string };
+      const json = (await res.json()) as {
+        lead?: Lead;
+        activities?: LeadActivity[];
+        error?: string;
+      };
       if (!res.ok) {
         setError(json.error || "Update failed");
         return;
       }
       setLead(json.lead || null);
+      setActivities(json.activities || []);
       setMsg("Saved");
     } catch {
       setError("Network error");
@@ -133,8 +154,11 @@ export default function AdminLeadDetailPage() {
           {lead.companyName}
         </h1>
         <p className="mt-1 text-white/55">
-          {lead.name} · {lead.vertical}
+          {lead.name} · {lead.vertical} · <SourceBadge source={lead.source} />
         </p>
+        {lead.sourceDetail ? (
+          <p className="mt-1 text-sm text-white/45">{lead.sourceDetail}</p>
+        ) : null}
         {msg ? (
           <p className="mt-2 text-sm text-[#E8A54B]">{msg}</p>
         ) : null}
@@ -231,18 +255,61 @@ export default function AdminLeadDetailPage() {
           <label className="text-xs uppercase tracking-wide text-white/40">
             Assignee
           </label>
+          <select
+            value={lead.assignee}
+            disabled={busy}
+            onChange={(e) =>
+              void patch({ action: "assignee", assignee: e.target.value })
+            }
+            className="mt-2 w-full border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
+          >
+            {Array.from(
+              new Set([...team, lead.assignee.toLowerCase()]),
+            ).map((email) => (
+              <option key={email} value={email}>
+                {email}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-wide text-white/40">
+            Quote amount (GBP)
+          </label>
           <input
-            defaultValue={lead.assignee}
+            type="number"
+            min={0}
+            step={1}
+            defaultValue={lead.quoteAmount ?? ""}
             disabled={busy}
             onBlur={(e) => {
-              const v = e.target.value.trim();
-              if (v && v !== lead.assignee) {
-                void patch({ action: "assignee", assignee: v });
-              }
+              const v = e.target.value;
+              void patch({
+                action: "meta",
+                quoteAmount: v ? Number(v) : null,
+              });
             }}
             className="mt-2 w-full border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
           />
         </div>
+        {lead.status === "lost" ? (
+          <div className="sm:col-span-2">
+            <label className="text-xs uppercase tracking-wide text-white/40">
+              Lost reason
+            </label>
+            <input
+              defaultValue={lead.lostReason ?? ""}
+              disabled={busy}
+              onBlur={(e) =>
+                void patch({
+                  action: "meta",
+                  lostReason: e.target.value || null,
+                })
+              }
+              className="mt-2 w-full border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
+            />
+          </div>
+        ) : null}
         {lead.utm && Object.values(lead.utm).some(Boolean) ? (
           <div className="sm:col-span-2">
             <p className="text-xs uppercase tracking-wide text-white/40">
@@ -260,6 +327,15 @@ export default function AdminLeadDetailPage() {
             </p>
           </div>
         ) : null}
+      </section>
+
+      <section className="border border-white/10 p-4">
+        <h2 className="text-sm font-medium uppercase tracking-wide text-white/45">
+          Activity timeline
+        </h2>
+        <div className="mt-4">
+          <ActivityTimeline items={activities} />
+        </div>
       </section>
 
       <section className="border border-white/10 p-4">

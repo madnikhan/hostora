@@ -9,16 +9,17 @@ import {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isSeoPage = pathname.startsWith("/admin/seo");
-  const isSeoApi = pathname.startsWith("/api/admin/seo");
-  const isLeadsPage = pathname.startsWith("/admin/leads");
-  const isLeadsApi = pathname.startsWith("/api/admin/leads");
+  const isAdminPage =
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/seo") ||
+    pathname.startsWith("/admin/leads") ||
+    pathname.startsWith("/admin/outreach");
+  const isAdminApi =
+    pathname.startsWith("/api/admin/seo") ||
+    pathname.startsWith("/api/admin/leads");
   const isLoginPage = pathname === "/admin/seo/login";
   const isLoginApi = pathname === "/api/admin/seo/login";
   const isRemindApi = pathname === "/api/admin/leads/remind";
-
-  const isAdminPage = isSeoPage || isLeadsPage;
-  const isAdminApi = isSeoApi || isLeadsApi;
 
   if (!isAdminPage && !isAdminApi) {
     return NextResponse.next();
@@ -27,7 +28,6 @@ export async function middleware(request: NextRequest) {
   const res = NextResponse.next();
   res.headers.set("X-Robots-Tag", "noindex, nofollow");
 
-  // Cron job authenticates with bearer secret (not session cookie)
   if (isRemindApi) {
     return res;
   }
@@ -54,6 +54,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin",
+    "/admin/outreach/:path*",
     "/admin/seo/:path*",
     "/api/admin/seo/:path*",
     "/admin/leads",

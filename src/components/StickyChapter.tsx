@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef, type ReactNode } from "react";
 
 export function StickyChapter({
@@ -14,13 +14,18 @@ export function StickyChapter({
   body: string;
   visual: ReactNode;
 }) {
+  const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
-  const opacity = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0.35, 1, 1, 0.35]);
+  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [40, -40]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.75, 1],
+    reduce ? [1, 1, 1, 1] : [0.35, 1, 1, 0.35],
+  );
 
   return (
     <section

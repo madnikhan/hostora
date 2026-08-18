@@ -3,7 +3,19 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LEAD_STATUSES, type LeadStatus } from "@/lib/leads/types";
+import { AdminButton } from "@/components/admin/AdminButton";
+import {
+  AssigneePicker,
+  SourceBadge,
+  getStoredAssignee,
+} from "@/components/admin/leads/AssigneePicker";
+import { ManualLeadForm } from "@/components/admin/leads/ManualLeadForm";
+import {
+  LEAD_SOURCES,
+  LEAD_STATUSES,
+  type LeadSource,
+  type LeadStatus,
+} from "@/lib/leads/types";
 
 type LeadRow = {
   id: string;
@@ -14,6 +26,7 @@ type LeadRow = {
   vertical: string;
   start: string;
   status: LeadStatus;
+  source: LeadSource;
   assignee: string;
   createdAt: string;
   updatedAt: string;
@@ -24,10 +37,14 @@ type LeadRow = {
 export default function AdminLeadsPage() {
   const router = useRouter();
   const [leads, setLeads] = useState<LeadRow[]>([]);
+  const [team, setTeam] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("all");
+  const [source, setSource] = useState<string>("all");
+  const [assignee, setAssignee] = useState("");
   const [overdueOnly, setOverdueOnly] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   const load = useCallback(async () => {
     setError("");
@@ -39,6 +56,7 @@ export default function AdminLeadsPage() {
       }
       const json = (await res.json()) as {
         leads?: LeadRow[];
+        team?: string[];
         error?: string;
       };
       if (!res.ok) {
@@ -46,12 +64,14 @@ export default function AdminLeadsPage() {
         return;
       }
       setLeads(json.leads || []);
+      setTeam(json.team || []);
     } catch {
       setError("Network error");
     }
   }, [router]);
 
   useEffect(() => {
+    setAssignee(getStoredAssignee());
     void load();
   }, [load]);
 
@@ -59,6 +79,13 @@ export default function AdminLeadsPage() {
     const needle = q.trim().toLowerCase();
     return leads.filter((l) => {
       if (status !== "all" && l.status !== status) return false;
+      if (source !== "all" && l.source !== source) return false;
+      if (
+        assignee &&
+        l.assignee.toLowerCase() !== assignee.toLowerCase()
+      ) {
+        return false;
+      }
       if (overdueOnly && l.overdueTasks < 1) return false;
       if (!needle) return true;
       return (
@@ -68,39 +95,70 @@ export default function AdminLeadsPage() {
         l.phone.includes(needle)
       );
     });
-  }, [leads, q, status, overdueOnly]);
+  }, [leads, q, status, source, assignee, overdueOnly]);
+
+  const statusCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: leads.length };
+    for (const s of LEAD_STATUSES) counts[s] = 0;
+    for (const l of leads) counts[l.status]++;
+    return counts;
+  }, [leads]);
 
   return (
-    <div>
+    <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-white/45">
             CRM
           </p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight">
-            Demo leads
-          </h1>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight">Leads</h1>
           <p className="mt-2 max-w-xl text-sm text-white/55">
-            Every Book a demo request lands here — pipeline, calls, and
-            follow-ups.
+            Demo bookings, Tawk chats, Facebook DMs, and manual entries.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => void load()}
-          className="rounded border border-white/15 px-3 py-1.5 text-sm text-white/70 hover:border-white/30"
-        >
-          Refresh
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <AdminButton variant="secondary" onClick={() => void load()}>
+            Refresh
+          </AdminButton>
+          <a href="/api/admin/leads?format=csv">
+            <AdminButton variant="secondary">Export CSV</AdminButton>
+          </a>
+          <AdminButton onClick={() => setShowForm((v) => !v)}>
+            {showForm ? "Hide form" : "Add lead"}
+          </AdminButton>
+        </div>
       </div>
 
       {error ? (
-        <p className="mt-4 border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+        <p className="border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">
           {error}
         </p>
       ) : null}
 
-      <div className="mt-6 flex flex-wrap gap-3">
+      {showForm ? <ManualLeadForm team={team} /> : null}
+
+      <div className="max-w-xs">
+        <AssigneePicker team={team} value={assignee} onChange={setAssignee} />
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {(["all", ...LEAD_STATUSES] as const).map((s) => (
+          <button
+            key={s}
+            type="button"
+            onClick={() => setStatus(s)}
+            className={`rounded-full px-3 py-1 text-xs uppercase tracking-wide ${
+              status === s
+                ? "bg-[#E8A54B] text-[#0B0B0C]"
+                : "bg-white/10 text-white/60 hover:text-white"
+            }`}
+          >
+            {s} ({statusCounts[s] ?? 0})
+          </button>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap gap-3">
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -108,12 +166,12 @@ export default function AdminLeadsPage() {
           className="min-w-[14rem] flex-1 border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
         />
         <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          value={source}
+          onChange={(e) => setSource(e.target.value)}
           className="border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
         >
-          <option value="all">All statuses</option>
-          {LEAD_STATUSES.map((s) => (
+          <option value="all">All sources</option>
+          {LEAD_SOURCES.map((s) => (
             <option key={s} value={s}>
               {s}
             </option>
@@ -129,13 +187,14 @@ export default function AdminLeadsPage() {
         </label>
       </div>
 
-      <div className="mt-6 overflow-x-auto border border-white/10">
-        <table className="w-full min-w-[720px] text-left text-sm">
+      <div className="overflow-x-auto border border-white/10">
+        <table className="w-full min-w-[800px] text-left text-sm">
           <thead className="border-b border-white/10 text-white/45">
             <tr>
               <th className="px-3 py-2 font-medium">Lead</th>
+              <th className="px-3 py-2 font-medium">Source</th>
               <th className="px-3 py-2 font-medium">Vertical</th>
-              <th className="px-3 py-2 font-medium">Demo</th>
+              <th className="px-3 py-2 font-medium">Demo / start</th>
               <th className="px-3 py-2 font-medium">Status</th>
               <th className="px-3 py-2 font-medium">Tasks</th>
             </tr>
@@ -143,11 +202,8 @@ export default function AdminLeadsPage() {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td
-                  colSpan={5}
-                  className="px-3 py-8 text-center text-white/40"
-                >
-                  No leads yet. New bookings from /contact appear here.
+                <td colSpan={6} className="px-3 py-8 text-center text-white/40">
+                  No leads match filters.
                 </td>
               </tr>
             ) : (
@@ -166,6 +222,10 @@ export default function AdminLeadsPage() {
                     <p className="text-white/55">
                       {l.name} · {l.email}
                     </p>
+                    <p className="text-xs text-white/35">{l.assignee}</p>
+                  </td>
+                  <td className="px-3 py-3">
+                    <SourceBadge source={l.source} />
                   </td>
                   <td className="px-3 py-3 text-white/70">{l.vertical}</td>
                   <td className="px-3 py-3 text-white/70">

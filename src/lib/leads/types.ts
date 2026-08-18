@@ -10,6 +10,18 @@ export const LEAD_STATUSES = [
 
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
+export const LEAD_SOURCES = [
+  "website",
+  "facebook_group",
+  "tawk_chat",
+  "referral",
+  "cold_call",
+  "whatsapp",
+  "other",
+] as const;
+
+export type LeadSource = (typeof LEAD_SOURCES)[number];
+
 export const CALL_OUTCOMES = [
   "reached",
   "voicemail",
@@ -57,6 +69,28 @@ export type LeadUtm = {
   ref?: string;
 };
 
+export type LeadActivity =
+  | { kind: "note"; id: string; at: string; body: string; author?: string }
+  | {
+      kind: "call";
+      id: string;
+      at: string;
+      outcome: CallOutcome;
+      note?: string;
+      author?: string;
+    }
+  | {
+      kind: "task";
+      id: string;
+      at: string;
+      title: string;
+      type: TaskType;
+      dueAt: string;
+      done: boolean;
+      doneAt?: string;
+    }
+  | { kind: "email"; at: string; label: string };
+
 export type Lead = {
   id: string;
   name: string;
@@ -70,6 +104,13 @@ export type Lead = {
   htmlLink: string | null;
   status: LeadStatus;
   assignee: string;
+  source: LeadSource;
+  sourceDetail?: string;
+  facebookGroup?: string;
+  tawkChatId?: string;
+  chatTranscript?: string;
+  quoteAmount?: number;
+  lostReason?: string;
   notes: LeadNote[];
   calls: LeadCall[];
   tasks: LeadTask[];
@@ -89,6 +130,8 @@ export type LeadSummary = Pick<
   | "start"
   | "status"
   | "assignee"
+  | "source"
+  | "sourceDetail"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -115,3 +158,16 @@ export const FOLLOW_UP_TEMPLATES = [
 ] as const;
 
 export type FollowUpTemplateId = (typeof FOLLOW_UP_TEMPLATES)[number]["id"];
+
+export function leadSourceLabel(source: LeadSource): string {
+  const labels: Record<LeadSource, string> = {
+    website: "Website demo",
+    facebook_group: "Facebook group",
+    tawk_chat: "Tawk chat",
+    referral: "Referral",
+    cold_call: "Cold call",
+    whatsapp: "WhatsApp",
+    other: "Other",
+  };
+  return labels[source];
+}

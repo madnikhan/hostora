@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Syne, DM_Sans } from "next/font/google";
 import { JsonLd } from "@/components/JsonLd";
 import { TawkChat } from "@/components/TawkChat";
@@ -8,7 +9,7 @@ import "./globals.css";
 const display = Syne({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["600", "700", "800"],
 });
 
 const body = DM_Sans({
@@ -157,7 +158,9 @@ export default function RootLayout({
       >
         <JsonLd data={jsonLd} />
         {children}
-        <TawkChat />
+        <Suspense fallback={null}>
+          <TawkChat />
+        </Suspense>
       </body>
     </html>
   );

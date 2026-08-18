@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function AdminSeoLoginPage() {
   const router = useRouter();
   const search = useSearchParams();
-  const next = search.get("next") || "/admin/seo";
+  const next = search.get("next") || "/admin";
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -26,7 +26,7 @@ export default function AdminSeoLoginPage() {
         setError(data.error || "Login failed");
         return;
       }
-      router.replace(next.startsWith("/admin/seo") ? next : "/admin/seo");
+      router.replace(next.startsWith("/admin") ? next : "/admin");
       router.refresh();
     } catch {
       setError("Network error");
@@ -40,7 +40,7 @@ export default function AdminSeoLoginPage() {
       <h1 className="font-[family-name:var(--font-display)] text-3xl text-[#E8A54B]">
         Hostora
       </h1>
-      <p className="mt-2 text-sm text-white/60">SEO admin · password required</p>
+      <p className="mt-2 text-sm text-white/60">Sales admin · password required</p>
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
         <label className="block text-sm text-white/70">
           Password

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FadeUp } from "@/components/FadeUp";
+import { PageHero } from "@/components/ui/PageHero";
+import { Button } from "@/components/ui/Button";
 import { hardwareItems } from "@/lib/hardwareMedia";
 
 export const metadata: Metadata = {
@@ -13,27 +15,20 @@ export const metadata: Metadata = {
 
 export default function HardwarePage() {
   return (
-    <div className="px-6 pb-28 pt-20">
-      <div className="mx-auto max-w-5xl">
-        <FadeUp>
-          <p className="eyebrow">Hardware</p>
-          <h1 className="display mt-4 max-w-3xl text-5xl font-extrabold md:text-7xl">
-            Hardware that{" "}
-            <span className="text-accent">runs Hostora</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted">
-            A local Hostora server runs the full stack in Docker — software and
-            PostgreSQL — so every device on the floor stays connected. Plus
-            tills, tablets, printers, and scanners, installed for live service.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-8 inline-flex rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-background transition hover:bg-accent-strong"
-          >
-            Book a demo
-          </Link>
-        </FadeUp>
+    <div className="pb-28">
+      <PageHero
+        eyebrow="Hardware"
+        title={
+          <>
+            Hardware that <span className="text-accent">runs Hostora</span>
+          </>
+        }
+        description="A local Hostora server runs the full stack in Docker — software and PostgreSQL — so every device on the floor stays connected. Plus tills, tablets, printers, and scanners, installed for live service."
+      >
+        <Button href="/contact">Book a demo</Button>
+      </PageHero>
 
+      <div className="mx-auto max-w-5xl px-6">
         <section className="mt-20" aria-labelledby="kit-heading">
           <FadeUp>
             <h2

@@ -1,12 +1,12 @@
 import { del, list, put } from "@vercel/blob";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { bookingConfig } from "@/lib/booking/config";
 import { randomUUID } from "node:crypto";
 import type {
   Lead,
   LeadCall,
   LeadNote,
+  LeadSource,
   LeadStatus,
   LeadSummary,
   LeadTask,
@@ -14,6 +14,7 @@ import type {
   TaskType,
   CallOutcome,
 } from "@/lib/leads/types";
+import { defaultAssigneeEmail } from "@/lib/leads/team";
 
 const LEAD_PREFIX = "leads/";
 const INDEX_PATH = "leads/index.json";
@@ -43,7 +44,18 @@ function leadsDir() {
 }
 
 function defaultAssignee(): string {
-  return bookingConfig.notifyEmails[0] || "sales@hostorasoft.co.uk";
+  return defaultAssigneeEmail();
+}
+
+/** Backfill defaults for leads created before source fields existed. */
+export function normalizeLead(raw: Lead): Lead {
+  return {
+    ...raw,
+    source: raw.source ?? "website",
+    notes: raw.notes ?? [],
+    calls: raw.calls ?? [],
+    tasks: raw.tasks ?? [],
+  };
 }
 
 async function putJson(pathname: string, data: unknown) {
@@ -138,6 +150,8 @@ function summarize(lead: Lead): LeadSummary {
     start: lead.start,
     status: lead.status,
     assignee: lead.assignee,
+    source: lead.source,
+    sourceDetail: lead.sourceDetail,
     createdAt: lead.createdAt,
     updatedAt: lead.updatedAt,
     openTasks: open.length,
@@ -160,7 +174,72 @@ export type CreateLeadInput = {
   calendarEventId: string | null;
   htmlLink: string | null;
   utm?: LeadUtm;
+  source?: LeadSource;
+  sourceDetail?: string;
 };
+
+export type ManualLeadInput = {
+  name: string;
+  email: string;
+  phone: string;
+  companyName: string;
+  vertical: string;
+  source: LeadSource;
+  sourceDetail?: string;
+  facebookGroup?: string;
+  assignee?: string;
+  start?: string;
+  note?: string;
+};
+
+export type TawkLeadInput = {
+  name: string;
+  email: string;
+  phone?: string;
+  companyName?: string;
+  tawkChatId: string;
+  message?: string;
+  referrer?: string;
+  country?: string;
+  city?: string;
+};
+
+function buildInitialTasks(startIso: string, includeDemoFollowUp: boolean) {
+  const now = new Date().toISOString();
+  const tasks: LeadTask[] = [];
+  if (includeDemoFollowUp) {
+    const demoStart = new Date(startIso);
+    const followDue = new Date(demoStart.getTime() + 24 * 60 * 60 * 1000);
+    tasks.push({
+      id: randomUUID(),
+      type: "call",
+      title: "Post-demo follow-up call",
+      dueAt: followDue.toISOString(),
+      remindAt: followDue.toISOString(),
+      done: false,
+      createdAt: now,
+    });
+  }
+  return tasks;
+}
+
+export async function findLeadByEmail(
+  email: string,
+): Promise<Lead | null> {
+  const needle = email.trim().toLowerCase();
+  if (!needle) return null;
+  const leads = await listLeads();
+  return (
+    leads.find((l) => l.email.trim().toLowerCase() === needle) ?? null
+  );
+}
+
+export async function findLeadByTawkChatId(
+  chatId: string,
+): Promise<Lead | null> {
+  const leads = await listLeads();
+  return leads.find((l) => l.tawkChatId === chatId) ?? null;
+}
 
 export async function createLead(input: CreateLeadInput): Promise<Lead> {
   assertWritable();
@@ -168,6 +247,7 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
   const id = randomUUID();
   const demoStart = new Date(input.start);
   const followDue = new Date(demoStart.getTime() + 24 * 60 * 60 * 1000);
+  void followDue;
 
   const lead: Lead = {
     id,
@@ -182,19 +262,11 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
     htmlLink: input.htmlLink,
     status: "new",
     assignee: defaultAssignee(),
+    source: input.source ?? "website",
+    sourceDetail: input.sourceDetail,
     notes: [],
     calls: [],
-    tasks: [
-      {
-        id: randomUUID(),
-        type: "call",
-        title: "Post-demo follow-up call",
-        dueAt: followDue.toISOString(),
-        remindAt: followDue.toISOString(),
-        done: false,
-        createdAt: now,
-      },
-    ],
+    tasks: buildInitialTasks(input.start, true),
     utm: input.utm,
     createdAt: now,
     updatedAt: now,
@@ -211,6 +283,188 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
   return lead;
 }
 
+export async function createManualLead(
+  input: ManualLeadInput,
+): Promise<Lead> {
+  assertWritable();
+  const now = new Date().toISOString();
+  const id = randomUUID();
+  const start = input.start ?? now;
+  const hasDemo = Boolean(input.start);
+  const notes: LeadNote[] = [];
+  if (input.note?.trim()) {
+    notes.push({
+      id: randomUUID(),
+      body: input.note.trim(),
+      createdAt: now,
+    });
+  }
+
+  const lead: Lead = {
+    id,
+    name: input.name.trim(),
+    email: input.email.trim(),
+    phone: input.phone.trim(),
+    companyName: input.companyName.trim(),
+    vertical: input.vertical.trim(),
+    start,
+    meetLink: null,
+    calendarEventId: null,
+    htmlLink: null,
+    status: "new",
+    assignee: input.assignee?.trim() || defaultAssignee(),
+    source: input.source,
+    sourceDetail: input.sourceDetail?.trim(),
+    facebookGroup: input.facebookGroup?.trim(),
+    notes,
+    calls: [],
+    tasks: hasDemo ? buildInitialTasks(start, true) : [],
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  await writeLeadFile(lead);
+  try {
+    const idx = await readIndex();
+    await writeIndex([lead.id, ...idx.ids]);
+  } catch (err) {
+    console.error("lead index update failed", err);
+  }
+  return lead;
+}
+
+export async function createOrUpdateTawkLead(
+  input: TawkLeadInput,
+): Promise<{ lead: Lead; created: boolean }> {
+  const existingByChat = await findLeadByTawkChatId(input.tawkChatId);
+  if (existingByChat) {
+    const noteBody = [
+      input.message ? `New message: ${input.message}` : null,
+      input.referrer ? `Page: ${input.referrer}` : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
+    if (noteBody) await addLeadNote(existingByChat.id, noteBody, "tawk");
+    const refreshed = await getLead(existingByChat.id);
+    return { lead: refreshed!, created: false };
+  }
+
+  const existingByEmail = input.email
+    ? await findLeadByEmail(input.email)
+    : null;
+  if (existingByEmail) {
+    const lead = await getLead(existingByEmail.id);
+    if (!lead) {
+      return { lead: existingByEmail, created: false };
+    }
+    lead.tawkChatId = input.tawkChatId;
+    const noteBody = [
+      "Tawk chat linked to existing lead.",
+      input.message ? `Message: ${input.message}` : null,
+      input.referrer ? `Page: ${input.referrer}` : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
+    lead.notes.unshift({
+      id: randomUUID(),
+      body: noteBody,
+      createdAt: new Date().toISOString(),
+      author: "tawk",
+    });
+    const saved = await saveLead(lead);
+    return { lead: saved, created: false };
+  }
+
+  assertWritable();
+  const now = new Date().toISOString();
+  const id = randomUUID();
+  const followDue = new Date(Date.now() + 4 * 60 * 60 * 1000);
+  const location = [input.city, input.country].filter(Boolean).join(", ");
+  const notes: LeadNote[] = [];
+  if (input.message?.trim()) {
+    notes.push({
+      id: randomUUID(),
+      body: `First chat message: ${input.message.trim()}`,
+      createdAt: now,
+      author: "tawk",
+    });
+  }
+
+  const lead: Lead = {
+    id,
+    name: input.name.trim() || "Tawk visitor",
+    email: input.email.trim(),
+    phone: input.phone?.trim() || "",
+    companyName: input.companyName?.trim() || "Unknown venue",
+    vertical: "Unknown",
+    start: now,
+    meetLink: null,
+    calendarEventId: null,
+    htmlLink: null,
+    status: "new",
+    assignee: defaultAssignee(),
+    source: "tawk_chat",
+    sourceDetail: [input.referrer, location].filter(Boolean).join(" · ") || undefined,
+    tawkChatId: input.tawkChatId,
+    notes,
+    calls: [],
+    tasks: [
+      {
+        id: randomUUID(),
+        type: "call",
+        title: "Follow up Tawk chat",
+        dueAt: followDue.toISOString(),
+        remindAt: followDue.toISOString(),
+        done: false,
+        createdAt: now,
+      },
+    ],
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  await writeLeadFile(lead);
+  try {
+    const idx = await readIndex();
+    await writeIndex([lead.id, ...idx.ids]);
+  } catch (err) {
+    console.error("lead index update failed", err);
+  }
+  return { lead, created: true };
+}
+
+export async function appendTawkTranscript(
+  chatId: string,
+  transcript: string,
+): Promise<Lead | null> {
+  const lead = await findLeadByTawkChatId(chatId);
+  if (!lead) return null;
+  lead.chatTranscript = transcript.trim();
+  return saveLead(lead);
+}
+
+export async function updateLeadMeta(
+  id: string,
+  patch: {
+    quoteAmount?: number | null;
+    lostReason?: string | null;
+    sourceDetail?: string;
+  },
+): Promise<Lead | null> {
+  const lead = await getLead(id);
+  if (!lead) return null;
+  if (patch.quoteAmount !== undefined) {
+    lead.quoteAmount = patch.quoteAmount ?? undefined;
+  }
+  if (patch.lostReason !== undefined) {
+    lead.lostReason = patch.lostReason?.trim() || undefined;
+  }
+  if (patch.sourceDetail !== undefined) {
+    lead.sourceDetail = patch.sourceDetail.trim() || undefined;
+  }
+  return saveLead(lead);
+}
+
 export async function getLead(id: string): Promise<Lead | null> {
   const clean = id.trim();
   if (!clean) return null;
@@ -220,14 +474,15 @@ export async function getLead(id: string): Promise<Lead | null> {
     );
   }
   if (hasBlob()) {
-    return readJsonBlob<Lead>(`${LEAD_PREFIX}${clean}.json`);
+    const raw = await readJsonBlob<Lead>(`${LEAD_PREFIX}${clean}.json`);
+    return raw ? normalizeLead(raw) : null;
   }
   try {
     const raw = await fs.readFile(
       path.join(leadsDir(), `${clean}.json`),
       "utf8",
     );
-    return JSON.parse(raw) as Lead;
+    return normalizeLead(JSON.parse(raw) as Lead);
   } catch {
     return null;
   }
@@ -252,7 +507,7 @@ export async function listLeads(): Promise<Lead[]> {
       try {
         const res = await fetch(blob.url, { cache: "no-store" });
         if (!res.ok) continue;
-        const lead = (await res.json()) as Lead;
+        const lead = normalizeLead((await res.json()) as Lead);
         if (lead?.id) leads.push(lead);
       } catch {
         /* skip corrupt */
@@ -265,7 +520,7 @@ export async function listLeads(): Promise<Lead[]> {
       for (const file of files) {
         if (!file.endsWith(".json") || file === "index.json") continue;
         const raw = await fs.readFile(path.join(leadsDir(), file), "utf8");
-        const lead = JSON.parse(raw) as Lead;
+        const lead = normalizeLead(JSON.parse(raw) as Lead);
         if (lead?.id) leads.push(lead);
       }
     } catch {

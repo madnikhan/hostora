@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 
 const links = [
@@ -10,11 +11,19 @@ const links = [
   { href: "/solutions", label: "Solutions" },
   { href: "/locations", label: "Locations" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/security", label: "Security" },
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 
+function navClass(active: boolean) {
+  return active
+    ? "text-sm text-foreground underline decoration-accent decoration-2 underline-offset-4"
+    : "text-sm text-muted transition hover:text-foreground";
+}
+
 export function SiteHeader() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const panelId = useId();
 
@@ -58,7 +67,7 @@ export function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-muted transition hover:text-foreground"
+              className={navClass(pathname === link.href)}
             >
               {link.label}
             </Link>
@@ -109,19 +118,16 @@ export function SiteHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-lg px-3 py-3 text-base text-foreground transition hover:bg-surface"
+                className={`rounded-lg px-3 py-3 text-base transition hover:bg-surface ${
+                  pathname === link.href
+                    ? "text-foreground"
+                    : "text-muted hover:text-foreground"
+                }`}
                 onClick={() => setOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/security"
-              className="rounded-lg px-3 py-3 text-base text-muted transition hover:bg-surface hover:text-foreground"
-              onClick={() => setOpen(false)}
-            >
-              Security
-            </Link>
             <Link
               href="/contact"
               className="mt-2 rounded-full bg-accent px-4 py-3 text-center text-sm font-semibold text-background"

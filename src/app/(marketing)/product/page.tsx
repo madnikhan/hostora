@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeUp } from "@/components/FadeUp";
 import { DeviceMock } from "@/components/DeviceMock";
+import { PageHero } from "@/components/ui/PageHero";
+import { Button } from "@/components/ui/Button";
 import { hardwareFeatured } from "@/lib/hardwareMedia";
-import { productMedia } from "@/lib/productMedia";
+import { productMedia, pitchClips } from "@/lib/productMedia";
 
 export const metadata: Metadata = {
   title: "Product — POS, kitchen, QR, inventory & more",
@@ -19,12 +21,16 @@ const modules = [
     desc: "Table service, takeaway tickets, modifiers, discounts, and split payments.",
     media: productMedia.till,
     title: "Till",
+    video: pitchClips.till.video,
+    poster: pitchClips.till.poster,
   },
   {
     name: "Kitchen display",
     desc: "Live boards by station with status, notes, target times, and stall visibility.",
     media: productMedia.kds,
     title: "KDS",
+    video: pitchClips.kitchen.video,
+    poster: pitchClips.kitchen.poster,
   },
   {
     name: "Guest QR & service",
@@ -66,20 +72,20 @@ const modules = [
 
 export default function ProductPage() {
   return (
-    <div className="px-6 pb-28 pt-20">
-      <div className="mx-auto max-w-5xl">
-        <FadeUp>
-          <p className="eyebrow">Product</p>
-          <h1 className="display mt-4 max-w-3xl text-5xl font-extrabold md:text-7xl">
-            Everything the floor needs. Nothing it doesn&apos;t.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted">
-            Hostora replaces the patchwork of till apps, kitchen screens, booking
-            widgets, and spreadsheets with one operational system.
-          </p>
-        </FadeUp>
+    <div className="pb-28">
+      <PageHero
+        eyebrow="Product"
+        title="Everything the floor needs. Nothing it doesn't."
+        description="Hostora replaces the patchwork of till apps, kitchen screens, booking widgets, and spreadsheets with one operational system."
+      >
+        <Button href="/contact">Book a demo</Button>
+        <Button href="/hardware" variant="secondary">
+          See hardware
+        </Button>
+      </PageHero>
 
-        <div className="mt-20 space-y-16 md:space-y-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="space-y-16 md:space-y-24">
           {modules.map((mod, i) => (
             <FadeUp key={mod.name} delay={(i % 2) * 0.04}>
               <article
@@ -88,9 +94,7 @@ export default function ProductPage() {
                 }`}
               >
                 <div>
-                  <p className="text-xs font-medium tracking-[0.2em] text-accent uppercase">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
+                  <p className="eyebrow">{String(i + 1).padStart(2, "0")}</p>
                   <h2 className="display mt-4 text-3xl font-bold md:text-4xl">
                     {mod.name}
                   </h2>
@@ -100,6 +104,7 @@ export default function ProductPage() {
                   title={mod.title}
                   src={mod.media.src}
                   alt={mod.media.alt}
+                  video={"video" in mod ? mod.video : undefined}
                   priority={i === 0}
                 />
               </article>

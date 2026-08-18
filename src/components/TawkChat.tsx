@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const TAWK_SRC = "https://embed.tawk.to/6a52e1964e30b91d4a8526ff/1jt9s2d9c";
@@ -11,6 +11,11 @@ declare global {
     Tawk_API?: {
       hideWidget?: () => void;
       showWidget?: () => void;
+      onLoad?: () => void;
+      setAttributes?: (
+        attrs: Record<string, string>,
+        cb?: (err?: Error) => void,
+      ) => void;
     };
   }
 }
@@ -19,9 +24,13 @@ function isPitchPath(pathname: string | null) {
   return pathname === "/pitch" || Boolean(pathname?.startsWith("/pitch/"));
 }
 
-function injectTawk() {
-  if (document.getElementById("tawk-to-script")) return;
+function injectTawk(onReady: () => void) {
+  if (document.getElementById("tawk-to-script")) {
+    onReady();
+    return;
+  }
   window.Tawk_API ??= {};
+  window.Tawk_API.onLoad = onReady;
   const s1 = document.createElement("script");
   s1.id = "tawk-to-script";
   s1.async = true;
@@ -32,9 +41,21 @@ function injectTawk() {
   s0.parentNode?.insertBefore(s1, s0);
 }
 
+function pushTawkContext(pathname: string, search: string) {
+  const attrs: Record<string, string> = { page: pathname };
+  const sp = new URLSearchParams(search);
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "ref"]) {
+    const v = sp.get(key);
+    if (v) attrs[key] = v;
+  }
+  window.Tawk_API?.setAttributes?.(attrs, () => {});
+}
+
 /** Tawk.to live chat — interaction- or idle-gated; skip on sales pitch. */
 export function TawkChat() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.toString() ? `?${searchParams.toString()}` : "";
   const onPitch = isPitchPath(pathname);
   const [armed, setArmed] = useState(false);
 
@@ -63,8 +84,13 @@ export function TawkChat() {
 
   useEffect(() => {
     if (!armed || onPitch) return;
-    injectTawk();
-  }, [armed, onPitch]);
+    injectTawk(() => pushTawkContext(pathname, search));
+  }, [armed, onPitch, pathname, search]);
+
+  useEffect(() => {
+    if (!armed || onPitch) return;
+    pushTawkContext(pathname, search);
+  }, [armed, onPitch, pathname, search]);
 
   useEffect(() => {
     const root = document.documentElement;

@@ -1,92 +1,105 @@
 # Demo leads CRM
 
-Staff pipeline for every **Book a demo** request from `/contact`.
+Staff sales workspace for demo bookings, Tawk chat, Facebook outreach, and manual entries.
 
 ## Access
 
 1. Password: `ADMIN_SEO_PASSWORD`, or fallback `BLOG_PUBLISH_SECRET`
-2. Open [https://www.hostorasoft.co.uk/admin/leads](https://www.hostorasoft.co.uk/admin/leads)
-3. Login via `/admin/seo/login` if prompted (session cookie is shared; SEO UI is redirected to Leads)
+2. Dashboard: [https://www.hostorasoft.co.uk/admin](https://www.hostorasoft.co.uk/admin)
+3. Leads: [https://www.hostorasoft.co.uk/admin/leads](https://www.hostorasoft.co.uk/admin/leads)
+4. Facebook outreach toolkit: [https://www.hostorasoft.co.uk/admin/outreach](https://www.hostorasoft.co.uk/admin/outreach)
+5. Login via `/admin/seo/login` if prompted (shared session cookie)
+
+## Env (Production)
+
+```bash
+BLOB_READ_WRITE_TOKEN=...   # required — leads won't persist without it
+SALES_TEAM=sales@hostorasoft.co.uk,teammate@example.com
+CRON_SECRET=...             # daily task reminder digest
+TAWK_WEBHOOK_SECRET=...     # from tawk.to webhook settings
+```
+
+## Lead sources
+
+| Source | How it arrives |
+|--------|----------------|
+| `website` | Auto from `/contact` demo booking |
+| `tawk_chat` | Tawk webhook on chat start (pre-chat form required) |
+| `facebook_group` | Manual add after group DM / outreach |
+| `referral`, `cold_call`, `whatsapp`, `other` | Manual add |
 
 ## Critical: Blob on Production
 
-**Demo leads will not appear in `/admin/leads` without Blob.**
+**Leads will not appear in `/admin/leads` without Blob.**
 
-On Vercel Production you **must** set:
-
-```bash
-BLOB_READ_WRITE_TOKEN=...
-```
-
-Use the same Vercel Blob store as blog/SEO drafts. Without it, booking still creates a Calendar event and sends email, but CRM save fails (you’ll see a warning on the confirmation card and in the sales notify email).
-
-Filesystem `content/leads/` is **local dev only** — it is not durable on serverless.
+Filesystem `content/leads/` is **local dev only** — not durable on serverless.
 
 ### Verify after deploy
 
-1. Confirm `BLOB_READ_WRITE_TOKEN` is set on Production and the project was **redeployed**
+1. Confirm `BLOB_READ_WRITE_TOKEN` on Production + redeploy
 2. Book a test demo on `/contact`
-3. Open `/admin/leads` — the company should list within seconds (Refresh if needed)
-4. If confirmation shows a CRM warning, fix the Blob token and re-book
-
-## What gets stored
-
-On each successful calendar booking, Hostora also writes a lead (Vercel Blob `leads/*.json`, or local `content/leads/` in dev):
-
-- Contact: name, email, phone, company, vertical
-- Demo slot + Meet / Calendar links
-- Status pipeline: `new` → `contacted` → `demo_done` → `quoted` → `won` | `lost` | `no_show`
-- Notes, call log, follow-up tasks (auto-creates a post-demo call task +1 day)
-- Optional UTM / `ref` from the contact URL
-
-Listing scans all `leads/*.json` files (does not rely only on an index file).
+3. Add a manual test lead (Facebook source)
+4. Trigger a test Tawk chat (with pre-chat email filled)
+5. Open `/admin` — confirm counts by source
 
 ## Staff actions
 
 | Action | Where |
 |--------|--------|
-| Filter / search leads | `/admin/leads` |
-| Change status, assignee | Lead detail |
-| Log call (`reached` / `voicemail` / …) | Lead detail |
-| Add notes & tasks | Lead detail |
-| Send template email (thanks / quote nudge / no-show) | Lead detail → SMTP |
-| Click-to-call / WhatsApp / mailto | Lead detail |
+| Dashboard KPIs | `/admin` |
+| Filter / search / export CSV | `/admin/leads` |
+| Add lead manually | `/admin/leads` → Add lead |
+| Change status, assignee, quote amount | Lead detail |
+| Activity timeline | Lead detail |
+| Log call / notes / tasks | Lead detail |
+| Send template email | Lead detail → SMTP |
+| Facebook post + tracked link | `/admin/outreach` |
+
+## Facebook group workflow
+
+1. Open `/admin/outreach` → pick group → copy post + tracked `/contact` or `/go/{slug}` link
+2. Post manually in the Facebook group
+3. When someone DMs: WhatsApp/call → book demo or **Add lead** with source `facebook_group`
+4. Filter leads by source on dashboard weekly
+
+## Tawk.to chat workflow
+
+### Dashboard setup (once)
+
+In [tawk.to](https://dashboard.tawk.to) → Admin → Property:
+
+1. **Pre-chat form** — require name, email, phone, company
+2. **Webhooks** → URL: `https://www.hostorasoft.co.uk/api/webhooks/tawk`
+3. Events: **Chat Start** (+ optional Chat End / transcript)
+4. Copy webhook secret → `TAWK_WEBHOOK_SECRET` on Vercel
+
+### Staff workflow
+
+1. Visitor chats on site → lead appears with source **Tawk chat**
+2. Reply in **Tawk dashboard** (not Hostora)
+3. From lead detail: log call, send `/contact`, move pipeline status
+4. If webhook fails: add lead manually with source `tawk_chat`
+
+## Pipeline
+
+`new` → `contacted` → `demo_done` → `quoted` → `won` | `lost` | `no_show`
+
+- Auto task: post-demo call (+1 day) for website bookings
+- Auto task: follow up Tawk chat (+4 hours) for chat leads
+- Optional `quoteAmount` (GBP) and `lostReason` on lead detail
 
 ## Daily reminders
 
-Vercel Cron runs **08:00 UTC** → `GET /api/admin/leads/remind`.
-
-Set on Vercel:
-
-```bash
-CRON_SECRET=long-random-string
-```
-
-Vercel sends `Authorization: Bearer $CRON_SECRET`. The job emails each assignee a digest of open tasks due today (or overdue).
-
-Manual test:
-
-```bash
-curl -H "Authorization: Bearer $CRON_SECRET" \
-  https://www.hostorasoft.co.uk/api/admin/leads/remind
-```
+Vercel Cron **08:00 UTC** → `GET /api/admin/leads/remind` with `Authorization: Bearer $CRON_SECRET`.
 
 ## Attribution URLs
 
-Pass UTMs into `/contact`:
-
 ```
-https://www.hostorasoft.co.uk/contact?utm_source=youtube&utm_medium=video&utm_campaign=demo&ref=ad1
+https://www.hostorasoft.co.uk/contact?utm_source=facebook&utm_medium=group&utm_campaign=uk-restaurant-owners&ref=fb-uk-restaurant-owners
 ```
 
-Stored on the lead for reporting.
-
-## Requirements
-
-- `BLOB_READ_WRITE_TOKEN` on Production (required for durable leads)
-- SMTP env already used for booking confirmations
-- Booking Google Calendar flow unchanged — CRM is additive
+Short link: `https://www.hostorasoft.co.uk/go/uk-restaurant-owners`
 
 ## Phase 2 ideas
 
-Quote PDF attach, SMS (Twilio), HubSpot sync, lead scoring — see product plan notes.
+Quote PDF attach, SMS (Twilio), HubSpot sync, per-user auth, lead scoring.

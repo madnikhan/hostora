@@ -3,6 +3,8 @@ import Link from "next/link";
 import { FadeUp } from "@/components/FadeUp";
 import { DeviceMock } from "@/components/DeviceMock";
 import { JsonLd } from "@/components/JsonLd";
+import { PageHero } from "@/components/ui/PageHero";
+import { Button } from "@/components/ui/Button";
 import { productMedia, pitchClips } from "@/lib/productMedia";
 
 export const metadata: Metadata = {
@@ -104,22 +106,20 @@ const faqJsonLd = {
 
 export default function SolutionsPage() {
   return (
-    <div className="px-6 pb-28 pt-20">
+    <div className="pb-28">
       <JsonLd data={faqJsonLd} />
-      <div className="mx-auto max-w-5xl">
-        <FadeUp>
-          <p className="eyebrow">Solutions</p>
-          <h1 className="display mt-4 max-w-3xl text-5xl font-extrabold md:text-7xl">
-            Built for how hospitality actually works.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted leading-relaxed">
-            Restaurant, Takeaway, and Events packs for operators who need a
-            system that goes live in days — plus hotel F&amp;B and food carts
-            configured to the outlets or footprint. Same spine. Not a bespoke
-            rewrite.
-          </p>
-        </FadeUp>
+      <PageHero
+        eyebrow="Solutions"
+        title="Built for how hospitality actually works."
+        description="Restaurant, Takeaway, and Events packs for operators who need a system that goes live in days — plus hotel F&B and food carts configured to the outlets or footprint."
+      >
+        <Button href="/contact">Book a demo</Button>
+        <Button href="/product" variant="secondary">
+          See the product
+        </Button>
+      </PageHero>
 
+      <div className="mx-auto max-w-5xl px-6">
         <div className="mt-16 space-y-10">
           {solutions.map((s, i) => (
             <FadeUp key={s.title} delay={i * 0.06}>
@@ -174,7 +174,7 @@ export default function SolutionsPage() {
           <div className="mt-16 text-center">
             <Link
               href="/contact"
-              className="inline-flex rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-background"
+              className="inline-flex rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-background transition hover:bg-accent-strong"
             >
               Book a demo
             </Link>
