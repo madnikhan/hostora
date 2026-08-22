@@ -7,6 +7,10 @@ import { createMeetEvent, getBusyRanges } from "@/lib/booking/google";
 import { rateLimit } from "@/lib/booking/rateLimit";
 import { buildDaySlots } from "@/lib/booking/slots";
 import { createLead } from "@/lib/leads/store";
+import { DEMO_VERTICALS } from "@/lib/demoVerticals";
+import { INQUIRY_TYPES, IT_VERTICALS } from "@/lib/leads/types";
+
+const ALL_VERTICALS = [...DEMO_VERTICALS, ...IT_VERTICALS] as const;
 
 const bodySchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -18,13 +22,8 @@ const bodySchema = z.object({
     .min(7)
     .max(40)
     .regex(/^[+\d\s().-]+$/),
-  vertical: z.enum([
-    "Restaurant",
-    "Takeaway",
-    "Events",
-    "Hotel F&B",
-    "Food cart",
-  ]),
+  inquiryType: z.enum(INQUIRY_TYPES).default("hospitality"),
+  vertical: z.enum(ALL_VERTICALS),
   start: z.string().datetime(),
   utm: z
     .object({
@@ -80,6 +79,7 @@ export async function POST(request: Request) {
   }
 
   const data = parsed.data;
+  const isIt = data.inquiryType === "it_services";
   const start = new Date(data.start);
   if (Number.isNaN(start.getTime())) {
     return NextResponse.json({ error: "Invalid start time" }, { status: 400 });
@@ -119,13 +119,16 @@ export async function POST(request: Request) {
   let meeting;
   try {
     meeting = await createMeetEvent({
-      summary: `Hostora demo — ${data.companyName}`,
+      summary: isIt
+        ? `IT inquiry — ${data.companyName}`
+        : `Hostora demo — ${data.companyName}`,
       description: [
-        `Hostora product demo`,
+        isIt ? "Business IT & install inquiry" : "Hostora product demo",
         `Name: ${data.name}`,
         `Email: ${data.email}`,
         `Company: ${data.companyName}`,
         `Phone: ${data.phone}`,
+        `Track: ${data.inquiryType}`,
         `Vertical: ${data.vertical}`,
       ].join("\n"),
       start,
@@ -186,6 +189,7 @@ export async function POST(request: Request) {
       phone: data.phone,
       companyName: data.companyName,
       vertical: data.vertical,
+      inquiryType: data.inquiryType,
       start: meeting.start || data.start,
       meetLink: meeting.meetLink ?? null,
       calendarEventId: meeting.eventId ?? null,

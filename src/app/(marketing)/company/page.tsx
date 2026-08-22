@@ -120,6 +120,14 @@ export default function CompanyPage() {
             e-commerce information requirements. VAT registration will be shown
             here if and when the company is VAT-registered.
           </p>
+          <p className="mt-6 text-sm leading-relaxed text-muted">
+            {company.legalName} also offers{" "}
+            <Link href="/business-it" className="text-accent hover:underline">
+              business IT &amp; install services
+            </Link>{" "}
+            (corporate, NHS non-clinical sites, motor offices) — separate from
+            the Hostora hospitality product.
+          </p>
           <Link
             href="/contact"
             className="mt-8 inline-flex rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-background"

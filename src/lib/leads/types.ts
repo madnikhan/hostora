@@ -22,6 +22,21 @@ export const LEAD_SOURCES = [
 
 export type LeadSource = (typeof LEAD_SOURCES)[number];
 
+export const INQUIRY_TYPES = ["hospitality", "it_services"] as const;
+
+export type InquiryType = (typeof INQUIRY_TYPES)[number];
+
+/** Business IT verticals (Track B — K WAZIR LTD install/services). */
+export const IT_VERTICALS = [
+  "Corporate",
+  "NHS site",
+  "Motor",
+  "Home office",
+  "Other",
+] as const;
+
+export type ItVertical = (typeof IT_VERTICALS)[number];
+
 export const CALL_OUTCOMES = [
   "reached",
   "voicemail",
@@ -98,6 +113,7 @@ export type Lead = {
   phone: string;
   companyName: string;
   vertical: string;
+  inquiryType: InquiryType;
   start: string;
   meetLink: string | null;
   calendarEventId: string | null;
@@ -127,6 +143,7 @@ export type LeadSummary = Pick<
   | "phone"
   | "companyName"
   | "vertical"
+  | "inquiryType"
   | "start"
   | "status"
   | "assignee"
@@ -170,4 +187,19 @@ export function leadSourceLabel(source: LeadSource): string {
     other: "Other",
   };
   return labels[source];
+}
+
+export function inquiryTypeLabel(type: InquiryType): string {
+  return type === "hospitality" ? "Hostora hospitality" : "Business IT";
+}
+
+const IT_VERTICAL_SET = new Set<string>(IT_VERTICALS);
+
+/** Backfill inquiry type for leads created before the field existed. */
+export function resolveInquiryType(
+  lead: Partial<Pick<Lead, "inquiryType" | "vertical">>,
+): InquiryType {
+  if (lead.inquiryType) return lead.inquiryType;
+  if (lead.vertical && IT_VERTICAL_SET.has(lead.vertical)) return "it_services";
+  return "hospitality";
 }

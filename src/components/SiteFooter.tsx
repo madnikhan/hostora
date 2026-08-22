@@ -44,6 +44,9 @@ export function SiteFooter() {
           <Link href="/company" className="hover:text-foreground">
             Company information
           </Link>
+          <Link href="/business-it" className="hover:text-foreground">
+            Business IT
+          </Link>
         </div>
       </div>
       <div className="border-t border-border px-6 py-6 text-xs leading-relaxed text-muted">

@@ -10,7 +10,7 @@ import {
   leadsStorageMode,
 } from "@/lib/leads/store";
 import { getSalesTeam } from "@/lib/leads/team";
-import { LEAD_SOURCES } from "@/lib/leads/types";
+import { LEAD_SOURCES, INQUIRY_TYPES } from "@/lib/leads/types";
 import { isAdminAuthenticated } from "@/lib/seo/adminAuth";
 
 const createSchema = z.object({
@@ -19,6 +19,7 @@ const createSchema = z.object({
   phone: z.string().trim().min(3).max(40),
   companyName: z.string().trim().min(1).max(200),
   vertical: z.string().trim().min(1).max(100),
+  inquiryType: z.enum(INQUIRY_TYPES).optional(),
   source: z.enum(LEAD_SOURCES),
   sourceDetail: z.string().trim().max(500).optional(),
   facebookGroup: z.string().trim().max(200).optional(),

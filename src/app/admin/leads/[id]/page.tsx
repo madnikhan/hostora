@@ -15,7 +15,7 @@ import {
   type LeadStatus,
 } from "@/lib/leads/types";
 import { ActivityTimeline } from "@/components/admin/leads/ActivityTimeline";
-import { SourceBadge } from "@/components/admin/leads/AssigneePicker";
+import { InquiryTypeBadge, SourceBadge } from "@/components/admin/leads/AssigneePicker";
 import { AdminButton } from "@/components/admin/AdminButton";
 
 function waLink(phone: string) {
@@ -154,7 +154,9 @@ export default function AdminLeadDetailPage() {
           {lead.companyName}
         </h1>
         <p className="mt-1 text-white/55">
-          {lead.name} · {lead.vertical} · <SourceBadge source={lead.source} />
+          {lead.name} · {lead.vertical} ·{" "}
+          <InquiryTypeBadge type={lead.inquiryType} /> ·{" "}
+          <SourceBadge source={lead.source} />
         </p>
         {lead.sourceDetail ? (
           <p className="mt-1 text-sm text-white/45">{lead.sourceDetail}</p>

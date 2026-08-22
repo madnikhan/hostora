@@ -2,17 +2,19 @@ import { del, list, put } from "@vercel/blob";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import type {
-  Lead,
-  LeadCall,
-  LeadNote,
-  LeadSource,
-  LeadStatus,
-  LeadSummary,
-  LeadTask,
-  LeadUtm,
-  TaskType,
-  CallOutcome,
+import {
+  resolveInquiryType,
+  type InquiryType,
+  type Lead,
+  type LeadCall,
+  type LeadNote,
+  type LeadSource,
+  type LeadStatus,
+  type LeadSummary,
+  type LeadTask,
+  type LeadUtm,
+  type TaskType,
+  type CallOutcome,
 } from "@/lib/leads/types";
 import { defaultAssigneeEmail } from "@/lib/leads/team";
 
@@ -49,8 +51,10 @@ function defaultAssignee(): string {
 
 /** Backfill defaults for leads created before source fields existed. */
 export function normalizeLead(raw: Lead): Lead {
+  const inquiryType = resolveInquiryType(raw);
   return {
     ...raw,
+    inquiryType,
     source: raw.source ?? "website",
     notes: raw.notes ?? [],
     calls: raw.calls ?? [],
@@ -147,6 +151,7 @@ function summarize(lead: Lead): LeadSummary {
     phone: lead.phone,
     companyName: lead.companyName,
     vertical: lead.vertical,
+    inquiryType: resolveInquiryType(lead),
     start: lead.start,
     status: lead.status,
     assignee: lead.assignee,
@@ -169,6 +174,7 @@ export type CreateLeadInput = {
   phone: string;
   companyName: string;
   vertical: string;
+  inquiryType?: InquiryType;
   start: string;
   meetLink: string | null;
   calendarEventId: string | null;
@@ -184,6 +190,7 @@ export type ManualLeadInput = {
   phone: string;
   companyName: string;
   vertical: string;
+  inquiryType?: InquiryType;
   source: LeadSource;
   sourceDetail?: string;
   facebookGroup?: string;
@@ -256,6 +263,7 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
     phone: input.phone,
     companyName: input.companyName,
     vertical: input.vertical,
+    inquiryType: input.inquiryType ?? resolveInquiryType({ vertical: input.vertical }),
     start: input.start,
     meetLink: input.meetLink,
     calendarEventId: input.calendarEventId,
@@ -307,6 +315,9 @@ export async function createManualLead(
     phone: input.phone.trim(),
     companyName: input.companyName.trim(),
     vertical: input.vertical.trim(),
+    inquiryType:
+      input.inquiryType ??
+      resolveInquiryType({ vertical: input.vertical.trim() }),
     start,
     meetLink: null,
     calendarEventId: null,
@@ -397,6 +408,7 @@ export async function createOrUpdateTawkLead(
     phone: input.phone?.trim() || "",
     companyName: input.companyName?.trim() || "Unknown venue",
     vertical: "Unknown",
+    inquiryType: "hospitality",
     start: now,
     meetLink: null,
     calendarEventId: null,

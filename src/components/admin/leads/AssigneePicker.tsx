@@ -1,6 +1,6 @@
 "use client";
 
-import { LEAD_SOURCES, leadSourceLabel, type LeadSource } from "@/lib/leads/types";
+import { LEAD_SOURCES, inquiryTypeLabel, leadSourceLabel, type InquiryType, type LeadSource } from "@/lib/leads/types";
 
 const ASSIGNEE_KEY = "hostora_sales_assignee";
 
@@ -49,6 +49,21 @@ export function SourceBadge({ source }: { source: LeadSource }) {
   return (
     <span className="rounded bg-white/10 px-2 py-0.5 text-xs text-white/75">
       {leadSourceLabel(source)}
+    </span>
+  );
+}
+
+export function InquiryTypeBadge({ type }: { type: InquiryType }) {
+  const isIt = type === "it_services";
+  return (
+    <span
+      className={`rounded px-2 py-0.5 text-xs ${
+        isIt
+          ? "bg-sky-500/20 text-sky-100"
+          : "bg-[#E8A54B]/20 text-[#E8A54B]"
+      }`}
+    >
+      {inquiryTypeLabel(type)}
     </span>
   );
 }

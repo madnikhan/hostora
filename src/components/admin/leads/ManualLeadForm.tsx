@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AdminButton } from "@/components/admin/AdminButton";
-import { LEAD_SOURCES } from "@/lib/leads/types";
+import { LEAD_SOURCES, INQUIRY_TYPES, IT_VERTICALS } from "@/lib/leads/types";
+import { DEMO_VERTICALS } from "@/lib/demoVerticals";
 
 export function ManualLeadForm({ team }: { team: string[] }) {
   const router = useRouter();
@@ -15,12 +16,18 @@ export function ManualLeadForm({ team }: { team: string[] }) {
     email: "",
     phone: "",
     companyName: "",
+    inquiryType: "hospitality" as (typeof INQUIRY_TYPES)[number],
     vertical: "Restaurant",
     source: "facebook_group" as (typeof LEAD_SOURCES)[number],
     sourceDetail: "",
     assignee: team[0] ?? "",
     note: "",
   });
+
+  const verticalOptions =
+    form.inquiryType === "it_services"
+      ? [...IT_VERTICALS]
+      : [...DEMO_VERTICALS, "Other"];
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -94,17 +101,28 @@ export function ManualLeadForm({ team }: { team: string[] }) {
           className="border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
         />
         <select
+          value={form.inquiryType}
+          onChange={(e) => {
+            const inquiryType = e.target.value as (typeof INQUIRY_TYPES)[number];
+            const nextVertical =
+              inquiryType === "it_services" ? IT_VERTICALS[0] : "Restaurant";
+            setForm({ ...form, inquiryType, vertical: nextVertical });
+          }}
+          className="border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
+        >
+          <option value="hospitality">Hostora hospitality</option>
+          <option value="it_services">Business IT</option>
+        </select>
+        <select
           value={form.vertical}
           onChange={(e) => setForm({ ...form, vertical: e.target.value })}
           className="border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
         >
-          {["Restaurant", "Takeaway", "Events", "Hotel F&B", "Food cart", "Other"].map(
-            (v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ),
-          )}
+          {verticalOptions.map((v) => (
+            <option key={v} value={v}>
+              {v}
+            </option>
+          ))}
         </select>
         <select
           value={form.source}

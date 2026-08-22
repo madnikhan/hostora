@@ -1,9 +1,11 @@
-import type { Lead, LeadSource, LeadStatus } from "@/lib/leads/types";
+import type { InquiryType, Lead, LeadSource, LeadStatus } from "@/lib/leads/types";
+import { resolveInquiryType } from "@/lib/leads/types";
 
 export type LeadStats = {
   total: number;
   byStatus: Record<LeadStatus, number>;
   bySource: Record<LeadSource, number>;
+  byInquiryType: Record<InquiryType, number>;
   newThisWeek: number;
   demosNext24h: number;
   overdueTasks: number;
@@ -44,6 +46,11 @@ export function computeLeadStats(leads: Lead[]): LeadStats {
     other: 0,
   } satisfies Record<LeadSource, number>;
 
+  const byInquiryType = {
+    hospitality: 0,
+    it_services: 0,
+  } satisfies Record<InquiryType, number>;
+
   let newThisWeek = 0;
   let demosNext24h = 0;
   let overdueTasks = 0;
@@ -52,6 +59,7 @@ export function computeLeadStats(leads: Lead[]): LeadStats {
   for (const lead of leads) {
     byStatus[lead.status]++;
     bySource[lead.source]++;
+    byInquiryType[resolveInquiryType(lead)]++;
     if (new Date(lead.createdAt).getTime() >= weekStart) newThisWeek++;
     const demoAt = new Date(lead.start).getTime();
     if (demoAt >= now && demoAt <= next24h) demosNext24h++;
@@ -66,6 +74,7 @@ export function computeLeadStats(leads: Lead[]): LeadStats {
     total: leads.length,
     byStatus,
     bySource,
+    byInquiryType,
     newThisWeek,
     demosNext24h,
     overdueTasks,

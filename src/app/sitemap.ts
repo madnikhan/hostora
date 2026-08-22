@@ -71,6 +71,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.5,
     },
+    {
+      url: `${siteUrl}/business-it`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.55,
+    },
   ];
 
   const locationRoutes: MetadataRoute.Sitemap = locations.map((loc) => ({

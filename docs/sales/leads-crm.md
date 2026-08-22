@@ -28,6 +28,15 @@ TAWK_WEBHOOK_SECRET=...     # from tawk.to webhook settings
 | `facebook_group` | Manual add after group DM / outreach |
 | `referral`, `cold_call`, `whatsapp`, `other` | Manual add |
 
+## Inquiry track (`inquiryType`)
+
+| Value | Meaning |
+|-------|---------|
+| `hospitality` | Hostora demo — restaurant, takeaway, events, hotel F&B, food cart |
+| `it_services` | Business IT & install — corporate, NHS site, motor, home office |
+
+Set automatically from `/contact` (inquiry selector). Filter on `/admin/leads` and view **By track** on `/admin`. Playbook: `docs/sales/zero-budget-gtm.md`.
+
 ## Critical: Blob on Production
 
 **Leads will not appear in `/admin/leads` without Blob.**

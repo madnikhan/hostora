@@ -6,13 +6,16 @@ import { useRouter } from "next/navigation";
 import { AdminButton } from "@/components/admin/AdminButton";
 import {
   AssigneePicker,
+  InquiryTypeBadge,
   SourceBadge,
   getStoredAssignee,
 } from "@/components/admin/leads/AssigneePicker";
 import { ManualLeadForm } from "@/components/admin/leads/ManualLeadForm";
 import {
+  INQUIRY_TYPES,
   LEAD_SOURCES,
   LEAD_STATUSES,
+  type InquiryType,
   type LeadSource,
   type LeadStatus,
 } from "@/lib/leads/types";
@@ -24,6 +27,7 @@ type LeadRow = {
   phone: string;
   companyName: string;
   vertical: string;
+  inquiryType: InquiryType;
   start: string;
   status: LeadStatus;
   source: LeadSource;
@@ -42,6 +46,7 @@ export default function AdminLeadsPage() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("all");
   const [source, setSource] = useState<string>("all");
+  const [inquiryType, setInquiryType] = useState<string>("all");
   const [assignee, setAssignee] = useState("");
   const [overdueOnly, setOverdueOnly] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -80,6 +85,7 @@ export default function AdminLeadsPage() {
     return leads.filter((l) => {
       if (status !== "all" && l.status !== status) return false;
       if (source !== "all" && l.source !== source) return false;
+      if (inquiryType !== "all" && l.inquiryType !== inquiryType) return false;
       if (
         assignee &&
         l.assignee.toLowerCase() !== assignee.toLowerCase()
@@ -95,7 +101,7 @@ export default function AdminLeadsPage() {
         l.phone.includes(needle)
       );
     });
-  }, [leads, q, status, source, assignee, overdueOnly]);
+  }, [leads, q, status, source, inquiryType, assignee, overdueOnly]);
 
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = { all: leads.length };
@@ -177,6 +183,18 @@ export default function AdminLeadsPage() {
             </option>
           ))}
         </select>
+        <select
+          value={inquiryType}
+          onChange={(e) => setInquiryType(e.target.value)}
+          className="border border-white/15 bg-black/40 px-3 py-2 text-sm outline-none focus:border-[#E8A54B]"
+        >
+          <option value="all">All tracks</option>
+          {INQUIRY_TYPES.map((t) => (
+            <option key={t} value={t}>
+              {t === "hospitality" ? "Hostora hospitality" : "Business IT"}
+            </option>
+          ))}
+        </select>
         <label className="flex items-center gap-2 text-sm text-white/60">
           <input
             type="checkbox"
@@ -192,6 +210,7 @@ export default function AdminLeadsPage() {
           <thead className="border-b border-white/10 text-white/45">
             <tr>
               <th className="px-3 py-2 font-medium">Lead</th>
+              <th className="px-3 py-2 font-medium">Track</th>
               <th className="px-3 py-2 font-medium">Source</th>
               <th className="px-3 py-2 font-medium">Vertical</th>
               <th className="px-3 py-2 font-medium">Demo / start</th>
@@ -202,7 +221,7 @@ export default function AdminLeadsPage() {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-3 py-8 text-center text-white/40">
+                <td colSpan={7} className="px-3 py-8 text-center text-white/40">
                   No leads match filters.
                 </td>
               </tr>
@@ -223,6 +242,9 @@ export default function AdminLeadsPage() {
                       {l.name} · {l.email}
                     </p>
                     <p className="text-xs text-white/35">{l.assignee}</p>
+                  </td>
+                  <td className="px-3 py-3">
+                    <InquiryTypeBadge type={l.inquiryType} />
                   </td>
                   <td className="px-3 py-3">
                     <SourceBadge source={l.source} />

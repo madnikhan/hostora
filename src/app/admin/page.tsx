@@ -6,16 +6,18 @@ import { useRouter } from "next/navigation";
 import {
   AssigneePicker,
   getStoredAssignee,
+  InquiryTypeBadge,
   SourceBadge,
 } from "@/components/admin/leads/AssigneePicker";
 import { AdminButton } from "@/components/admin/AdminButton";
-import type { LeadSource, LeadStatus } from "@/lib/leads/types";
-import { LEAD_STATUSES, leadSourceLabel } from "@/lib/leads/types";
+import type { InquiryType, LeadSource, LeadStatus } from "@/lib/leads/types";
+import { INQUIRY_TYPES, LEAD_STATUSES, inquiryTypeLabel, leadSourceLabel } from "@/lib/leads/types";
 
 type LeadStats = {
   total: number;
   byStatus: Record<LeadStatus, number>;
   bySource: Record<LeadSource, number>;
+  byInquiryType: Record<InquiryType, number>;
   newThisWeek: number;
   demosNext24h: number;
   overdueTasks: number;
@@ -29,6 +31,7 @@ type LeadRow = {
   start: string;
   status: LeadStatus;
   source: LeadSource;
+  inquiryType: InquiryType;
   assignee: string;
   meetLink?: string | null;
 };
@@ -149,7 +152,7 @@ export default function AdminDashboardPage() {
       ) : null}
 
       {stats ? (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-3">
           <section className="border border-white/10 p-4">
             <h2 className="text-sm font-medium uppercase tracking-wide text-white/45">
               Pipeline
@@ -172,6 +175,19 @@ export default function AdminDashboardPage() {
                 <li key={s} className="flex justify-between text-white/75">
                   <span>{leadSourceLabel(s)}</span>
                   <span>{stats.bySource[s]}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section className="border border-white/10 p-4">
+            <h2 className="text-sm font-medium uppercase tracking-wide text-white/45">
+              By track
+            </h2>
+            <ul className="mt-4 space-y-2 text-sm">
+              {(Object.keys(stats.byInquiryType) as InquiryType[]).map((t) => (
+                <li key={t} className="flex justify-between text-white/75">
+                  <span>{inquiryTypeLabel(t)}</span>
+                  <span>{stats.byInquiryType[t]}</span>
                 </li>
               ))}
             </ul>
@@ -208,6 +224,7 @@ export default function AdminDashboardPage() {
                   </p>
                 </div>
                 <SourceBadge source={l.source} />
+                <InquiryTypeBadge type={l.inquiryType} />
               </li>
             ))
           )}
