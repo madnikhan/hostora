@@ -1,8 +1,16 @@
-import { del, list, put } from "@vercel/blob";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import {
+  pgDeleteLead,
+  pgFindLeadByEmail,
+  pgFindLeadByTawkChatId,
+  pgGetLead,
+  pgListLeads,
+  pgSaveLead,
+} from "@/lib/leads/postgres";
+import {
+  normalizeLead,
   resolveInquiryType,
   type InquiryType,
   type Lead,
@@ -18,27 +26,31 @@ import {
 } from "@/lib/leads/types";
 import { defaultAssigneeEmail } from "@/lib/leads/team";
 
-const LEAD_PREFIX = "leads/";
-const INDEX_PATH = "leads/index.json";
+export { normalizeLead } from "@/lib/leads/types";
 
 type LeadIndex = { ids: string[]; updatedAt: string };
 
-function hasBlob() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
+function hasPostgres() {
+  return Boolean(process.env.POSTGRES_URL?.trim());
 }
 
 function isProduction() {
   return process.env.NODE_ENV === "production";
 }
 
-/** Production must use Blob; local dev may use filesystem. */
-function assertWritable() {
-  if (hasBlob()) return;
+function storageBackend(): "postgres" | "filesystem" {
+  if (hasPostgres()) return "postgres";
   if (isProduction()) {
     throw new Error(
-      "BLOB_READ_WRITE_TOKEN is not set. Add it on Vercel Production (same Blob store as blog) and redeploy — demo leads cannot use the serverless filesystem.",
+      "POSTGRES_URL is not set. Add a Vercel Postgres (Neon) database on Production and redeploy — demo leads cannot use the serverless filesystem.",
     );
   }
+  return "filesystem";
+}
+
+/** Production must use Postgres; local dev may use filesystem. */
+function assertWritable() {
+  storageBackend();
 }
 
 function leadsDir() {
@@ -49,56 +61,11 @@ function defaultAssignee(): string {
   return defaultAssigneeEmail();
 }
 
-/** Backfill defaults for leads created before source fields existed. */
-export function normalizeLead(raw: Lead): Lead {
-  const inquiryType = resolveInquiryType(raw);
-  return {
-    ...raw,
-    inquiryType,
-    source: raw.source ?? "website",
-    notes: raw.notes ?? [],
-    calls: raw.calls ?? [],
-    tasks: raw.tasks ?? [],
-  };
-}
-
-async function putJson(pathname: string, data: unknown) {
-  assertWritable();
-  if (!hasBlob()) {
-    throw new Error("BLOB_READ_WRITE_TOKEN is not set.");
-  }
-  await put(pathname, JSON.stringify(data, null, 2), {
-    access: "public",
-    contentType: "application/json",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-  });
-}
-
-async function readJsonBlob<T>(pathname: string): Promise<T | null> {
-  if (!hasBlob()) return null;
-  try {
-    const { blobs } = await list({ prefix: pathname });
-    const hit = blobs.find((b) => b.pathname === pathname);
-    if (!hit) return null;
-    const res = await fetch(hit.url, { cache: "no-store" });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-}
-
 async function ensureFsDir() {
   await fs.mkdir(leadsDir(), { recursive: true });
 }
 
 async function readIndex(): Promise<LeadIndex> {
-  if (hasBlob()) {
-    const idx = await readJsonBlob<LeadIndex>(INDEX_PATH);
-    if (idx?.ids) return idx;
-    return { ids: [], updatedAt: new Date().toISOString() };
-  }
   try {
     const raw = await fs.readFile(path.join(leadsDir(), "index.json"), "utf8");
     return JSON.parse(raw) as LeadIndex;
@@ -108,16 +75,12 @@ async function readIndex(): Promise<LeadIndex> {
 }
 
 async function writeIndex(ids: string[]) {
+  assertWritable();
+  await ensureFsDir();
   const idx: LeadIndex = {
     ids: [...new Set(ids)],
     updatedAt: new Date().toISOString(),
   };
-  if (hasBlob()) {
-    await putJson(INDEX_PATH, idx);
-    return;
-  }
-  assertWritable();
-  await ensureFsDir();
   await fs.writeFile(
     path.join(leadsDir(), "index.json"),
     `${JSON.stringify(idx, null, 2)}\n`,
@@ -125,12 +88,7 @@ async function writeIndex(ids: string[]) {
   );
 }
 
-async function writeLeadFile(lead: Lead) {
-  const pathname = `${LEAD_PREFIX}${lead.id}.json`;
-  if (hasBlob()) {
-    await putJson(pathname, lead);
-    return;
-  }
+async function fsWriteLeadFile(lead: Lead) {
   assertWritable();
   await ensureFsDir();
   await fs.writeFile(
@@ -140,7 +98,7 @@ async function writeLeadFile(lead: Lead) {
   );
 }
 
-function summarize(lead: Lead): LeadSummary {
+export function summarize(lead: Lead): LeadSummary {
   const now = Date.now();
   const open = lead.tasks.filter((t) => !t.done);
   const overdue = open.filter((t) => new Date(t.dueAt).getTime() < now);
@@ -164,8 +122,8 @@ function summarize(lead: Lead): LeadSummary {
   };
 }
 
-export function leadsStorageMode(): "blob" | "filesystem" {
-  return hasBlob() ? "blob" : "filesystem";
+export function leadsStorageMode(): "postgres" | "filesystem" {
+  return hasPostgres() ? "postgres" : "filesystem";
 }
 
 export type CreateLeadInput = {
@@ -233,6 +191,7 @@ function buildInitialTasks(startIso: string, includeDemoFollowUp: boolean) {
 export async function findLeadByEmail(
   email: string,
 ): Promise<Lead | null> {
+  if (hasPostgres()) return pgFindLeadByEmail(email);
   const needle = email.trim().toLowerCase();
   if (!needle) return null;
   const leads = await listLeads();
@@ -244,6 +203,7 @@ export async function findLeadByEmail(
 export async function findLeadByTawkChatId(
   chatId: string,
 ): Promise<Lead | null> {
+  if (hasPostgres()) return pgFindLeadByTawkChatId(chatId);
   const leads = await listLeads();
   return leads.find((l) => l.tawkChatId === chatId) ?? null;
 }
@@ -252,9 +212,6 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
   assertWritable();
   const now = new Date().toISOString();
   const id = randomUUID();
-  const demoStart = new Date(input.start);
-  const followDue = new Date(demoStart.getTime() + 24 * 60 * 60 * 1000);
-  void followDue;
 
   const lead: Lead = {
     id,
@@ -263,7 +220,8 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
     phone: input.phone,
     companyName: input.companyName,
     vertical: input.vertical,
-    inquiryType: input.inquiryType ?? resolveInquiryType({ vertical: input.vertical }),
+    inquiryType:
+      input.inquiryType ?? resolveInquiryType({ vertical: input.vertical }),
     start: input.start,
     meetLink: input.meetLink,
     calendarEventId: input.calendarEventId,
@@ -280,12 +238,15 @@ export async function createLead(input: CreateLeadInput): Promise<Lead> {
     updatedAt: now,
   };
 
-  await writeLeadFile(lead);
+  if (hasPostgres()) {
+    return pgSaveLead(lead);
+  }
+
+  await fsWriteLeadFile(lead);
   try {
     const idx = await readIndex();
     await writeIndex([lead.id, ...idx.ids]);
   } catch (err) {
-    // Lead file is source of truth; index is optional cache
     console.error("lead index update failed", err);
   }
   return lead;
@@ -334,7 +295,11 @@ export async function createManualLead(
     updatedAt: now,
   };
 
-  await writeLeadFile(lead);
+  if (hasPostgres()) {
+    return pgSaveLead(lead);
+  }
+
+  await fsWriteLeadFile(lead);
   try {
     const idx = await readIndex();
     await writeIndex([lead.id, ...idx.ids]);
@@ -416,7 +381,8 @@ export async function createOrUpdateTawkLead(
     status: "new",
     assignee: defaultAssignee(),
     source: "tawk_chat",
-    sourceDetail: [input.referrer, location].filter(Boolean).join(" · ") || undefined,
+    sourceDetail:
+      [input.referrer, location].filter(Boolean).join(" · ") || undefined,
     tawkChatId: input.tawkChatId,
     notes,
     calls: [],
@@ -435,7 +401,12 @@ export async function createOrUpdateTawkLead(
     updatedAt: now,
   };
 
-  await writeLeadFile(lead);
+  if (hasPostgres()) {
+    const saved = await pgSaveLead(lead);
+    return { lead: saved, created: true };
+  }
+
+  await fsWriteLeadFile(lead);
   try {
     const idx = await readIndex();
     await writeIndex([lead.id, ...idx.ids]);
@@ -480,15 +451,7 @@ export async function updateLeadMeta(
 export async function getLead(id: string): Promise<Lead | null> {
   const clean = id.trim();
   if (!clean) return null;
-  if (isProduction() && !hasBlob()) {
-    throw new Error(
-      "BLOB_READ_WRITE_TOKEN is not set. Add it on Vercel Production and redeploy.",
-    );
-  }
-  if (hasBlob()) {
-    const raw = await readJsonBlob<Lead>(`${LEAD_PREFIX}${clean}.json`);
-    return raw ? normalizeLead(raw) : null;
-  }
+  if (hasPostgres()) return pgGetLead(clean);
   try {
     const raw = await fs.readFile(
       path.join(leadsDir(), `${clean}.json`),
@@ -500,44 +463,21 @@ export async function getLead(id: string): Promise<Lead | null> {
   }
 }
 
-/** Primary listing: scan all lead JSON files (index is not required). */
 export async function listLeads(): Promise<Lead[]> {
-  if (isProduction() && !hasBlob()) {
-    throw new Error(
-      "BLOB_READ_WRITE_TOKEN is not set. Add it on Vercel Production and redeploy.",
-    );
-  }
+  if (hasPostgres()) return pgListLeads();
 
   const leads: Lead[] = [];
-
-  if (hasBlob()) {
-    const { blobs } = await list({ prefix: LEAD_PREFIX });
-    for (const blob of blobs) {
-      if (!blob.pathname.endsWith(".json")) continue;
-      if (blob.pathname === INDEX_PATH) continue;
-      if (!blob.pathname.startsWith(LEAD_PREFIX)) continue;
-      try {
-        const res = await fetch(blob.url, { cache: "no-store" });
-        if (!res.ok) continue;
-        const lead = normalizeLead((await res.json()) as Lead);
-        if (lead?.id) leads.push(lead);
-      } catch {
-        /* skip corrupt */
-      }
+  try {
+    await ensureFsDir();
+    const files = await fs.readdir(leadsDir());
+    for (const file of files) {
+      if (!file.endsWith(".json") || file === "index.json") continue;
+      const raw = await fs.readFile(path.join(leadsDir(), file), "utf8");
+      const lead = normalizeLead(JSON.parse(raw) as Lead);
+      if (lead?.id) leads.push(lead);
     }
-  } else {
-    try {
-      await ensureFsDir();
-      const files = await fs.readdir(leadsDir());
-      for (const file of files) {
-        if (!file.endsWith(".json") || file === "index.json") continue;
-        const raw = await fs.readFile(path.join(leadsDir(), file), "utf8");
-        const lead = normalizeLead(JSON.parse(raw) as Lead);
-        if (lead?.id) leads.push(lead);
-      }
-    } catch {
-      /* empty */
-    }
+  } catch {
+    /* empty */
   }
 
   return leads.sort(
@@ -552,8 +492,9 @@ export async function listLeadSummaries(): Promise<LeadSummary[]> {
 }
 
 async function saveLead(lead: Lead): Promise<Lead> {
+  if (hasPostgres()) return pgSaveLead(lead);
   lead.updatedAt = new Date().toISOString();
-  await writeLeadFile(lead);
+  await fsWriteLeadFile(lead);
   return lead;
 }
 
@@ -675,17 +616,14 @@ export async function listDueReminders(now = new Date()): Promise<DueReminder[]>
 
 /** @internal test helper — not for production delete UI in v1 */
 export async function deleteLead(id: string): Promise<void> {
-  if (hasBlob()) {
-    const { blobs } = await list({ prefix: `${LEAD_PREFIX}${id}.json` });
-    for (const b of blobs) {
-      if (b.pathname === `${LEAD_PREFIX}${id}.json`) await del(b.url);
-    }
-  } else {
-    try {
-      await fs.unlink(path.join(leadsDir(), `${id}.json`));
-    } catch {
-      /* ignore */
-    }
+  if (hasPostgres()) {
+    await pgDeleteLead(id);
+    return;
+  }
+  try {
+    await fs.unlink(path.join(leadsDir(), `${id}.json`));
+  } catch {
+    /* ignore */
   }
   try {
     const idx = await readIndex();

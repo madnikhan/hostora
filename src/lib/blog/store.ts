@@ -1,4 +1,5 @@
-import { list, put } from "@vercel/blob";
+import { head, list, put } from "@vercel/blob";
+import { unstable_cache } from "next/cache";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { BlogPost } from "./types";
@@ -29,14 +30,30 @@ async function readSeedPosts(): Promise<BlogPost[]> {
   }
 }
 
-async function readBlobPosts(): Promise<BlogPost[]> {
+async function readBlobPostByPath(pathname: string): Promise<BlogPost | null> {
+  if (!hasBlobToken()) return null;
+  try {
+    const meta = await head(pathname);
+    const res = await fetch(meta.url, { next: { revalidate: 300 } });
+    if (!res.ok) return null;
+    const parsed = (await res.json()) as BlogPost;
+    if (parsed?.slug && parsed?.title) {
+      return { ...parsed, source: parsed.source ?? "soro" };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function readBlobPostsUncached(): Promise<BlogPost[]> {
   if (!hasBlobToken()) return [];
   try {
     const { blobs } = await list({ prefix: BLOB_PREFIX });
     const posts: BlogPost[] = [];
     for (const blob of blobs) {
       if (!blob.pathname.endsWith(".json")) continue;
-      const res = await fetch(blob.url, { next: { revalidate: 60 } });
+      const res = await fetch(blob.url, { next: { revalidate: 300 } });
       if (!res.ok) continue;
       const parsed = (await res.json()) as BlogPost;
       if (parsed?.slug && parsed?.title) {
@@ -49,6 +66,12 @@ async function readBlobPosts(): Promise<BlogPost[]> {
     return [];
   }
 }
+
+const readBlobPosts = unstable_cache(
+  readBlobPostsUncached,
+  ["blog-blob-posts"],
+  { revalidate: 300 },
+);
 
 function sortPosts(posts: BlogPost[]): BlogPost[] {
   return [...posts].sort(
@@ -67,8 +90,25 @@ export async function listBlogPosts(): Promise<BlogPost[]> {
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  const posts = await listBlogPosts();
-  return posts.find((p) => p.slug === slug) ?? null;
+  const clean = slugify(slug);
+  if (!clean) return null;
+
+  if (hasBlobToken()) {
+    const fromBlob = await readBlobPostByPath(`${BLOB_PREFIX}${clean}.json`);
+    if (fromBlob) return fromBlob;
+  }
+
+  try {
+    const raw = await fs.readFile(path.join(SEED_DIR, `${clean}.json`), "utf8");
+    const parsed = JSON.parse(raw) as BlogPost;
+    if (parsed?.slug && parsed?.title) {
+      return { ...parsed, source: parsed.source ?? "seed" };
+    }
+  } catch {
+    /* fall through */
+  }
+
+  return null;
 }
 
 export async function saveBlogPost(

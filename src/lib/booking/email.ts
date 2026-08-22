@@ -47,7 +47,7 @@ function internalHtml(p: BookingMailPayload): string {
   const leadUrl = p.leadId ? `${siteUrl}/admin/leads/${p.leadId}` : null;
   const crmLine = leadUrl
     ? `<li><strong>CRM lead:</strong> <a href="${leadUrl}">${leadUrl}</a></li>`
-    : `<li><strong>CRM:</strong> <span style="color:#b45309">Lead save failed${p.leadError ? ` — ${p.leadError}` : ""}. Check BLOB_READ_WRITE_TOKEN on Vercel.</span></li>`;
+    : `<li><strong>CRM:</strong> <span style="color:#b45309">Lead save failed${p.leadError ? ` — ${p.leadError}` : ""}. Check POSTGRES_URL on Vercel.</span></li>`;
 
   return `
   <div style="font-family:system-ui,sans-serif;padding:24px">

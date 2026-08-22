@@ -13,10 +13,12 @@ Staff sales workspace for demo bookings, Tawk chat, Facebook outreach, and manua
 ## Env (Production)
 
 ```bash
-BLOB_READ_WRITE_TOKEN=...   # required — leads won't persist without it
+POSTGRES_URL=...              # required — CRM leads (Vercel Postgres / Neon)
+POSTGRES_URL_NON_POOLING=...  # optional — one-time migration script only
+BLOB_READ_WRITE_TOKEN=...     # blog + SEO drafts only (not CRM)
 SALES_TEAM=sales@hostorasoft.co.uk,teammate@example.com
-CRON_SECRET=...             # daily task reminder digest
-TAWK_WEBHOOK_SECRET=...     # from tawk.to webhook settings
+CRON_SECRET=...               # daily task reminder digest
+TAWK_WEBHOOK_SECRET=...       # from tawk.to webhook settings
 ```
 
 ## Lead sources
@@ -37,19 +39,44 @@ TAWK_WEBHOOK_SECRET=...     # from tawk.to webhook settings
 
 Set automatically from `/contact` (inquiry selector). Filter on `/admin/leads` and view **By track** on `/admin`. Playbook: `docs/sales/zero-budget-gtm.md`.
 
-## Critical: Blob on Production
+## Critical: Postgres on Production
 
-**Leads will not appear in `/admin/leads` without Blob.**
+**Leads will not appear in `/admin/leads` without Postgres.**
 
-Filesystem `content/leads/` is **local dev only** — not durable on serverless.
+CRM data lives in **Vercel Postgres (Neon)** — not Blob. Blob is still used for blog posts and SEO drafts only.
+
+### First-time setup
+
+1. Vercel → **hostora** → **Storage** → **Create Database** → Postgres (Neon)
+2. Connect store to project — Vercel adds `POSTGRES_URL` automatically
+3. Redeploy Production
+
+### Migrate existing Blob leads (one time)
+
+If you previously stored leads in Blob before the Postgres migration:
+
+```bash
+BLOB_READ_WRITE_TOKEN=... POSTGRES_URL=... node scripts/migrate-leads-blob-to-postgres.mjs
+```
+
+Use `POSTGRES_URL_NON_POOLING` if the pooled URL fails on DDL. The script lists Blob once, upserts into Postgres, and prints row counts.
 
 ### Verify after deploy
 
-1. Confirm `BLOB_READ_WRITE_TOKEN` on Production + redeploy
+1. Confirm `POSTGRES_URL` on Production + redeploy
 2. Book a test demo on `/contact`
 3. Add a manual test lead (Facebook source)
 4. Trigger a test Tawk chat (with pre-chat email filled)
 5. Open `/admin` — confirm counts by source
+6. Confirm **no new** `leads/*.json` files appear in Blob (CRM should not write there)
+
+### Local dev
+
+Without `POSTGRES_URL`, leads use `content/leads/` on disk. Set `POSTGRES_URL` locally if you want to test against a Neon dev branch.
+
+## Blob quota note
+
+Vercel Hobby includes **2,000 Blob advanced operations/month** (`list`, `put`, `copy`). CRM on Blob exhausted this quickly. Postgres removes CRM from that budget. Blog listing is cached (~5 min) and single-file reads use `head()` (simple op, not advanced).
 
 ## Staff actions
 

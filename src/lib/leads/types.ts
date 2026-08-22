@@ -203,3 +203,16 @@ export function resolveInquiryType(
   if (lead.vertical && IT_VERTICAL_SET.has(lead.vertical)) return "it_services";
   return "hospitality";
 }
+
+/** Backfill defaults for leads created before source fields existed. */
+export function normalizeLead(raw: Lead): Lead {
+  const inquiryType = resolveInquiryType(raw);
+  return {
+    ...raw,
+    inquiryType,
+    source: raw.source ?? "website",
+    notes: raw.notes ?? [],
+    calls: raw.calls ?? [],
+    tasks: raw.tasks ?? [],
+  };
+}

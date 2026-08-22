@@ -1,4 +1,4 @@
-import { del, list, put } from "@vercel/blob";
+import { del, head, list, put } from "@vercel/blob";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import seedTopics from "../../../content/seo/topics.json";
@@ -54,10 +54,8 @@ async function putJson(pathname: string, data: unknown) {
 async function readJsonBlob<T>(pathname: string): Promise<T | null> {
   if (!hasBlob()) return null;
   try {
-    const { blobs } = await list({ prefix: pathname });
-    const hit = blobs.find((b) => b.pathname === pathname);
-    if (!hit) return null;
-    const res = await fetch(hit.url, { cache: "no-store" });
+    const meta = await head(pathname);
+    const res = await fetch(meta.url, { cache: "no-store" });
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch {
@@ -158,11 +156,12 @@ export async function saveDraft(draft: SeoDraft): Promise<SeoDraft> {
 export async function deleteDraft(slug: string): Promise<void> {
   const clean = slugify(slug);
   if (hasBlob()) {
-    const { blobs } = await list({ prefix: `${DRAFT_PREFIX}${clean}.json` });
-    const urls = blobs
-      .filter((b) => b.pathname === `${DRAFT_PREFIX}${clean}.json`)
-      .map((b) => b.url);
-    if (urls.length) await del(urls);
+    try {
+      const meta = await head(`${DRAFT_PREFIX}${clean}.json`);
+      await del(meta.url);
+    } catch {
+      /* not found */
+    }
     return;
   }
   try {

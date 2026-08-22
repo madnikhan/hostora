@@ -5,9 +5,9 @@ import { computeLeadStats } from "@/lib/leads/stats";
 import {
   createManualLead,
   findLeadByEmail,
-  listLeadSummaries,
   listLeads,
   leadsStorageMode,
+  summarize,
 } from "@/lib/leads/store";
 import { getSalesTeam } from "@/lib/leads/team";
 import { LEAD_SOURCES, INQUIRY_TYPES } from "@/lib/leads/types";
@@ -47,8 +47,8 @@ export async function GET(request: Request) {
       });
     }
 
-    const leads = await listLeadSummaries();
     const full = await listLeads();
+    const leads = full.map(summarize);
     const stats = computeLeadStats(full);
     return NextResponse.json({
       storage: leadsStorageMode(),

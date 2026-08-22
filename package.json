@@ -22,9 +22,11 @@
     "seo:draft": "node scripts/seo/draft.mjs",
     "seo:list-drafts": "node scripts/seo/list-drafts.mjs",
     "seo:publish": "node scripts/seo/publish.mjs",
-    "seo:gsc": "node scripts/seo/gsc-topics.mjs"
+    "seo:gsc": "node scripts/seo/gsc-topics.mjs",
+    "leads:migrate-from-blob": "node scripts/migrate-leads-blob-to-postgres.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "@vercel/blob": "^2.6.1",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",

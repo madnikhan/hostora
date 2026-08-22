@@ -214,7 +214,7 @@ export function DemoBookingForm({
         {success.leadError ? (
           <p className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
             Booking is on the calendar, but the CRM lead was not saved. Staff:
-            set <code className="text-amber-50">BLOB_READ_WRITE_TOKEN</code> on
+            set <code className="text-amber-50">POSTGRES_URL</code> on
             Vercel and redeploy. ({success.leadError})
           </p>
         ) : null}

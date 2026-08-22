@@ -107,7 +107,8 @@ Weekly playbook for **Track A** (Hostora hospitality) and **Track B** (K WAZIR L
 ## Env (ops)
 
 ```bash
-BLOB_READ_WRITE_TOKEN=...
+POSTGRES_URL=...               # CRM leads (required on Production)
+BLOB_READ_WRITE_TOKEN=...      # blog/SEO only
 SALES_TEAM=sales@hostorasoft.co.uk,teammate@example.com
 TAWK_WEBHOOK_SECRET=...
 ```
