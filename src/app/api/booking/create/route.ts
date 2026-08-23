@@ -205,8 +205,10 @@ export async function POST(request: Request) {
 
   let emailsSent = false;
   let emailError: string | null = null;
+  let customerMessageId: string | null = null;
+  let notifyMessageId: string | null = null;
   try {
-    await sendBookingEmails({
+    const emailResult = await sendBookingEmails({
       name: data.name,
       email: data.email,
       companyName: data.companyName,
@@ -219,6 +221,15 @@ export async function POST(request: Request) {
       leadError,
     });
     emailsSent = true;
+    customerMessageId = emailResult.customerMessageId ?? null;
+    notifyMessageId = emailResult.notifyMessageId ?? null;
+    console.info("booking emails sent", {
+      customer: emailResult.customerMessageId,
+      customerResponse: emailResult.customerResponse,
+      notify: emailResult.notifyMessageId,
+      notifyResponse: emailResult.notifyResponse,
+      to: data.email,
+    });
   } catch (err) {
     console.error("booking emails failed (event was created)", err);
     emailError =
@@ -234,6 +245,8 @@ export async function POST(request: Request) {
     htmlLink: meeting.htmlLink,
     emailsSent,
     emailError,
+    customerMessageId,
+    notifyMessageId,
     leadId,
     leadError,
   });

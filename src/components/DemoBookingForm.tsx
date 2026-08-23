@@ -8,6 +8,7 @@ import {
   type InquiryType,
   type ItVertical,
 } from "@/lib/leads/types";
+import { company } from "@/lib/company";
 
 type Slot = { start: string; label: string };
 
@@ -196,7 +197,7 @@ export function DemoBookingForm({
         <p className="eyebrow">Confirmed</p>
         <h2 className="display mt-3 text-2xl font-bold">
           {success.emailsSent
-            ? "Check your email for confirmation."
+            ? "Confirmation email sent."
             : isIt
               ? "Your call is booked on the calendar."
               : "Your demo is booked on the calendar."}
@@ -204,8 +205,8 @@ export function DemoBookingForm({
         <p className="mt-4 text-muted leading-relaxed">
           {success.emailsSent
             ? isIt
-              ? "Your 30-minute call with our IT team is booked. We also notified sales."
-              : "Your Hostora demo is booked. We also notified our sales team."
+              ? `We sent a confirmation from ${company.email} with a calendar attachment — check inbox and spam. Sales were also notified.`
+              : `We sent a confirmation from ${company.email} with a calendar attachment — check inbox and spam. Sales were also notified.`
             : "The calendar invite was saved, but confirmation emails could not be sent. Our team will follow up — or email sales@hostorasoft.co.uk."}
         </p>
         {success.emailError ? (

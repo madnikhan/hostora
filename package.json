@@ -23,7 +23,8 @@
     "seo:list-drafts": "node scripts/seo/list-drafts.mjs",
     "seo:publish": "node scripts/seo/publish.mjs",
     "seo:gsc": "node scripts/seo/gsc-topics.mjs",
-    "leads:migrate-from-blob": "node scripts/migrate-leads-blob-to-postgres.mjs"
+    "leads:migrate-from-blob": "node scripts/migrate-leads-blob-to-postgres.mjs",
+    "booking:test-smtp": "node scripts/test-smtp.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

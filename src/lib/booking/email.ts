@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { formatInTimeZone } from "date-fns-tz";
 import { bookingConfig, isSmtpConfigured } from "@/lib/booking/config";
+import { buildDemoIcs } from "@/lib/booking/ics";
 import { company, siteUrl } from "@/lib/company";
 
 export type BookingMailPayload = {
@@ -16,12 +18,39 @@ export type BookingMailPayload = {
   leadError?: string | null;
 };
 
+export type BookingEmailResult = {
+  customerMessageId?: string;
+  customerResponse?: string;
+  notifyMessageId?: string;
+  notifyResponse?: string;
+};
+
 function whenLabel(start: Date): string {
   return formatInTimeZone(
     start,
     bookingConfig.timezone,
     "EEEE d MMMM yyyy 'at' HH:mm zzz",
   );
+}
+
+function customerText(p: BookingMailPayload): string {
+  const when = whenLabel(p.start);
+  const meet = p.meetLink
+    ? `Join Google Meet: ${p.meetLink}`
+    : "Your Google Meet link will be sent by our team shortly.";
+  return [
+    `Hostora demo confirmed`,
+    ``,
+    `Thanks ${p.name} — you're booked.`,
+    ``,
+    `When: ${when}`,
+    `Company: ${p.companyName}`,
+    `Business type: ${p.vertical}`,
+    meet,
+    ``,
+    `Reply to this email if you need to reschedule.`,
+    `${company.legalName} · ${company.email}`,
+  ].join("\n");
 }
 
 function customerHtml(p: BookingMailPayload): string {
@@ -40,6 +69,27 @@ function customerHtml(p: BookingMailPayload): string {
     ${meet}
     <p style="margin-top:32px;color:#9a958c;font-size:13px">${company.legalName} · ${company.email}</p>
   </div>`;
+}
+
+function internalText(p: BookingMailPayload): string {
+  const when = whenLabel(p.start);
+  const leadUrl = p.leadId ? `${siteUrl}/admin/leads/${p.leadId}` : null;
+  const crm = leadUrl
+    ? `CRM lead: ${leadUrl}`
+    : `CRM: lead save failed${p.leadError ? ` — ${p.leadError}` : ""}`;
+  return [
+    `New Hostora demo booking`,
+    ``,
+    `Name: ${p.name}`,
+    `Email: ${p.email}`,
+    `Company: ${p.companyName}`,
+    `Vertical: ${p.vertical}`,
+    `Phone: ${p.phone}`,
+    `When: ${when}`,
+    `Meet: ${p.meetLink || "(pending)"}`,
+    `Calendar: ${p.htmlLink || "n/a"}`,
+    crm,
+  ].join("\n");
 }
 
 function internalHtml(p: BookingMailPayload): string {
@@ -83,7 +133,39 @@ function createTransport() {
   });
 }
 
-export async function sendBookingEmails(p: BookingMailPayload): Promise<void> {
+function icsAttachment(p: BookingMailPayload) {
+  const when = whenLabel(p.start);
+  const ics = buildDemoIcs({
+    start: p.start,
+    summary: `Hostora demo — ${p.companyName}`,
+    description: [
+      `Hostora demo with ${p.name}`,
+      `Company: ${p.companyName}`,
+      `Phone: ${p.phone}`,
+      p.meetLink ? `Meet: ${p.meetLink}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+    meetLink: p.meetLink,
+    attendeeEmail: p.email,
+  });
+  return {
+    filename: "hostora-demo.ics",
+    content: ics,
+    contentType: "text/calendar; charset=utf-8; method=PUBLISH",
+  };
+}
+
+function mailMeta(info: SMTPTransport.SentMessageInfo) {
+  return {
+    messageId: info.messageId || undefined,
+    response: typeof info.response === "string" ? info.response : undefined,
+  };
+}
+
+export async function sendBookingEmails(
+  p: BookingMailPayload,
+): Promise<BookingEmailResult> {
   if (!isSmtpConfigured()) {
     throw new Error(
       "SMTP is not configured. Set SMTP_HOST, SMTP_USER, and SMTP_PASS on the server.",
@@ -94,32 +176,41 @@ export async function sendBookingEmails(p: BookingMailPayload): Promise<void> {
   const when = whenLabel(p.start);
   const replyTo = company.email;
   const from = bookingConfig.fromEmail;
+  const result: BookingEmailResult = {};
 
   try {
-    await transport.sendMail({
+    const customerInfo = await transport.sendMail({
       from,
       replyTo,
       to: p.email,
       subject: `Hostora demo confirmed — ${when}`,
+      text: customerText(p),
       html: customerHtml(p),
+      attachments: [icsAttachment(p)],
     });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    throw new Error(`Customer email failed (${bookingConfig.smtpHost}): ${msg}`);
-  }
+    const customerMeta = mailMeta(customerInfo);
+    result.customerMessageId = customerMeta.messageId;
+    result.customerResponse = customerMeta.response;
 
-  if (bookingConfig.notifyEmails.length) {
-    try {
-      await transport.sendMail({
+    if (bookingConfig.notifyEmails.length) {
+      const notifyInfo = await transport.sendMail({
         from,
         replyTo,
         to: bookingConfig.notifyEmails,
         subject: `New Hostora demo: ${p.name} · ${p.companyName}`,
+        text: internalText(p),
         html: internalHtml(p),
       });
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      throw new Error(`Sales notify email failed (${bookingConfig.smtpHost}): ${msg}`);
+      const notifyMeta = mailMeta(notifyInfo);
+      result.notifyMessageId = notifyMeta.messageId;
+      result.notifyResponse = notifyMeta.response;
     }
+
+    return result;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new Error(`Booking email failed (${bookingConfig.smtpHost}): ${msg}`);
+  } finally {
+    transport.close();
   }
 }

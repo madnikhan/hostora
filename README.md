@@ -87,16 +87,36 @@ Send confirmations **From** `sales@hostorasoft.co.uk` via your IONOS mailbox (no
    - `BOOKING_FROM_EMAIL="Hostora <sales@hostorasoft.co.uk>"`
 3. Notifications go to `BOOKING_NOTIFY_EMAILS` (default: `sales@hostorasoft.co.uk,madnikhan1@gmail.com`)
 
-Add the same SMTP vars on Vercel for production.
+Add the same SMTP vars on **Vercel Production** (`.env.local` does not apply to the live site).
+
+**Test SMTP before booking:**
+
+```bash
+npm run booking:test-smtp -- you@example.com
+```
+
+This runs `transport.verify()` then sends a plain test message. Check inbox and spam. If verify fails, fix `SMTP_PASS` in IONOS first.
+
+**Troubleshooting (no email arrives but booking succeeds):**
+
+1. Confirm all `SMTP_*` vars on Vercel Production and redeploy
+2. Run `npm run booking:test-smtp` locally with the same credentials
+3. Check **spam/junk** — confirmation comes from `sales@hostorasoft.co.uk`, not Google Calendar
+4. In IONOS DNS for `hostorasoft.co.uk`, enable **SPF** and **DKIM** for the mailbox (Gmail often drops mail without them)
+5. Check IONOS sent-mail logs for the `sales@` mailbox
+6. Vercel → Logs → `/api/booking/create` — look for `booking emails sent` with `messageId`
+
+There is **no Google Calendar invite email** to the client (service-account limitation). The app sends a Hostora confirmation email with a `.ics` calendar attachment and Meet link when available.
 
 ### 3. Env checklist
 Copy [`.env.example`](.env.example) to `.env.local` and fill values. See that file for `BOOKING_HOURS`, timezone, and duration.
 
 ### 4. Test
-1. `npm run dev` → open `/contact`
-2. Book a weekday slot
-3. Confirm: Calendar event + customer email + emails to both notify addresses
-4. Open `/admin/leads` (same SEO admin password) — the lead should appear for follow-up
+1. `npm run booking:test-smtp -- your@email.com` — confirm SMTP works
+2. `npm run dev` → open `/contact`
+3. Book a weekday slot
+4. Confirm: Calendar event + customer email (with `.ics` attachment) + emails to notify addresses
+5. Open `/admin/leads` (same SEO admin password) — the lead should appear for follow-up
 
 ## Demo leads CRM
 
